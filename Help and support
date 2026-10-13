@@ -1,0 +1,748 @@
+<!DOCTYPE html><html lang="en" style="width: 100%; min-height: 100vh; overflow-x: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Habit Tracker Dashboard</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16',
+            },
+            deepForest: '#0c2e1f',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Roboto', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 8px 30px rgba(0, 0, 0, 0.04)',
+            'card': '0 10px 25px -5px rgba(22, 101, 52, 0.08)',
+            'glow': '0 0 20px rgba(74, 222, 128, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    /* iOS frame setup & smooth scrolling */
+    body {
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    /* Hide scrollbar for clean app feel */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Smooth background crossfade animations */
+    .hero-slide {
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-slide.inactive {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+    .hero-slide.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    /* Organic slow, elegant decelerating transitions for mini product cards */
+    .product-track {
+      transition: transform 2200ms cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform;
+    }
+
+    /* Subtle parallax, scale cushion, and soft depth fade during swipe transitions */
+    .product-item {
+      transition: transform 2200ms cubic-bezier(0.25, 1, 0.5, 1), opacity 1800ms cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform, opacity;
+    }
+    .product-item img {
+      transition: transform 2400ms cubic-bezier(0.25, 1, 0.5, 1), filter 1800ms ease;
+    }
+    .product-item .item-meta {
+      transition: transform 2000ms cubic-bezier(0.25, 1, 0.5, 1), opacity 1600ms ease;
+    }
+
+    /* Active & inactive slide states inside mini cards */
+    .product-item.item-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .product-item.item-active img {
+      transform: scale(1);
+      filter: blur(0px);
+    }
+    .product-item.item-active .item-meta {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .product-item.item-inactive {
+      opacity: 0.65;
+      transform: scale(0.96);
+    }
+    .product-item.item-inactive img {
+      transform: scale(1.08);
+      filter: blur(0.4px);
+    }
+    .product-item.item-inactive .item-meta {
+      transform: translateY(6px);
+      opacity: 0.4;
+    }
+
+    /* Multi-state interactive container smooth transition */
+    .dynamic-state {
+      transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dynamic-state.hidden-state {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+    }
+    .dynamic-state.active-state {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      position: relative;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex justify-center items-start p-0 font-sans">
+<!-- BEGIN: PhoneShellContainer -->
+<!-- Container styled as modern mobile viewport -->
+<div class="w-full max-w-[440px] min-h-screen bg-slate-50 relative flex flex-col overflow-x-hidden mx-auto" data-purpose="mobile-screen-shell">
+<!-- Glowing emerald ambient dynamic hero backdrop with crossfade -->
+<!-- BEGIN: MainContentScrollableArea -->
+<!-- END: MainContentScrollableArea -->
+<!-- BEGIN: BottomNavigationBar -->
+<!-- Fixed modern floating bottom bar -->
+<!-- Buyer Navigation Drawer Overlay --><!-- Buyer Navigation Drawer Overlay -->
+<!-- DESTINATION 1: MY PROFILE MODAL -->
+<!-- DESTINATION 2: MY WALLET MODAL -->
+<!-- DESTINATION 3: HELP & SUPPORT MODAL -->
+<div class="relative w-full min-h-screen bg-slate-50 flex flex-col z-10" id="support-modal-overlay">
+<div class="w-full min-h-screen bg-slate-50 flex flex-col" id="support-modal-content">
+<!-- Header -->
+<div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-white flex-shrink-0"><div class="w-full px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-white"><button aria-label="Back" class="p-1 text-slate-800 hover:text-emerald-700 transition-colors flex items-center justify-center focus:outline-none" id="btn-close-support"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></button><h1 class="text-base font-bold text-slate-900 tracking-tight font-sans">Help &amp; Support</h1><span class="text-xs font-semibold text-emerald-600">24/7 Available</span></div></div>
+<!-- Scrollable Help Body -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar"><div class="relative flex items-center mb-1"><svg class="w-4 h-4 text-emerald-800 absolute left-3.5 pointer-events-none opacity-60" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" x2="21" y1="16.5" y2="21"></line></svg><input class="w-full pl-10 pr-4 py-3 bg-white border-0 shadow-sm rounded-2xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all" id="input-faq-search" placeholder="Search help articles, topics..." type="text"></div><div class="space-y-2.5 pt-1" id="faq-list-container"><div class="bg-white rounded-2xl p-4 shadow-sm transition-all duration-200 faq-item"><button class="w-full text-left font-bold text-xs text-slate-900 flex justify-between items-center bg-transparent btn-faq-toggle"><span class="pr-2">How do I track my order delivery?</span><span class="text-slate-400 text-sm font-semibold transition-transform duration-200 faq-icon">+</span></button><div class="mt-2.5 text-[11px] text-slate-600 leading-relaxed hidden faq-content border-t border-slate-100 pt-2.5">Track your package live through the Multi-State tracker on your homepage or via Order Details. We update you in real time as your package moves from Seller Verification to In-Transit and Delivered.</div></div><div class="bg-white rounded-2xl p-4 shadow-sm transition-all duration-200 faq-item"><button class="w-full text-left font-bold text-xs text-slate-900 flex justify-between items-center bg-transparent btn-faq-toggle"><span class="pr-2">What is Sleec’s return and refund policy?</span><span class="text-slate-400 text-sm font-semibold transition-transform duration-200 faq-icon">+</span></button><div class="mt-2.5 text-[11px] text-slate-600 leading-relaxed hidden faq-content border-t border-slate-100 pt-2.5">All verified purchases on Sleec come with a 7-day hassle-free return window. If an item is damaged or incorrect, initiate a return from your order tab for an instant Sleec Wallet refund or original card reimbursement.</div></div><div class="bg-white rounded-2xl p-4 shadow-sm transition-all duration-200 faq-item"><button class="w-full text-left font-bold text-xs text-slate-900 flex justify-between items-center bg-transparent btn-faq-toggle"><span class="pr-2">How does multi-store checkout work?</span><span class="text-slate-400 text-sm font-semibold transition-transform duration-200 faq-icon">+</span></button><div class="mt-2.5 text-[11px] text-slate-600 leading-relaxed hidden faq-content border-t border-slate-100 pt-2.5">You can add items from multiple curated brand shops across Nigeria into one single checkout bag. Pay with a single transaction using your Sleec Wallet or card, while each store ships their parcel straight to your doorstep.</div></div><div class="bg-white rounded-2xl p-4 shadow-sm transition-all duration-200 faq-item"><button class="w-full text-left font-bold text-xs text-slate-900 flex justify-between items-center bg-transparent btn-faq-toggle"><span class="pr-2">How can I contact a seller directly?</span><span class="text-slate-400 text-sm font-semibold transition-transform duration-200 faq-icon">+</span></button><div class="mt-2.5 text-[11px] text-slate-600 leading-relaxed hidden faq-content border-t border-slate-100 pt-2.5">Navigate to the seller's verified storefront or tap 'Message Store' on any product page. You can chat directly with merchants regarding sizing, materials, and batch restock timings.</div></div></div><section class="rounded-3xl p-5 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/50 border border-emerald-100 shadow-sm relative overflow-hidden text-center flex flex-col items-center justify-center my-2" id="ask-padi-cta-section"><div class="w-16 h-16 mb-2 relative flex items-center justify-center"><div class="absolute inset-0 bg-emerald-400/20 rounded-full blur-lg"></div><svg class="w-14 h-14 relative drop-shadow-sm" viewBox="0 0 100 100"><circle cx="28" cy="28" fill="#34d399" r="12"></circle><circle cx="28" cy="28" fill="#ec4899" opacity="0.6" r="6"></circle><circle cx="72" cy="28" fill="#34d399" r="12"></circle><circle cx="72" cy="28" fill="#ec4899" opacity="0.6" r="6"></circle><circle cx="50" cy="55" fill="#34d399" r="35"></circle><ellipse cx="50" cy="62" fill="#ffffff" rx="14" ry="10"></ellipse><ellipse cx="50" cy="58" fill="#0f172a" rx="5" ry="3.5"></ellipse><circle cx="38" cy="48" fill="#0f172a" r="4"></circle><circle cx="62" cy="48" fill="#0f172a" r="4"></circle><circle cx="39" cy="46" fill="#ffffff" r="1.5"></circle><circle cx="63" cy="46" fill="#ffffff" r="1.5"></circle><circle cx="30" cy="58" fill="#f43f5e" opacity="0.5" r="4"></circle><circle cx="70" cy="58" fill="#f43f5e" opacity="0.5" r="4"></circle><path d="M 45,64 Q 50,68 55,64" fill="none" stroke="#0f172a" stroke-linecap="round" stroke-width="1.8"></path></svg></div><h2 class="text-xs font-bold text-slate-800 mb-1">Didn’t find your answer?</h2><button class="w-full max-w-[240px] py-2.5 px-5 rounded-full bg-[#0c2e1f] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm hover:bg-[#154631] active:scale-95 transition-all mt-1" id="btn-ask-padi-main" type="button"><span class="font-semibold">Ask Padi</span></button><button class="text-xs font-semibold text-emerald-800 hover:text-emerald-950 hover:underline mt-3 transition-colors flex items-center gap-1" id="btn-toggle-contact-form" type="button"><span class="">Or contact support</span><svg class="w-3.5 h-3.5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></section><section class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-3 hidden transition-all duration-300" id="contact-support-form-container"><div class="flex justify-between items-center pb-1 border-b border-slate-100"><h4 class="text-xs font-bold text-slate-900">Contact Support Team</h4><span class="text-[10px] text-slate-400">Response in 24–72h</span></div><form class="space-y-3" id="form-sleec-support"><div class="space-y-1"><label class="block text-[11px] font-bold text-slate-700">Issue Type</label><select class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 font-medium focus:outline-none focus:border-emerald-600 focus:bg-white" id="support-issue-type" required=""><option value="order">Order Issue or Delay</option><option value="payment">Payment Problem</option><option value="refund">Refund / Return Issue</option><option value="account">Account Access Issue</option><option value="seller">Product or Seller Complaint</option><option value="technical">Technical Problem</option><option value="other">Other</option></select></div><div class="space-y-1"><label class="block text-[11px] font-bold text-slate-700">Order Reference <span class="text-slate-400 font-normal">(optional)</span></label><input class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white" id="support-order-ref" placeholder="#SLC-89201" type="text"></div><div class="space-y-1"><label class="block text-[11px] font-bold text-slate-700">Email Address</label><input class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white" id="support-email" required="" type="email" value="fuadino@sleec.app"></div><div class="space-y-1"><label class="block text-[11px] font-bold text-slate-700">Description / Message</label><textarea class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white" id="support-message-body" placeholder="Describe what happened or how we can help..." required="" rows="3"></textarea></div><button class="w-full py-2.5 rounded-xl bg-[#0c2e1f] hover:bg-[#154631] text-white font-bold text-xs active:scale-95 transition-all shadow-sm" id="btn-submit-support-ticket" type="submit">Submit Message</button></form></section><div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center space-y-2 hidden transition-all duration-300" id="support-success-card"><div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-sm"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div><h5 class="text-sm font-bold text-emerald-950">Message sent successfully</h5><p class="text-xs text-emerald-800 leading-snug">Your support request has been received. You’ll get a response within 24–72 hours.</p><div class="pt-1"><span class="text-[10px] font-mono text-emerald-700 bg-white/80 px-2.5 py-1 rounded-full border border-emerald-200 inline-block" id="support-ticket-id">Ticket #SLC-74921</span></div><button class="mt-2 px-4 py-1.5 rounded-full bg-emerald-700 text-white text-xs font-semibold hover:bg-emerald-800 transition-colors" id="btn-done-support-ticket" type="button">Done</button></div></div>
+</div>
+</div>
+<!-- LOG OUT CONFIRMATION DIALOG -->
+<div class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-200 flex justify-center items-center p-4 opacity-0 pointer-events-none" id="logout-dialog-overlay">
+<div class="w-full max-w-[320px] bg-white rounded-3xl p-5 shadow-2xl flex flex-col text-center space-y-3 transform transition-transform duration-200 scale-95" id="logout-dialog-content">
+<div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+<svg class="w-6 h-6 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+</div>
+<h4 class="text-base font-bold text-slate-900">Are you sure you want to log out?</h4>
+<p class="text-xs text-slate-500 leading-snug">You will need to sign in again to access your private wallet balance and saved profile addresses.</p>
+<div class="pt-2 flex items-center gap-2">
+<button class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-100 active:scale-95 transition-all" id="btn-logout-cancel" type="button">Cancel</button>
+<button class="flex-1 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold hover:bg-rose-700 active:scale-95 transition-all shadow-sm" id="btn-logout-confirm" type="button">Log Out</button>
+</div>
+</div>
+</div><!-- Interactive Search Overlay --><div class="fixed inset-0 z-40 bg-slate-50 flex flex-col transition-all duration-300 opacity-0 pointer-events-none" id="search-overlay"><div class="bg-white border-b border-slate-200 px-4 pt-3 pb-3 shadow-sm"><div class="flex items-center space-x-2.5"><button aria-label="Back" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors flex-shrink-0" id="btn-close-search"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></button><div class="flex-1 relative flex items-center"><svg class="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" x2="21" y1="16.5" y2="21"></line></svg><input class="w-full pl-9 pr-8 py-2 bg-slate-100 focus:bg-white border border-transparent focus:border-emerald-600 rounded-full text-xs font-medium text-slate-900 focus:outline-none transition-all" id="search-input" placeholder="Search products, stores &amp; drops..." type="text"><button class="w-5 h-5 rounded-full bg-slate-300 text-slate-600 absolute right-2.5 flex items-center justify-center text-xs hidden hover:bg-slate-400" id="btn-clear-search">×</button></div></div><div class="flex items-center space-x-1.5 mt-3 overflow-x-auto no-scrollbar pb-0.5"><button class="search-chip active px-3 py-1 rounded-full text-xs font-semibold bg-[#0c2e1f] text-white flex-shrink-0" data-filter="all">All</button><button class="search-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 flex-shrink-0" data-filter="products">Products</button><button class="search-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 flex-shrink-0" data-filter="shops">Shops</button><button class="search-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 flex-shrink-0" data-filter="price">&lt; ₦20,000</button><button class="search-chip px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 flex-shrink-0" data-filter="trending">Popular</button></div></div><div class="flex-1 overflow-y-auto p-4 space-y-4"><div id="search-recent-section"><div class="flex justify-between items-center mb-2"><span class="text-xs font-bold text-slate-800 uppercase tracking-wide">Recent Searches</span><button class="text-xs font-semibold text-emerald-700 hover:underline" id="btn-clear-recent">Clear history</button></div><div class="flex flex-wrap gap-2" id="recent-chips-container"><button class="recent-query-chip px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-700 hover:border-emerald-600 flex items-center gap-1.5 shadow-sm"><span class="">Mint Hoodie</span><svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg></button><button class="recent-query-chip px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-700 hover:border-emerald-600 flex items-center gap-1.5 shadow-sm"><span class="">Sage Runners</span><svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg></button><button class="recent-query-chip px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-700 hover:border-emerald-600 flex items-center gap-1.5 shadow-sm"><span class="">Amber Eau</span><svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg></button></div></div><div id="search-results-container"><h4 class="text-xs font-bold text-slate-800 mb-2 uppercase tracking-wide">Suggested Stores &amp; Products</h4><div class="space-y-2.5" id="search-live-list"></div></div></div></div><!-- Cart Drawer Sheet Overlay --><div class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none flex justify-center items-end" id="cart-drawer-overlay"><div class="w-full max-w-[412px] bg-white rounded-t-[32px] shadow-2xl flex flex-col max-h-[85vh] transform translate-y-full transition-transform duration-300 ease-out" id="cart-sheet-content"><div class="p-4 border-b border-slate-100 flex items-center justify-between"><div class="flex items-center space-x-2"><h3 class="text-base font-bold text-slate-900">Shopping Bag</h3><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold" id="cart-sheet-total-count">2 items</span></div><button aria-label="Close cart" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors" id="btn-close-cart">×</button></div><div class="px-4 py-2 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-700"><label class="flex items-center space-x-2 cursor-pointer"><input checked="" class="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4" id="checkbox-select-all" type="checkbox"><span class="">Select All (<span class="" id="selected-items-count">2</span>)</span></label><button class="text-rose-600 hover:underline font-medium text-[11px]" id="btn-clear-all-cart">Clear bag</button></div><div class="flex-1 overflow-y-auto p-4 space-y-4" id="cart-items-scroll-list"></div><div class="p-4 border-t border-slate-100 bg-white" id="cart-footer-bar"><div class="flex justify-between items-baseline mb-3"><span class="text-xs text-slate-500 font-medium">Selected Items Subtotal</span><span class="text-lg font-bold text-[#0c2e1f]" id="cart-subtotal-val">₦50,500</span></div><button class="w-full py-3 px-4 rounded-2xl bg-[#0c2e1f] hover:bg-[#154631] text-white font-bold text-sm shadow-lg flex items-center justify-center space-x-2 transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none" id="btn-start-checkout"><span class="" id="checkout-btn-text">Proceed to Checkout (2)</span><svg class="w-4 h-4 stroke-current stroke-2" viewBox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button></div></div></div><!-- Multi-Step Checkout Modal Sequence --><div class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none flex justify-center items-end" id="checkout-modal-overlay"><div class="w-full max-w-[412px] bg-white rounded-t-[32px] shadow-2xl flex flex-col max-h-[92vh] transform translate-y-full transition-transform duration-300 ease-out overflow-hidden" id="checkout-sheet-content"><div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50"><div class="flex items-center space-x-2"><button class="w-7 h-7 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-700 text-xs hidden" id="btn-checkout-back">←</button><div><h3 class="text-sm font-bold text-slate-900" id="checkout-modal-title">Step 1: Order Review</h3><p class="text-[10px] text-slate-500" id="checkout-step-indicator">Step 1 of 5</p></div></div><button class="w-7 h-7 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 text-xs" id="btn-close-checkout">×</button></div><div class="flex items-center justify-between px-4 py-2 bg-slate-100/70"><div class="step-bar-node active flex-1 h-1 bg-emerald-600 rounded-full mx-0.5"></div><div class="step-bar-node flex-1 h-1 bg-slate-300 rounded-full mx-0.5" id="sb-2"></div><div class="step-bar-node flex-1 h-1 bg-slate-300 rounded-full mx-0.5" id="sb-3"></div><div class="step-bar-node flex-1 h-1 bg-slate-300 rounded-full mx-0.5" id="sb-4"></div><div class="step-bar-node flex-1 h-1 bg-slate-300 rounded-full mx-0.5" id="sb-5"></div></div><div class="flex-1 overflow-y-auto p-4 space-y-4" id="checkout-step-body"></div><div class="p-4 border-t border-slate-100 bg-white flex items-center justify-between gap-3"><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-semibold uppercase">Order Total</span><span class="text-base font-bold text-[#0c2e1f]" id="checkout-footer-total">₦50,500</span></div><button class="flex-1 py-2.5 px-4 rounded-xl bg-[#0c2e1f] hover:bg-[#154631] text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center space-x-1" id="btn-checkout-next"><span class="">Continue</span><svg class="w-3.5 h-3.5 stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button></div></div></div><!-- Printable Receipt Modal Overlay --><div class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none flex justify-center items-center p-3" id="receipt-modal-overlay"><div class="w-full max-w-[370px] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]" id="receipt-modal-content"><div class="p-4 border-b border-slate-100 flex items-center justify-between bg-[#0c2e1f] text-white"><div class="flex items-center space-x-2"><div class="w-6 h-6 rounded-full bg-emerald-400 text-[#0c2e1f] font-bold text-xs flex items-center justify-center">✓</div><h3 class="text-sm font-bold text-white">Order Receipt</h3></div><button class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-xs" id="btn-close-receipt">×</button></div><div class="flex-1 overflow-y-auto p-5 bg-white text-slate-800 space-y-4" id="receipt-printable-area"><div class="text-center pb-3 border-b border-dashed border-slate-200"><div class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs tracking-wider uppercase mb-1">PAID &amp; CONFIRMED</div><h2 class="text-lg font-black text-slate-900 tracking-tight">SLEEC COMMERCE</h2><p class="text-[11px] text-slate-500">Drop &amp; Storefronts Lagos, Nigeria</p></div><div class="space-y-1 text-xs border-b border-dashed border-slate-200 pb-3"><div class="flex justify-between"><span class="text-slate-400 font-medium">Order Reference:</span><span class="font-mono font-bold text-slate-900" id="rec-order-ref">#SLC-89201</span></div><div class="flex justify-between"><span class="text-slate-400 font-medium">Transaction ID:</span><span class="font-mono text-slate-700" id="rec-txn-id">TXN-94182904</span></div><div class="flex justify-between"><span class="text-slate-400 font-medium">Date &amp; Time:</span><span class="font-semibold text-slate-800" id="rec-date">Today, 14:32</span></div><div class="flex justify-between"><span class="text-slate-400 font-medium">Customer:</span><span class="font-semibold text-slate-800">Fuadino Adebayo</span></div><div class="flex justify-between"><span class="text-slate-400 font-medium">Payment Method:</span><span class="font-semibold text-emerald-700" id="rec-payment-method">Sleec Wallet</span></div></div><div><h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Items Purchased</h4><div class="space-y-2 text-xs" id="rec-items-list"></div></div><div class="border-t border-dashed border-slate-200 pt-3 space-y-1 text-xs"><div class="flex justify-between"><span class="text-slate-500">Subtotal</span><span class="font-semibold text-slate-900" id="rec-subtotal">₦50,500</span></div><div class="flex justify-between"><span class="text-slate-500">Fulfilment / Delivery Fee</span><span class="font-semibold text-slate-900" id="rec-delivery">₦0</span></div><div class="flex justify-between font-bold text-sm text-[#0c2e1f] pt-2 border-t border-slate-100"><span class="">Total Amount Paid</span><span class="" id="rec-total">₦50,500</span></div></div><div class="p-3 rounded-xl bg-emerald-50 text-[10px] text-emerald-900 border border-emerald-200"><div class="font-bold mb-0.5">Fulfilment Details:</div><div class="" id="rec-fulfilment-note">Self pickup at Store premises within standard store hours.</div></div></div><div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center gap-2"><button class="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-bold flex items-center justify-center space-x-1.5 shadow-sm active:scale-95 transition-all" id="btn-print-receipt-action"><svg class="w-4 h-4 stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect height="8" width="12" x="6" y="14"></rect></svg><span class="">Print Receipt</span></button><button class="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold active:scale-95 transition-all" id="btn-done-receipt">Done</button></div></div></div>
+<!-- END: BottomNavigationBar -->
+</div>
+<!-- END: PhoneShellContainer -->
+<script data-purpose="interactive-habit-toggles">
+    function initAnimations() {
+      // Background Hero Carousel crossfade logic for all 4 slides
+      const slides = [
+        document.getElementById('hero-slide-0'),
+        document.getElementById('hero-slide-1'),
+        document.getElementById('hero-slide-2'),
+        document.getElementById('hero-slide-3')
+      ];
+      const dots = document.querySelectorAll('.hero-dot');
+      let currentHeroIdx = 0;
+
+      function switchHeroSlide(targetIdx) {
+        currentHeroIdx = (targetIdx + slides.length) % slides.length;
+        slides.forEach((slide, idx) => {
+          if (!slide) return;
+          if (idx === currentHeroIdx) {
+            slide.classList.remove('inactive');
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+            slide.classList.add('inactive');
+          }
+        });
+        dots.forEach((dot, idx) => {
+          if (idx === currentHeroIdx) {
+            dot.className = "hero-dot w-4 h-1.5 rounded-full bg-white transition-all duration-300";
+          } else {
+            dot.className = "hero-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300";
+          }
+        });
+      }
+
+      dots.forEach((dot) => {
+        dot.addEventListener('click', () => {
+          const idx = parseInt(dot.getAttribute('data-slide') || '0', 10);
+          switchHeroSlide(idx);
+          resetHeroInterval();
+        });
+      });
+
+      let heroInterval = setInterval(() => {
+        switchHeroSlide(currentHeroIdx + 1);
+      }, 5500);
+
+      function resetHeroInterval() {
+        clearInterval(heroInterval);
+        heroInterval = setInterval(() => {
+          switchHeroSlide(currentHeroIdx + 1);
+        }, 5500);
+      }
+
+      // Dynamic Card Swipe Logic with relaxed 6.0s interval
+      const track1 = document.getElementById('track-box-1');
+      const track2 = document.getElementById('track-box-2');
+      const track3 = document.getElementById('track-box-3');
+
+      const c1Item0 = document.getElementById('card-1-item-0');
+      const c1Item1 = document.getElementById('card-1-item-1');
+      const c2Item0 = document.getElementById('card-2-item-0');
+      const c2Item1 = document.getElementById('card-2-item-1');
+      const c3Item0 = document.getElementById('card-3-item-0');
+      const c3Item1 = document.getElementById('card-3-item-1');
+
+      let cardStep = 0;
+
+      function executeOrganicSwipe() {
+        cardStep = (cardStep + 1) % 2;
+
+        setTimeout(() => {
+          if (track1) {
+            track1.style.transform = cardStep === 1 ? 'translateY(-50%)' : 'translateY(0%)';
+            if (c1Item0 && c1Item1) {
+              c1Item0.classList.toggle('item-active', cardStep === 0);
+              c1Item0.classList.toggle('item-inactive', cardStep === 1);
+              c1Item1.classList.toggle('item-active', cardStep === 1);
+              c1Item1.classList.toggle('item-inactive', cardStep === 0);
+            }
+          }
+        }, 0);
+
+        setTimeout(() => {
+          if (track2) {
+            track2.style.transform = cardStep === 1 ? 'translateY(0%)' : 'translateY(-50%)';
+            if (c2Item0 && c2Item1) {
+              c2Item0.classList.toggle('item-active', cardStep === 1);
+              c2Item0.classList.toggle('item-inactive', cardStep === 0);
+              c2Item1.classList.toggle('item-active', cardStep === 0);
+              c2Item1.classList.toggle('item-inactive', cardStep === 1);
+            }
+          }
+        }, 160);
+
+        setTimeout(() => {
+          if (track3) {
+            track3.style.transform = cardStep === 1 ? 'translateY(-50%)' : 'translateY(0%)';
+            if (c3Item0 && c3Item1) {
+              c3Item0.classList.toggle('item-active', cardStep === 0);
+              c3Item0.classList.toggle('item-inactive', cardStep === 1);
+              c3Item1.classList.toggle('item-active', cardStep === 1);
+              c3Item1.classList.toggle('item-inactive', cardStep === 0);
+            }
+          }
+        }, 320);
+      }
+
+      setInterval(executeOrganicSwipe, 6000);
+
+      // Multi-State Box Controller (State 1: Your first find awaits -> State 2: Delivery progress -> State 3: Find more on Sleec)
+      const stateScreens = [
+        document.getElementById('state-screen-0'),
+        document.getElementById('state-screen-1'),
+        document.getElementById('state-screen-2')
+      ];
+      const multiDots = document.querySelectorAll('.multi-dot');
+      const multiBox = document.getElementById('multi-state-box');
+      let currentBoxState = 0;
+      let multiStateTimer = null;
+
+      function setBoxState(stateIdx) {
+        currentBoxState = stateIdx % stateScreens.length;
+        stateScreens.forEach((scr, idx) => {
+          if (!scr) return;
+          if (idx === currentBoxState) {
+            scr.classList.remove('hidden-state');
+            scr.classList.add('active-state');
+          } else {
+            scr.classList.remove('active-state');
+            scr.classList.add('hidden-state');
+          }
+        });
+
+        // Update container theme styling slightly between dark state 2 and light states 1 & 3
+        if (multiBox) {
+          if (currentBoxState === 1) {
+            multiBox.className = "my-3.5 relative overflow-hidden rounded-[26px] bg-[#0c2e1f] border border-emerald-700/50 shadow-xl h-[132px] min-h-[132px] max-h-[132px] flex items-center transition-all duration-500";
+          } else {
+            multiBox.className = "my-3.5 relative overflow-hidden rounded-[26px] bg-[#eef6ed] border border-emerald-900/10 shadow-lg h-[132px] min-h-[132px] max-h-[132px] flex items-center transition-all duration-500";
+          }
+        }
+
+        // Update dot indicators
+        multiDots.forEach((dot, idx) => {
+          if (idx === currentBoxState) {
+            dot.className = currentBoxState === 1 ? "multi-dot w-3.5 h-1.5 rounded-full bg-emerald-400 transition-all" : "multi-dot w-3.5 h-1.5 rounded-full bg-emerald-800 transition-all";
+          } else {
+            dot.className = currentBoxState === 1 ? "multi-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all" : "multi-dot w-1.5 h-1.5 rounded-full bg-emerald-800/30 transition-all";
+          }
+        });
+      }
+
+      // Action button triggers
+      const btnExplore = document.getElementById('btn-explore-products');
+      if (btnExplore) {
+        btnExplore.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setBoxState(1); // Jump to State 2 (Delivery progress)
+          restartStateTimer();
+        });
+      }
+
+      const btnExploreSleec = document.getElementById('btn-explore-sleec');
+      if (btnExploreSleec) {
+        btnExploreSleec.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setBoxState(0); // Cycle back to State 1
+          restartStateTimer();
+        });
+      }
+
+      multiDots.forEach((dot) => {
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const target = parseInt(dot.getAttribute('data-target-state') || '0', 10);
+          setBoxState(target);
+          restartStateTimer();
+        });
+      });
+
+      function restartStateTimer() {
+        if (multiStateTimer) clearInterval(multiStateTimer);
+        // Automatic state advance every 30 seconds as requested
+        multiStateTimer = setInterval(() => {
+          setBoxState((currentBoxState + 1) % 3);
+        }, 30000);
+      }
+
+      restartStateTimer();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAnimations);
+    } else {
+      initAnimations();
+    }
+  </script>
+<script data-purpose="buyer-drawer-and-account-destinations">
+(function() {
+  // State store
+  let currentUser = {
+    isLoggedIn: true,
+    name: 'Fuadino Adebayo',
+    email: 'fuadino@sleec.app',
+    phone: '+234 812 345 6789',
+    bio: 'Streetwear and minimalist design collector in Lagos.',
+    wallet: 245680
+  };
+
+  // Elements
+  const btnHamburger = document.getElementById('btn-hamburger-menu');
+  const drawerOverlay = document.getElementById('buyer-drawer-overlay');
+  const drawerContent = document.getElementById('buyer-drawer-content');
+  const btnCloseDrawer = document.getElementById('btn-close-drawer');
+
+  const profileModal = document.getElementById('profile-modal-overlay');
+  const profileContent = document.getElementById('profile-modal-content');
+  const btnCloseProfile = document.getElementById('btn-close-profile');
+
+  const walletModal = document.getElementById('wallet-modal-overlay');
+  const walletContent = document.getElementById('wallet-modal-content');
+  const btnCloseWallet = document.getElementById('btn-close-wallet');
+
+  const supportModal = document.getElementById('support-modal-overlay');
+  const supportContent = document.getElementById('support-modal-content');
+  const btnCloseSupport = document.getElementById('btn-close-support');
+
+  const logoutDialog = document.getElementById('logout-dialog-overlay');
+  const logoutContent = document.getElementById('logout-dialog-content');
+  const btnLogoutCancel = document.getElementById('btn-logout-cancel');
+  const btnLogoutConfirm = document.getElementById('btn-logout-confirm');
+
+  const menuProfile = document.getElementById('menu-btn-profile');
+  const menuWallet = document.getElementById('menu-btn-wallet');
+  const menuSupport = document.getElementById('menu-btn-support');
+  const menuLogout = document.getElementById('menu-btn-logout');
+
+  // Drawer Open / Close
+  function openDrawer() {
+    if (!drawerOverlay || !drawerContent) return;
+    drawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
+    drawerOverlay.classList.add('opacity-100', 'pointer-events-auto');
+    drawerContent.classList.remove('-translate-x-full');
+    drawerContent.classList.add('translate-x-0');
+  }
+
+  function closeDrawer() {
+    if (!drawerOverlay || !drawerContent) return;
+    drawerOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+    drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+    drawerContent.classList.remove('translate-x-0');
+    drawerContent.classList.add('-translate-x-full');
+  }
+
+  if (btnHamburger) btnHamburger.addEventListener('click', openDrawer);
+  if (btnCloseDrawer) btnCloseDrawer.addEventListener('click', closeDrawer);
+  if (drawerOverlay) {
+    drawerOverlay.addEventListener('click', (e) => {
+      if (e.target === drawerOverlay) closeDrawer();
+    });
+  }
+
+  // Generic modal helpers
+  function showModal(overlay, sheet) {
+    if (!overlay || !sheet) return;
+    overlay.classList.remove('opacity-0', 'pointer-events-none');
+    overlay.classList.add('opacity-100', 'pointer-events-auto');
+    sheet.classList.remove('translate-y-full');
+    sheet.classList.add('translate-y-0');
+  }
+
+  function hideModal(overlay, sheet) {
+    if (!overlay || !sheet) return;
+    overlay.classList.remove('opacity-100', 'pointer-events-auto');
+    overlay.classList.add('opacity-0', 'pointer-events-none');
+    sheet.classList.remove('translate-y-0');
+    sheet.classList.add('translate-y-full');
+  }
+
+  // 1. My Profile Handler
+  if (menuProfile) {
+    menuProfile.addEventListener('click', () => {
+      closeDrawer();
+      showModal(profileModal, profileContent);
+    });
+  }
+  if (btnCloseProfile) {
+    btnCloseProfile.addEventListener('click', () => hideModal(profileModal, profileContent));
+  }
+  if (profileModal) {
+    profileModal.addEventListener('click', (e) => {
+      if (e.target === profileModal) hideModal(profileModal, profileContent);
+    });
+  }
+
+  // Profile Tabs Switcher
+  const profileTabs = document.querySelectorAll('.profile-tab');
+  const tabEdit = document.getElementById('tab-content-edit');
+  const tabAddresses = document.getElementById('tab-content-addresses');
+  const tabSettings = document.getElementById('tab-content-settings');
+
+  profileTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      profileTabs.forEach(t => {
+        t.classList.remove('active', 'text-[#0c2e1f]', 'border-[#0c2e1f]');
+        t.classList.add('text-slate-500', 'border-transparent');
+      });
+      tab.classList.add('active', 'text-[#0c2e1f]', 'border-[#0c2e1f]');
+      tab.classList.remove('text-slate-500', 'border-transparent');
+
+      const target = tab.getAttribute('data-tab');
+      if (tabEdit) tabEdit.classList.toggle('hidden', target !== 'edit');
+      if (tabAddresses) tabAddresses.classList.toggle('hidden', target !== 'addresses');
+      if (tabSettings) tabSettings.classList.toggle('hidden', target !== 'settings');
+    });
+  });
+
+  // Profile Edit Save & Cancel
+  const btnSaveProfile = document.getElementById('btn-save-profile');
+  const btnCancelProfile = document.getElementById('btn-cancel-profile');
+  const inputProfileName = document.getElementById('input-profile-name');
+  const inputProfileEmail = document.getElementById('input-profile-email');
+  const inputProfilePhone = document.getElementById('input-profile-phone');
+  const inputProfileBio = document.getElementById('input-profile-bio');
+  const btnChangeAvatar = document.getElementById('btn-change-avatar');
+  const previewAvatar = document.getElementById('profile-preview-avatar');
+  const drawerAvatar = document.getElementById('drawer-avatar-img');
+  const drawerDisplayName = document.getElementById('drawer-display-name');
+  const drawerDisplayEmail = document.getElementById('drawer-display-email');
+  const greetingTitle = document.getElementById('greeting-user-name');
+
+  if (btnChangeAvatar && previewAvatar) {
+    const avatarUrls = [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBf2KosHaPce84SUSv-V8EHDvhcU9R7IaflLN1tk5BGVfRfl54Z2o3EXqPDGQsENPT5K-ueIAzsfOOee1h4FZxqMTdpTd1RNP4_kpEl8ldWzTotR89Yp1vzSXIVCb8iUsR1alOuPPsbAkwCJp8jJBhcxfZc7w0P13Gx-hQUkOeDS7bLgMtwVcxfpBN-ROfOvrKR-mTxX7xx7VXVJ59a334zEpt2oR8f3uThXvkeTfqETtacZkftJUo-w6z1krWN6Bhp',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuC9d94DYr4PG1QgN7xx4JfeTZ6ltuUb8I2KM7IsyrBXzi25PymzKJQPQZ6Xz7oHKfpL-kmb9ZtElCMYJEKO3gew8PQKkhyGK24b7jeFTXw1oTkm-VsFm1BU-NkXWN7tdBXid7ZoP8MAarsrPafitfO2K9aQC69oRXdXit55oWLGdYoPl3laGnHSIQ43g1j9v3edzjl-17ZIov7d4iXFeXf73gJJJSN9eCEi6xppBczaRICfxRnE2wrHpzJ5abJo9aOX'
+    ];
+    let currAvIdx = 0;
+    btnChangeAvatar.addEventListener('click', () => {
+      currAvIdx = (currAvIdx + 1) % avatarUrls.length;
+      previewAvatar.src = avatarUrls[currAvIdx];
+      if (drawerAvatar) drawerAvatar.src = avatarUrls[currAvIdx];
+    });
+  }
+
+  if (btnSaveProfile) {
+    btnSaveProfile.addEventListener('click', () => {
+      if (inputProfileName && inputProfileName.value.trim()) {
+        currentUser.name = inputProfileName.value.trim();
+      }
+      if (inputProfileEmail && inputProfileEmail.value.trim()) {
+        currentUser.email = inputProfileEmail.value.trim();
+      }
+      if (inputProfilePhone) currentUser.phone = inputProfilePhone.value.trim();
+      if (inputProfileBio) currentUser.bio = inputProfileBio.value.trim();
+
+      // Reflect dynamically
+      if (drawerDisplayName) drawerDisplayName.textContent = currentUser.name;
+      if (drawerDisplayEmail) drawerDisplayEmail.textContent = currentUser.email;
+      if (greetingTitle) {
+        const firstName = currentUser.name.split(' ')[0] || currentUser.name;
+        greetingTitle.textContent = 'Hey, ' + firstName;
+      }
+      hideModal(profileModal, profileContent);
+    });
+  }
+
+  if (btnCancelProfile) {
+    btnCancelProfile.addEventListener('click', () => {
+      if (inputProfileName && inputProfileName.value !== currentUser.name) {
+        if (!confirm('Discard unsaved profile changes?')) return;
+      }
+      if (inputProfileName) inputProfileName.value = currentUser.name;
+      if (inputProfileEmail) inputProfileEmail.value = currentUser.email;
+      if (inputProfilePhone) inputProfilePhone.value = currentUser.phone;
+      if (inputProfileBio) inputProfileBio.value = currentUser.bio;
+      hideModal(profileModal, profileContent);
+    });
+  }
+
+  // Addresses Actions
+  const btnShowAddAddress = document.getElementById('btn-show-add-address');
+  const addrForm = document.getElementById('addr-form-container');
+  const btnCancelAddrForm = document.getElementById('btn-cancel-addr-form');
+  const btnSaveAddrAction = document.getElementById('btn-save-addr-action');
+  const btnUseLocation = document.getElementById('btn-use-location');
+  const locationAlert = document.getElementById('location-alert');
+
+  if (btnShowAddAddress && addrForm) {
+    btnShowAddAddress.addEventListener('click', () => {
+      addrForm.classList.remove('hidden');
+    });
+  }
+  if (btnCancelAddrForm && addrForm) {
+    btnCancelAddrForm.addEventListener('click', () => {
+      addrForm.classList.add('hidden');
+    });
+  }
+  if (btnUseLocation && locationAlert) {
+    btnUseLocation.addEventListener('click', () => {
+      locationAlert.classList.remove('hidden');
+      locationAlert.textContent = 'GPS location pinned: Lekki Phase 1, Victoria Island Corridor, Lagos. (Manage permissions in browser/device settings).';
+      const street = document.getElementById('input-addr-street');
+      const city = document.getElementById('input-addr-city');
+      const state = document.getElementById('input-addr-state');
+      if (street) street.value = '18 Admiralty Way';
+      if (city) city.value = 'Lekki';
+      if (state) state.value = 'Lagos';
+    });
+  }
+  if (btnSaveAddrAction && addrForm) {
+    btnSaveAddrAction.addEventListener('click', () => {
+      const street = document.getElementById('input-addr-street');
+      const title = document.getElementById('input-addr-title');
+      if (!street || !street.value) {
+        alert('Please enter street address');
+        return;
+      }
+      const container = document.getElementById('address-list-container');
+      if (container) {
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-2xl border border-slate-200 bg-white relative flex flex-col justify-between address-card';
+        card.innerHTML = `<div class="flex justify-between items-start mb-1"><span class="text-xs font-bold text-slate-900">${title && title.value ? title.value : 'New Address'}</span><button class="text-[10px] text-rose-500 font-semibold btn-del-addr">Delete</button></div><p class="text-xs text-slate-700 font-medium">${currentUser.name} • ${currentUser.phone}</p><p class="text-[11px] text-slate-500 mt-0.5">${street.value}</p>`;
+        container.appendChild(card);
+        const del = card.querySelector('.btn-del-addr');
+        if (del) del.addEventListener('click', () => card.remove());
+      }
+      addrForm.classList.add('hidden');
+    });
+  }
+
+  // 2. My Wallet Handler
+  if (menuWallet) {
+    menuWallet.addEventListener('click', () => {
+      closeDrawer();
+      showModal(walletModal, walletContent);
+    });
+  }
+  if (btnCloseWallet) {
+    btnCloseWallet.addEventListener('click', () => hideModal(walletModal, walletContent));
+  }
+  if (walletModal) {
+    walletModal.addEventListener('click', (e) => {
+      if (e.target === walletModal) hideModal(walletModal, walletContent);
+    });
+  }
+
+  const btnWalletTopup = document.getElementById('btn-wallet-topup');
+  const walletBalanceDisplay = document.getElementById('wallet-view-balance');
+  const drawerWalletDisplay = document.getElementById('drawer-menu-wallet-val');
+  if (btnWalletTopup) {
+    btnWalletTopup.addEventListener('click', () => {
+      currentUser.wallet += 25000;
+      const formatted = '₦' + currentUser.wallet.toLocaleString();
+      if (walletBalanceDisplay) walletBalanceDisplay.textContent = formatted;
+      if (drawerWalletDisplay) drawerWalletDisplay.textContent = formatted;
+      alert('₦25,000 added to your Sleec Wallet!');
+    });
+  }
+
+  // 3. Help & Support Handler
+  if (menuSupport) {
+    menuSupport.addEventListener('click', () => {
+      closeDrawer();
+      showModal(supportModal, supportContent);
+    });
+  }
+  if (btnCloseSupport) {
+    btnCloseSupport.addEventListener('click', () => hideModal(supportModal, supportContent));
+  }
+  if (supportModal) {
+    supportModal.addEventListener('click', (e) => {
+      if (e.target === supportModal) hideModal(supportModal, supportContent);
+    });
+  }
+
+  // Accordions
+  const faqToggles = document.querySelectorAll('.btn-faq-toggle');
+  faqToggles.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const content = btn.parentElement.querySelector('.faq-content');
+      const icon = btn.querySelector('.faq-icon');
+      if (content) {
+        const isHidden = content.classList.contains('hidden');
+        content.classList.toggle('hidden', !isHidden);
+        if (icon) icon.textContent = isHidden ? '−' : '+';
+      }
+    });
+  });
+
+  // FAQ Search filter
+  const faqInput = document.getElementById('input-faq-search');
+  if (faqInput) {
+    faqInput.addEventListener('input', (e) => {
+      const val = e.target.value.toLowerCase();
+      const items = document.querySelectorAll('.faq-item');
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(val) ? '' : 'none';
+      });
+    });
+  }
+
+  // Support form submission
+  const supportForm = document.getElementById('form-support-message');
+  const supportToast = document.getElementById('support-toast');
+  if (supportForm && supportToast) {
+    supportForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('support-message-text');
+      if (msg && !msg.value.trim()) {
+        alert('Please enter a message description.');
+        return;
+      }
+      supportToast.classList.remove('hidden');
+      setTimeout(() => {
+        supportToast.classList.add('hidden');
+        if (msg) msg.value = '';
+      }, 3500);
+    });
+  }
+
+  // 4. Log Out Flow
+  if (menuLogout) {
+    menuLogout.addEventListener('click', () => {
+      closeDrawer();
+      if (logoutDialog && logoutContent) {
+        logoutDialog.classList.remove('opacity-0', 'pointer-events-none');
+        logoutDialog.classList.add('opacity-100', 'pointer-events-auto');
+        logoutContent.classList.remove('scale-95');
+        logoutContent.classList.add('scale-100');
+      }
+    });
+  }
+
+  function closeLogoutDialog() {
+    if (logoutDialog && logoutContent) {
+      logoutDialog.classList.remove('opacity-100', 'pointer-events-auto');
+      logoutDialog.classList.add('opacity-0', 'pointer-events-none');
+      logoutContent.classList.remove('scale-100');
+      logoutContent.classList.add('scale-95');
+    }
+  }
+
+  if (btnLogoutCancel) btnLogoutCancel.addEventListener('click', closeLogoutDialog);
+  if (logoutDialog) {
+    logoutDialog.addEventListener('click', (e) => {
+      if (e.target === logoutDialog) closeLogoutDialog();
+    });
+  }
+
+  if (btnLogoutConfirm) {
+    btnLogoutConfirm.addEventListener('click', () => {
+      currentUser.isLoggedIn = false;
+      closeLogoutDialog();
+
+      // Transition UI to Guest state
+      if (greetingTitle) {
+        greetingTitle.textContent = 'Hey there, ready to discover fresh drops?';
+      }
+      if (drawerDisplayName) drawerDisplayName.textContent = 'Guest User';
+      if (drawerDisplayEmail) drawerDisplayEmail.textContent = 'Sign in to access your wallet';
+      const badge = document.getElementById('drawer-badge-pill');
+      if (badge) {
+        badge.textContent = 'Sign In / Register';
+        badge.className = 'inline-block px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-semibold mt-1 cursor-pointer';
+      }
+      if (drawerWalletDisplay) drawerWalletDisplay.textContent = 'Sign in to view';
+      const menuLabel = document.getElementById('menu-logout-label');
+      if (menuLabel) menuLabel.textContent = 'Sign In';
+    });
+  }
+})();
+</script>
+<div aria-hidden="true" data-snapdom-sandbox="true" id="snapdom-sandbox" style="position: absolute; left: -9999px; top: -9999px; width: 0px; height: 0px; overflow: hidden;"></div><script data-purpose="support-page-interactive-handlers">(function() { const closeBtn = document.getElementById('btn-close-support'); const overlay = document.getElementById('support-modal-overlay'); const sheet = document.getElementById('support-modal-content'); if (closeBtn && overlay && sheet) { closeBtn.addEventListener('click', function() { overlay.classList.remove('opacity-100', 'pointer-events-auto'); overlay.classList.add('opacity-0', 'pointer-events-none'); sheet.classList.remove('translate-y-0'); sheet.classList.add('translate-y-full'); }); } const toggles = document.querySelectorAll('.btn-faq-toggle'); toggles.forEach(function(btn) { btn.addEventListener('click', function() { const card = btn.closest('.faq-item'); const content = card ? card.querySelector('.faq-content') : null; const icon = btn.querySelector('.faq-icon'); if (content) { const isHidden = content.classList.contains('hidden'); content.classList.toggle('hidden', !isHidden); if (icon) { icon.textContent = isHidden ? '−' : '+'; } } }); }); const searchInput = document.getElementById('input-faq-search'); if (searchInput) { searchInput.addEventListener('input', function(e) { const q = e.target.value.toLowerCase(); const items = document.querySelectorAll('.faq-item'); items.forEach(function(item) { const txt = item.textContent.toLowerCase(); item.style.display = txt.includes(q) ? '' : 'none'; }); }); } const toggleFormBtn = document.getElementById('btn-toggle-contact-form'); const formContainer = document.getElementById('contact-support-form-container'); if (toggleFormBtn && formContainer) { toggleFormBtn.addEventListener('click', function() { const isHidden = formContainer.classList.contains('hidden'); formContainer.classList.toggle('hidden', !isHidden); if (isHidden) { formContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } }); } const supportForm = document.getElementById('form-sleec-support'); const successCard = document.getElementById('support-success-card'); const doneBtn = document.getElementById('btn-done-support-ticket'); if (supportForm && successCard) { supportForm.addEventListener('submit', function(e) { e.preventDefault(); const randomId = 'Ticket #SLC-' + Math.floor(10000 + Math.random() * 90000); const idEl = document.getElementById('support-ticket-id'); if (idEl) idEl.textContent = randomId; if (formContainer) formContainer.classList.add('hidden'); successCard.classList.remove('hidden'); successCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }); } if (doneBtn && successCard) { doneBtn.addEventListener('click', function() { successCard.classList.add('hidden'); const msgBox = document.getElementById('support-message-body'); if (msgBox) msgBox.value = ''; }); } })();</script>
+
+</body></html>
