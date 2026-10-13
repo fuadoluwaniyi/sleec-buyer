@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Sleec Buyer — My Orders</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            950: '#06170f',
+            900: '#0c2e1f',
+            800: '#14412d',
+            700: '#1d573d',
+            600: '#256d4d',
+            100: '#e1ede6',
+            50: '#f0f6f3'
+          }
+        },
+        fontFamily: {
+          sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<!-- Phosphor Icons for iOS-style crisp icons -->
+<link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" rel="stylesheet"/>
+<link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" rel="stylesheet"/>
+<!-- Custom Layout Styles -->
+<style data-purpose="layout-styles">
+  body {
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .sheet-modal {
+    transition: opacity 0.25s ease, visibility 0.25s;
+  }
+  .sheet-panel {
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+</style>
+</head>
+<body class="bg-[#f8faf9] text-stone-900 font-sans antialiased min-h-screen flex justify-center selection:bg-brand-100">
+<!-- Mobile Viewport Wrapper (390px standard mobile container) -->
+<div class="w-full max-w-[390px] min-h-screen relative flex flex-col bg-[#f8faf9] shadow-2xl overflow-x-hidden">
+<!-- BEGIN: AtmosphericHeader -->
+<header class="relative pt-3 pb-7 px-5 bg-gradient-to-b from-[#0c2e1f] via-[#123827] to-[#f8faf9]" data-purpose="hero-header">
+<!-- Top Action Bar -->
+<div class="flex items-center justify-between pt-2 mb-6">
+<!-- Hamburger Menu Button -->
+<button aria-label="Open menu" class="w-11 h-11 rounded-full bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center text-white active:scale-95 transition-transform" onclick="showToast('Menu opened')" type="button">
+<i class="ph ph-list text-xl"></i>
+</button>
+<!-- Centered Sleec Brand Logo -->
+<h1 class="text-white text-2xl font-bold tracking-tight">Sleec</h1>
+<!-- Shopping Bag Action Button with Badge -->
+<button aria-label="View shopping bag" class="relative w-11 h-11 rounded-full bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center text-white active:scale-95 transition-transform" onclick="showToast('Bag contains ' + cartCount + ' items')" type="button">
+<i class="ph ph-handbag-simple text-xl"></i>
+<span class="absolute -top-1 -right-1 w-5 h-5 bg-[#176241] border-2 border-[#0c2e1f] rounded-full text-white text-[11px] font-semibold flex items-center justify-center" id="cart-badge">
+          3
+        </span>
+</button>
+</div>
+<!-- Header Title Section -->
+<div class="mb-4">
+<h2 class="text-white text-2xl font-bold tracking-tight leading-snug">My Orders</h2>
+<p class="text-emerald-100/75 text-xs mt-0.5">Track, reorder and view invoices across stores</p>
+</div>
+<!-- Real-Time Search Bar -->
+<div class="relative w-full">
+<i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-lg pointer-events-none"></i>
+<input class="w-full pl-10 pr-9 py-2.5 bg-white text-stone-900 placeholder:text-stone-400 text-sm rounded-xl border-none shadow-[0_4px_16px_rgba(0,0,0,0.06)] focus:ring-2 focus:ring-[#14412d] transition-all" id="order-search-input" placeholder="Search your orders or items..." type="text"/>
+<button aria-label="Clear search" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600" id="clear-search-btn" type="button">
+<i class="ph ph-x-circle-fill text-lg"></i>
+</button>
+</div>
+</header>
+<!-- END: AtmosphericHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 px-4 -mt-2 pb-32">
+<!-- Category Filter Chips -->
+<nav aria-label="Order filters" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 mb-3">
+<button class="filter-chip px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap bg-[#0c2e1f] text-white shadow-sm transition-all" data-filter="all" type="button">All</button>
+<button class="filter-chip px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap bg-white text-stone-600 hover:bg-stone-50 shadow-xs transition-all" data-filter="ongoing" type="button">Ongoing</button>
+<button class="filter-chip px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap bg-white text-stone-600 hover:bg-stone-50 shadow-xs transition-all" data-filter="completed" type="button">Completed</button>
+<button class="filter-chip px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap bg-white text-stone-600 hover:bg-stone-50 shadow-xs transition-all" data-filter="cancelled" type="button">Cancelled</button>
+</nav>
+<!-- Order Count Indicator -->
+<div class="flex items-center justify-between px-1 mb-3">
+<span class="text-xs font-semibold text-stone-500 uppercase tracking-wider" id="active-results-count">4 Orders Found</span>
+<span class="text-[11px] text-stone-400">Tap card for details</span>
+</div>
+<!-- Orders List Container -->
+<div class="space-y-3.5" id="orders-list-container">
+<!-- ORDER CARD 1: SLC-84920 (Ongoing / In Transit) -->
+<article class="order-card bg-white rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer active:scale-[0.99] transition-all" data-order-id="SLC-84920" data-search="slc-84920 stride club sage runners in transit size 42 eu" data-status="ongoing">
+<!-- Order Card Header: text-only status (no background pill) -->
+<div class="flex items-center justify-between pb-3 border-b border-stone-50">
+<span class="text-xs text-stone-500 font-medium">Order #SLC-84920 · Today, 14:20</span>
+<span class="text-emerald-600 font-semibold text-xs tracking-tight">In Transit</span>
+</div>
+<!-- Product Details Row -->
+<div class="flex items-center gap-3.5 pt-3 pb-3.5">
+<img alt="Sage Runners" class="w-16 h-16 rounded-xl object-cover bg-stone-100 flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_-z4BZEwvGnhFHbmJHl9QgYGRTolMnlORAPJPSMHV87lyIkIG582JzdYXhYcOewjxs46rRlx_r2obA-e2vMzeD4x6Tq05GIepduyqZPfzRtIY5H1cW9NR-7qcwRblTy3knqbk6cOaVM8YBfku_DXslwlNfUNbfHgK86PHD2HdJi38tEmjWOd0jdfs-mikNAgAHol0JQ5aICtYAWPB80QpkzNyK6gS9bamoqW1TDEoka83pm1Ea3MBGESXxWysa_Wb"/>
+<div class="flex-1 min-w-0">
+<span class="text-[11px] font-medium text-stone-400 block truncate">Stride Club</span>
+<h3 class="text-sm font-semibold text-stone-900 truncate">Sage Runners</h3>
+<p class="text-xs text-stone-500 mt-0.5">Size 42 EU · Qty: 1</p>
+</div>
+<div class="text-right">
+<span class="text-sm font-bold text-stone-900">₦32,000</span>
+</div>
+</div>
+<!-- Bottom Action Row -->
+<div class="pt-2 flex items-center justify-between border-t border-stone-50">
+<span class="text-xs text-stone-500 flex items-center gap-1.5">
+<i class="ph ph-truck text-stone-500 text-sm"></i> Est. delivery tomorrow
+          </span>
+<button class="bg-[#0c2e1f] text-white hover:bg-[#15432e] text-xs font-semibold px-4 py-2 rounded-xl active:scale-95 transition-all shadow-sm" onclick="event.stopPropagation(); openTrackingModal();" type="button">
+            Track Order
+          </button>
+</div>
+</article>
+<!-- ORDER CARD 2: SLC-79114 (Ongoing / Ready for Pickup) -->
+<article class="order-card bg-white rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer active:scale-[0.99] transition-all" data-order-id="SLC-79114" data-search="slc-79114 everyday tote sleec basics cloudnine ready for pickup natural ecru" data-status="ongoing">
+<!-- Order Card Header: text-only status -->
+<div class="flex items-center justify-between pb-3 border-b border-stone-50">
+<span class="text-xs text-stone-500 font-medium">Order #SLC-79114 · 28 Sep 2026</span>
+<span class="text-amber-600 font-semibold text-xs tracking-tight">Ready for Pickup</span>
+</div>
+<!-- Product Details Row with Multi-Thumbnail -->
+<div class="flex items-center gap-3 pt-3 pb-3.5">
+<div class="flex -space-x-4 flex-shrink-0">
+<img alt="Everyday Tote" class="w-14 h-14 rounded-xl object-cover bg-stone-100 border-2 border-white shadow-xs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAytQI9VP-lZ-gwFC3mv7PZu2-DhTRJo_Gz78CGuoZlnpKT4OVFOVJ73PgF_LthAapSHWfKrka1WlAncvMBY6-9ZmkCHIQkyFYsVt2-lNrI7NQpbrqjPoCKDR5gzTJmLH1VVrjUfpDQbggYGehRZnf8Yy1ZOjnMh6UL8uH1z7LTH8sExKYUTcWK-Nnwf_dfCRf_FeSJ3yoXZ-QRFTReUJRQ5qNmAMdggfbw6zpLeAkT_8Ey0U1DDJHLZEd0NuwWLPnR"/>
+<div class="w-14 h-14 rounded-xl bg-stone-100 border-2 border-white flex items-center justify-center text-[11px] font-bold text-stone-600 shadow-xs">
+              +1
+            </div>
+</div>
+<div class="flex-1 min-w-0 pl-1">
+<span class="text-[11px] font-medium text-stone-400 block truncate">Sleec Basics &amp; Cloudnine</span>
+<h3 class="text-sm font-semibold text-stone-900 truncate">Everyday Tote + 1 it...</h3>
+<p class="text-xs text-stone-500 mt-0.5">Natural Ecru · Qty: 2</p>
+</div>
+<div class="text-right">
+<span class="text-sm font-bold text-stone-900">₦27,000</span>
+</div>
+</div>
+<!-- Bottom Action Row -->
+<div class="pt-2 flex items-center justify-between border-t border-stone-50">
+<span class="text-xs text-stone-500 flex items-center gap-1">
+<i class="ph ph-storefront text-stone-500"></i> Sleec VI Flagship Store
+          </span>
+<button class="bg-[#0c2e1f] text-white hover:bg-[#15432e] text-xs font-semibold px-4 py-2 rounded-xl active:scale-95 transition-all shadow-sm" onclick="event.stopPropagation(); openPickupModal();" type="button">
+            Pickup Details
+          </button>
+</div>
+</article>
+<!-- ORDER CARD 3: SLC-65201 (Completed / Delivered) -->
+<article class="order-card bg-white rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer active:scale-[0.99] transition-all" data-order-id="SLC-65201" data-search="slc-65201 amber eau maison vert delivered 50ml extrait" data-status="completed">
+<!-- Order Card Header: text-only status -->
+<div class="flex items-center justify-between pb-3 border-b border-stone-50">
+<span class="text-xs text-stone-500 font-medium">Order #SLC-65201 · 15 Sep 2026</span>
+<span class="text-emerald-600 font-semibold text-xs tracking-tight">Delivered</span>
+</div>
+<!-- Product Details Row -->
+<div class="flex items-center gap-3.5 pt-3 pb-3.5">
+<img alt="Amber Eau" class="w-16 h-16 rounded-xl object-cover bg-stone-100 flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJwJ-sxzmUP99WR3L___BVnTeFKoBD9Mge-_M8Tad6UN_arFJRb2dUOwpJfvYoNP_rGU25Qs3gKwRjmSgeBSE1DnBHA7QUWx6pfhQ_6s2bG9A5nHVnMAlH0laSwDut2aN24vVjCxtyfHUDe_Z2PfF86D6jj9CCo0ekY52JNEWZkcWUn7pkh0LEyPeGOwfQPF_NN9MEmmu_-sceCmfPS_sTfp0XNss3Nu5atXj5qzDHlehPGB6m9pHbIS8DqHN9aKQh"/>
+<div class="flex-1 min-w-0">
+<span class="text-[11px] font-medium text-stone-400 block truncate">Maison Vert</span>
+<h3 class="text-sm font-semibold text-stone-900 truncate">Amber Eau</h3>
+<p class="text-xs text-stone-500 mt-0.5">50ml Extrait · Qty: 1</p>
+</div>
+<div class="text-right">
+<span class="text-sm font-bold text-stone-900">₦24,000</span>
+</div>
+</div>
+<!-- Bottom Action Row -->
+<div class="pt-2 flex items-center justify-between border-t border-stone-50">
+<span class="text-xs text-stone-500 flex items-center gap-1">
+<i class="ph ph-check-circle text-emerald-600"></i> Delivered successfully
+          </span>
+<button class="bg-[#0c2e1f] text-white hover:bg-[#15432e] text-xs font-semibold px-4 py-2 rounded-xl active:scale-95 transition-all shadow-sm" onclick="event.stopPropagation(); triggerBuyAgain('Stride Club Sage Runners');" type="button">
+            Buy Again
+          </button>
+</div>
+</article>
+<!-- ORDER CARD 4: SLC-58210 (Cancelled) -->
+<article class="order-card bg-white rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer active:scale-[0.99] transition-all" data-order-id="SLC-58210" data-search="slc-58210 tortoise classic studio optic cancelled handcrafted" data-status="cancelled">
+<!-- Order Card Header: text-only status -->
+<div class="flex items-center justify-between pb-3 border-b border-stone-50">
+<span class="text-xs text-stone-500 font-medium">Order #SLC-58210 · 02 Sep 2026</span>
+<span class="text-stone-500 font-semibold text-xs tracking-tight">Cancelled</span>
+</div>
+<!-- Product Details Row -->
+<div class="flex items-center gap-3.5 pt-3 pb-3.5">
+<img alt="Tortoise Classic" class="w-16 h-16 rounded-xl object-cover bg-stone-100 flex-shrink-0 grayscale opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmfklpBKH9F5xm3-4f6Xc4ldIgBEBBQJkEqPyBBwUaJtCBraUuJTObMbQlcLUn5DEzMUJ7hnHAVnixjOy30lp4smT5gvFUQYGH3StuHjdvIxcm_yu6oGXFY173uf32U6AqzUgvVGctEZJKzbCW9ht9HHzK-8IT6A24N7G56JWNCatDy4T5KrS7BRB4-p6LKJXmxENEWPA_MTlUVKE_kNGZWj41Ug0oBTYIxQjx6ZkQedrbGGMRpHkEpbwO9WqS2VEg"/>
+<div class="flex-1 min-w-0">
+<span class="text-[11px] font-medium text-stone-400 block truncate">Studio Optic</span>
+<h3 class="text-sm font-semibold text-stone-900 truncate">Tortoise Classic</h3>
+<p class="text-xs text-stone-500 mt-0.5">Handcrafted · Qty: 1</p>
+</div>
+<div class="text-right">
+<span class="text-sm font-bold text-stone-400 line-through">₦16,000</span>
+</div>
+</div>
+<!-- Bottom Action Row -->
+<div class="pt-2 flex items-center justify-between border-t border-stone-50">
+<span class="text-xs text-stone-500 flex items-center gap-1">
+<i class="ph ph-info text-stone-500"></i> Refunded to card
+          </span>
+<button class="bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold px-4 py-2 rounded-xl active:scale-95 transition-all shadow-xs" onclick="event.stopPropagation(); openOrderDetailsModal('SLC-58210');" type="button">
+            View Details
+          </button>
+</div>
+</article>
+</div>
+<!-- Empty State for Search or Zero Results -->
+<div class="hidden flex-col items-center justify-center py-16 text-center" id="empty-state">
+<div class="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 mb-3">
+<i class="ph ph-magnifying-glass text-2xl"></i>
+</div>
+<h4 class="text-base font-semibold text-stone-800">No orders found</h4>
+<p class="text-xs text-stone-500 max-w-[220px] mt-1">We couldn't find matching orders. Try a different keyword or filter.</p>
+<button class="mt-4 px-4 py-2 bg-[#0c2e1f] text-white rounded-xl text-xs font-semibold" id="reset-filters-btn" type="button">
+        Reset Filters
+      </button>
+</div>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: FloatingBottomNavigation -->
+<!-- Sleec approved 5-icon dock: Home, Search, Center Padi Bear Mascot button, Orders (Active), Saved -->
+<nav aria-label="Bottom Navigation" class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(390px-2rem)] max-w-[calc(100%-2rem)] z-30">
+<div class="bg-white/95 backdrop-blur-md rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-stone-100/80 px-3 py-2 flex items-center justify-between">
+<!-- Tab 1: Home -->
+<a class="flex-1 flex flex-col items-center justify-center py-1 text-stone-400 hover:text-stone-700 transition-colors" href="#home" onclick="showToast('Navigating to Home')">
+<i class="ph ph-house text-2xl"></i>
+<span class="sr-only">Home</span>
+</a>
+<!-- Tab 2: Search -->
+<a class="flex-1 flex flex-col items-center justify-center py-1 text-stone-400 hover:text-stone-700 transition-colors" href="#search" onclick="focusSearch()">
+<i class="ph ph-magnifying-glass text-2xl"></i>
+<span class="sr-only">Search</span>
+</a>
+<!-- Tab 3: Padi AI Assistant (Center Bear Pill) -->
+<div class="flex-1 flex justify-center">
+<button aria-label="Padi Assistant" class="w-11 h-11 rounded-full bg-[#0c2e1f] text-white flex items-center justify-center shadow-md active:scale-95 transition-transform" onclick="showToast('Padi Assistant: How can I help you today?')" type="button">
+<!-- Sleec Stylized Bear Mascot -->
+<svg class="w-6 h-6 fill-current text-white" viewbox="0 0 24 24">
+<path d="M4.5 4a2.5 2.5 0 0 0-2.5 2.5v.5A2.5 2.5 0 0 0 4.5 9.5a2.5 2.5 0 0 0 .5-.05A7.5 7.5 0 0 0 3 14c0 4.418 4.03 8 9 8s9-3.582 9-8a7.5 7.5 0 0 0-2-4.55 2.5 2.5 0 0 0 .5.05 2.5 2.5 0 0 0 2.5-2.5v-.5A2.5 2.5 0 0 0 19.5 4a2.5 2.5 0 0 0-2.3 1.52A8.47 8.47 0 0 0 12 5a8.47 8.47 0 0 0-5.2 1.52A2.5 2.5 0 0 0 4.5 4zm4 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-3.5 3c1.38 0 2 .75 2 1.25 0 .25-.25.5-.5.5h-3c-.25 0-.5-.25-.5-.5 0-.5.62-1.25 2-1.25z"></path>
+</svg>
+</button>
+</div>
+<!-- Tab 4: Orders (HIGHLIGHTED / CURRENT) -->
+<a class="flex-1 flex flex-col items-center justify-center py-1 text-[#0c2e1f] relative" href="#orders">
+<i class="ph ph-receipt text-2xl font-bold"></i>
+<!-- Active Dot Indicator -->
+<span class="w-1.5 h-1.5 rounded-full bg-[#0c2e1f] mt-0.5"></span>
+<span class="sr-only">Orders</span>
+</a>
+<!-- Tab 5: Saved -->
+<a class="flex-1 flex flex-col items-center justify-center py-1 text-stone-400 hover:text-stone-700 transition-colors" href="#saved" onclick="showToast('View your saved wishlist items')">
+<i class="ph ph-heart text-2xl"></i>
+<span class="sr-only">Saved</span>
+</a>
+</div>
+</nav>
+<!-- END: FloatingBottomNavigation -->
+<!-- ======================================================== -->
+<!-- MODAL 1: DELIVERY TRACKING (Card 1: SLC-84920) -->
+<!-- ======================================================== -->
+<div aria-hidden="true" aria-modal="true" class="sheet-modal fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end opacity-0 pointer-events-none" id="tracking-modal" role="dialog">
+<div class="sheet-panel bg-white w-full max-w-[390px] mx-auto rounded-t-3xl max-h-[92vh] flex flex-col overflow-hidden shadow-2xl translate-y-full" id="tracking-panel">
+<!-- Modal Header -->
+<div class="px-5 pt-3 pb-3 relative flex items-center justify-between border-b border-stone-100/80">
+<div class="w-10 h-1 bg-stone-300 rounded-full mx-auto absolute top-2 left-1/2 -translate-x-1/2"></div>
+<div class="flex items-center gap-2 pt-2">
+<button aria-label="Back to orders" class="w-8 h-8 rounded-full bg-stone-100 text-stone-700 hover:bg-stone-200 flex items-center justify-center active:scale-95 transition-all mr-1" onclick="closeAllModals()" type="button">
+<i class="ph ph-arrow-left font-bold text-base"></i>
+</button>
+<div>
+<h3 class="text-base font-bold text-stone-900">Tracking #SLC-84920</h3>
+<p class="text-[11px] text-stone-400">Carrier: Sleec Express Delivery</p>
+</div>
+</div>
+<button aria-label="Close tracking" class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 flex items-center justify-center active:scale-95 transition-all" onclick="closeAllModals()" type="button">
+<i class="ph ph-x font-bold text-base"></i>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="flex-1 overflow-y-auto px-5 py-4 space-y-4 text-sm no-scrollbar">
+<!-- Status Overview Card -->
+<div class="bg-stone-50 rounded-2xl p-4">
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-xs font-semibold text-stone-500">Delivery Status</span>
+<span class="text-emerald-600 font-bold text-xs tracking-tight">In Transit</span>
+</div>
+<h4 class="text-base font-bold text-stone-900 leading-snug">Tomorrow by 2:00 PM</h4>
+<div class="mt-3 pt-2.5 border-t border-stone-200/60 flex items-center justify-between">
+<span class="text-xs text-stone-500">Tracking No:</span>
+<div class="flex items-center gap-1.5">
+<span class="font-mono text-xs font-semibold text-stone-800" id="trk-num-val">TRK-SLC-84920-NG</span>
+<button class="text-xs text-[#0c2e1f] font-semibold hover:underline flex items-center gap-0.5" onclick="copyTrackingNumber()" type="button">
+<i class="ph ph-copy"></i> Copy
+              </button>
+</div>
+</div>
+</div>
+<!-- Shipment Timeline -->
+<div class="bg-stone-50 rounded-2xl p-4">
+<h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-3.5">Shipment Activity</h4>
+<div class="space-y-4 relative pl-4 border-l-2 border-stone-200 ml-1">
+<!-- Step 4 (Active): In Transit -->
+<div class="relative pl-3">
+<div class="w-3.5 h-3.5 rounded-full bg-emerald-600 ring-4 ring-emerald-100 absolute -left-[23px] top-0.5"></div>
+<p class="text-xs font-bold text-stone-900">In Transit - Out for Regional Delivery</p>
+<p class="text-[11px] text-stone-500 mt-0.5">Lagos Central Distribution Center · Today, 14:20</p>
+</div>
+<!-- Step 3: Picked up by Courier -->
+<div class="relative pl-3">
+<div class="w-2.5 h-2.5 rounded-full bg-stone-400 absolute -left-[21px] top-1"></div>
+<p class="text-xs font-semibold text-stone-800">Picked up by Sleec Courier</p>
+<p class="text-[11px] text-stone-400 mt-0.5">Package handed over to driver · Today, 11:05</p>
+</div>
+<!-- Step 2: Processing & Packed -->
+<div class="relative pl-3">
+<div class="w-2.5 h-2.5 rounded-full bg-stone-400 absolute -left-[21px] top-1"></div>
+<p class="text-xs font-semibold text-stone-800">Processing &amp; Packed</p>
+<p class="text-[11px] text-stone-400 mt-0.5">Items verified &amp; boxed · Today, 08:30</p>
+</div>
+<!-- Step 1: Order Confirmed -->
+<div class="relative pl-3">
+<div class="w-2.5 h-2.5 rounded-full bg-stone-400 absolute -left-[21px] top-1"></div>
+<p class="text-xs font-semibold text-stone-800">Order Confirmed &amp; Paid</p>
+<p class="text-[11px] text-stone-400 mt-0.5">Payment confirmed via Sleec Pay · Yesterday, 21:14</p>
+</div>
+</div>
+</div>
+<!-- Delivery Address -->
+<div class="bg-stone-50 rounded-2xl p-4">
+<h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Delivery Address</h4>
+<div class="flex items-start gap-3">
+<i class="ph ph-map-pin text-xl text-[#0c2e1f] mt-0.5"></i>
+<div>
+<p class="text-xs font-bold text-stone-900">Fuadino O. · +234 801 234 5678</p>
+<p class="text-xs text-stone-600 mt-0.5 leading-relaxed">Plot 4, Admiralty Way, Lekki Phase 1, Lagos</p>
+</div>
+</div>
+</div>
+<!-- Included Item -->
+<div>
+<h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Included Item</h4>
+<div class="flex items-center gap-3 bg-stone-50 p-3 rounded-2xl">
+<img alt="Sage Runners" class="w-14 h-14 rounded-xl object-cover bg-white flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_-z4BZEwvGnhFHbmJHl9QgYGRTolMnlORAPJPSMHV87lyIkIG582JzdYXhYcOewjxs46rRlx_r2obA-e2vMzeD4x6Tq05GIepduyqZPfzRtIY5H1cW9NR-7qcwRblTy3knqbk6cOaVM8YBfku_DXslwlNfUNbfHgK86PHD2HdJi38tEmjWOd0jdfs-mikNAgAHol0JQ5aICtYAWPB80QpkzNyK6gS9bamoqW1TDEoka83pm1Ea3MBGESXxWysa_Wb"/>
+<div class="flex-1 min-w-0">
+<p class="text-[11px] text-stone-400 font-medium truncate">Stride Club</p>
+<h5 class="text-sm font-semibold text-stone-900 truncate">Sage Runners</h5>
+<p class="text-xs text-stone-500 mt-0.5">Size 42 EU · Qty: 1</p>
+</div>
+<span class="text-xs font-bold text-stone-900">₦32,000</span>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="p-4 bg-white border-t border-stone-100/80 flex items-center gap-2">
+<button class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 py-3 rounded-xl font-semibold text-xs active:scale-95 transition-all" onclick="showToast('Connecting you with Sleec Support...')" type="button">
+          Need Help?
+        </button>
+<button class="flex-1 bg-[#0c2e1f] hover:bg-[#15432e] text-white py-3 rounded-xl font-semibold text-xs active:scale-95 transition-all shadow-sm" onclick="closeAllModals()" type="button">
+          Done
+        </button>
+</div>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- MODAL 2: PICKUP DETAILS (Card 2: SLC-79114) -->
+<!-- ======================================================== -->
+<div aria-hidden="true" aria-modal="true" class="sheet-modal fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end opacity-0 pointer-events-none" id="pickup-modal" role="dialog">
+<div class="sheet-panel bg-white w-full max-w-[390px] mx-auto rounded-t-3xl max-h-[92vh] flex flex-col overflow-hidden shadow-2xl translate-y-full" id="pickup-panel">
+<!-- Modal Header -->
+<div class="px-5 pt-3 pb-3 relative flex items-center justify-between border-b border-stone-100/80">
+<div class="w-10 h-1 bg-stone-300 rounded-full mx-auto absolute top-2 left-1/2 -translate-x-1/2"></div>
+<div class="flex items-center gap-2 pt-2">
+<button aria-label="Back to orders" class="w-8 h-8 rounded-full bg-stone-100 text-stone-700 hover:bg-stone-200 flex items-center justify-center active:scale-95 transition-all mr-1" onclick="closeAllModals()" type="button">
+<i class="ph ph-arrow-left font-bold text-base"></i>
+</button>
+<div>
+<h3 class="text-base font-bold text-stone-900">Order #SLC-79114</h3>
+<p class="text-[11px] text-stone-400">Placed on 28 Sep 2026</p>
+</div>
+</div>
+<button aria-label="Close pickup sheet" class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 flex items-center justify-center active:scale-95 transition-all" onclick="closeAllModals()" type="button">
+<i class="ph ph-x font-bold text-base"></i>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="flex-1 overflow-y-auto px-5 py-4 space-y-4 text-sm no-scrollbar">
+<!-- Status Banner: Amber text only for status -->
+<div class="bg-stone-50 rounded-2xl p-4">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-stone-500">Pickup Status</span>
+<span class="text-amber-600 font-bold text-xs tracking-tight">Ready for Pickup</span>
+</div>
+<div class="mt-2 pt-2 border-t border-stone-200/50 flex items-center justify-between text-xs text-stone-500">
+<span>Collection Ready</span>
+<span class="font-medium text-stone-800">Available at Store Front</span>
+</div>
+</div>
+<!-- Pickup Code & Barcode Pass -->
+<div class="bg-stone-50 rounded-2xl p-4 flex flex-col items-center text-center">
+<span class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Pickup Code</span>
+<div class="flex items-center gap-2">
+<span class="text-xl font-mono font-bold tracking-widest text-stone-900 bg-white px-3 py-1.5 rounded-xl shadow-xs" id="pickup-code-val">SLC-79114-PKP</span>
+<button class="px-3 py-1.5 bg-[#0c2e1f] text-white rounded-xl text-xs font-semibold hover:bg-[#15432e] active:scale-95 transition-all shadow-xs flex items-center gap-1" id="copy-pickup-code-btn" onclick="copyPickupCode()" type="button">
+<i class="ph ph-copy"></i>
+<span id="copy-btn-label">Copy</span>
+</button>
+</div>
+<!-- Crisp Scannable SVG Barcode Pass -->
+<div class="w-full bg-white p-3 rounded-xl shadow-xs mt-3.5 flex flex-col items-center justify-center">
+<svg class="w-60 h-16 text-black" fill="currentColor" viewbox="0 0 240 70">
+<rect height="70" width="4" x="0" y="0"></rect>
+<rect height="70" width="2" x="8" y="0"></rect>
+<rect height="70" width="6" x="14" y="0"></rect>
+<rect height="70" width="2" x="24" y="0"></rect>
+<rect height="70" width="4" x="30" y="0"></rect>
+<rect height="70" width="6" x="38" y="0"></rect>
+<rect height="70" width="2" x="48" y="0"></rect>
+<rect height="70" width="8" x="54" y="0"></rect>
+<rect height="70" width="2" x="66" y="0"></rect>
+<rect height="70" width="4" x="72" y="0"></rect>
+<rect height="70" width="6" x="80" y="0"></rect>
+<rect height="70" width="2" x="90" y="0"></rect>
+<rect height="70" width="4" x="96" y="0"></rect>
+<rect height="70" width="2" x="104" y="0"></rect>
+<rect height="70" width="8" x="110" y="0"></rect>
+<rect height="70" width="4" x="122" y="0"></rect>
+<rect height="70" width="2" x="130" y="0"></rect>
+<rect height="70" width="6" x="136" y="0"></rect>
+<rect height="70" width="2" x="146" y="0"></rect>
+<rect height="70" width="4" x="152" y="0"></rect>
+<rect height="70" width="8" x="160" y="0"></rect>
+<rect height="70" width="2" x="172" y="0"></rect>
+<rect height="70" width="4" x="178" y="0"></rect>
+<rect height="70" width="6" x="186" y="0"></rect>
+<rect height="70" width="2" x="196" y="0"></rect>
+<rect height="70" width="4" x="202" y="0"></rect>
+<rect height="70" width="6" x="210" y="0"></rect>
+<rect height="70" width="2" x="220" y="0"></rect>
+<rect height="70" width="4" x="226" y="0"></rect>
+<rect height="70" width="4" x="234" y="0"></rect>
+</svg>
+<p class="text-[11px] font-mono text-stone-500 mt-1">SLC-79114-PKP</p>
+</div>
+<p class="text-xs text-stone-600 mt-2.5 font-medium">Show this barcode or give your pickup code to the store staff to collect your order.</p>
+</div>
+<!-- Products Summary -->
+<div>
+<h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Products Summary</h4>
+<div class="space-y-2">
+<!-- Item 1 -->
+<div class="flex items-center gap-3 bg-stone-50 p-3 rounded-2xl">
+<img alt="Everyday Tote" class="w-14 h-14 rounded-xl object-cover bg-white flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAytQI9VP-lZ-gwFC3mv7PZu2-DhTRJo_Gz78CGuoZlnpKT4OVFOVJ73PgF_LthAapSHWfKrka1WlAncvMBY6-9ZmkCHIQkyFYsVt2-lNrI7NQpbrqjPoCKDR5gzTJmLH1VVrjUfpDQbggYGehRZnf8Yy1ZOjnMh6UL8uH1z7LTH8sExKYUTcWK-Nnwf_dfCRf_FeSJ3yoXZ-QRFTReUJRQ5qNmAMdggfbw6zpLeAkT_8Ey0U1DDJHLZEd0NuwWLPnR"/>
+<div class="flex-1 min-w-0">
+<p class="text-[11px] text-stone-400 font-medium truncate">Sleec Basics</p>
+<h5 class="text-sm font-semibold text-stone-900 truncate">Everyday Tote</h5>
+<p class="text-xs text-stone-500 mt-0.5">Natural Ecru · Qty: 2</p>
+</div>
+<span class="text-xs font-bold text-stone-900">₦17,000</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-3 bg-stone-50 p-3 rounded-2xl">
+<div class="w-14 h-14 rounded-xl bg-stone-200 flex items-center justify-center flex-shrink-0 text-stone-600">
+<i class="ph ph-t-shirt text-2xl"></i>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-[11px] text-stone-400 font-medium truncate">Cloudnine</p>
+<h5 class="text-sm font-semibold text-stone-900 truncate">Cloudnine Hoodie</h5>
+<p class="text-xs text-stone-500 mt-0.5">Sage Green · Qty: 1</p>
+</div>
+<span class="text-xs font-bold text-stone-900">₦10,000</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 px-1 text-xs">
+<span class="text-stone-500">Order Total (3 items)</span>
+<span class="font-bold text-stone-900 text-sm">₦27,000</span>
+</div>
+</div>
+<!-- Pickup Location -->
+<div>
+<h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Pickup Location</h4>
+<div class="bg-stone-50 p-3.5 rounded-2xl space-y-3">
+<div class="flex items-start gap-3">
+<i class="ph ph-storefront text-xl text-[#0c2e1f] mt-0.5"></i>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-stone-900">Sleec Basics &amp; Cloudnine Flagship Store</p>
+<p class="text-xs text-stone-600 mt-0.5 leading-relaxed">Plot 12, Admiralty Way, Lekki Phase 1, Lagos, Nigeria</p>
+<p class="text-[11px] text-stone-500 mt-1 flex items-center gap-1">
+<i class="ph ph-clock"></i> Mon – Sat: 9:00 AM – 8:00 PM
+                </p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="w-full bg-[#0c2e1f] hover:bg-[#15432e] text-white py-2.5 rounded-xl font-semibold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-sm" onclick="openDirections()" type="button">
+<i class="ph ph-map-trifold text-sm"></i>
+<span>Get Directions</span>
+</button>
+<a class="w-full bg-stone-100 hover:bg-stone-200 text-stone-800 py-2.5 rounded-xl font-semibold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5" href="tel:+2348123456789">
+<i class="ph ph-phone text-sm"></i>
+<span>Call Store</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Pickup Instructions -->
+<div>
+<h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Pickup Instructions</h4>
+<div class="bg-stone-50 p-3.5 rounded-2xl flex items-start gap-3">
+<i class="ph ph-file-text text-xl text-[#0c2e1f] mt-0.5"></i>
+<div>
+<p class="text-xs font-medium text-stone-700 leading-relaxed">Please call 30 mins before arrival. Bring a valid government ID or your order reference.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="p-4 bg-white border-t border-stone-100/80">
+<button class="w-full bg-[#0c2e1f] hover:bg-[#15432e] text-white py-3 rounded-xl font-semibold text-xs active:scale-95 transition-all shadow-sm" onclick="closeAllModals()" type="button">
+          Done
+        </button>
+</div>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- MODAL 3: ORDER DETAILS (Card 3: SLC-65201 & Card 4: SLC-58210) -->
+<!-- ======================================================== -->
+<div aria-hidden="true" aria-modal="true" class="sheet-modal fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end opacity-0 pointer-events-none" id="details-modal" role="dialog">
+<div class="sheet-panel bg-white w-full max-w-[390px] mx-auto rounded-t-3xl max-h-[92vh] flex flex-col overflow-hidden shadow-2xl translate-y-full" id="details-panel">
+<!-- Modal Header -->
+<div class="px-5 pt-3 pb-3 relative flex items-center justify-between border-b border-stone-100/80">
+<div class="w-10 h-1 bg-stone-300 rounded-full mx-auto absolute top-2 left-1/2 -translate-x-1/2"></div>
+<div class="flex items-center gap-2 pt-2">
+<button aria-label="Back to orders" class="w-8 h-8 rounded-full bg-stone-100 text-stone-700 hover:bg-stone-200 flex items-center justify-center active:scale-95 transition-all mr-1" onclick="closeAllModals()" type="button">
+<i class="ph ph-arrow-left font-bold text-base"></i>
+</button>
+<div>
+<h3 class="text-base font-bold text-stone-900" id="gen-modal-title">Order Details</h3>
+<p class="text-[11px] text-stone-400" id="gen-modal-subtitle">Summary &amp; Receipt</p>
+</div>
+</div>
+<button aria-label="Close sheet" class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 flex items-center justify-center active:scale-95 transition-all" onclick="closeAllModals()" type="button">
+<i class="ph ph-x font-bold text-base"></i>
+</button>
+</div>
+<!-- Dynamic Content Area -->
+<div class="flex-1 overflow-y-auto px-5 py-4 space-y-4 text-sm no-scrollbar" id="gen-modal-body">
+<!-- Rendered via JS -->
+</div>
+<!-- Modal Footer -->
+<div class="p-4 bg-white border-t border-stone-100/80 flex items-center gap-2" id="gen-modal-footer">
+<!-- Rendered via JS -->
+</div>
+</div>
+</div>
+<!-- Toast Notification Pill -->
+<div aria-hidden="true" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-stone-900/95 backdrop-blur text-white px-4 py-2.5 rounded-full text-xs font-medium shadow-lg transition-opacity duration-300 z-50 flex items-center gap-2 opacity-0 pointer-events-none" id="toast-message">
+<i class="ph ph-check-circle-fill text-emerald-400 text-base" id="toast-icon"></i>
+<span id="toast-text">Action successful</span>
+</div>
+</div>
+<!-- BEGIN: Consolidated Vanilla JS -->
+<script data-purpose="sleec-orders-interactions">
+  // Global cart counter state
+  let cartCount = 3;
+  let toastTimer = null;
+
+  // DOM Elements cache
+  let searchInput, clearSearchBtn, filterChips, orderCards, emptyState, ordersListContainer, countLabel, resetFiltersBtn;
+  let currentFilter = 'all';
+  let searchQuery = '';
+
+  // Toast Functionality
+  function showToast(message, isCheck = true) {
+    const toast = document.getElementById('toast-message');
+    const toastText = document.getElementById('toast-text');
+    const toastIcon = document.getElementById('toast-icon');
+    if (!toast || !toastText) return;
+
+    toastText.textContent = message;
+    if (toastIcon) {
+      toastIcon.className = isCheck 
+        ? 'ph ph-check-circle-fill text-emerald-400 text-base' 
+        : 'ph ph-info-fill text-amber-400 text-base';
+    }
+
+    toast.classList.remove('opacity-0', 'pointer-events-none');
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.add('opacity-0', 'pointer-events-none');
+    }, 2400);
+  }
+
+  // Cart Increment for Buy Again
+  function triggerBuyAgain(itemTitle) {
+    cartCount++;
+    const badge = document.getElementById('cart-badge');
+    if (badge) {
+      badge.textContent = cartCount;
+      badge.classList.add('scale-125');
+      setTimeout(() => badge.classList.remove('scale-125'), 200);
+    }
+    showToast(`Added ${itemTitle} to your Sleec Bag!`);
+  }
+
+  // Copy tracking number
+  function copyTrackingNumber() {
+    const num = document.getElementById('trk-num-val')?.textContent.trim() || 'TRK-SLC-84920-NG';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(num);
+    }
+    showToast('Tracking number copied!');
+  }
+
+  // Copy pickup code
+  function copyPickupCode() {
+    const code = document.getElementById('pickup-code-val')?.textContent.trim() || 'SLC-79114-PKP';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code);
+    }
+    const label = document.getElementById('copy-btn-label');
+    if (label) {
+      label.textContent = 'Copied!';
+      setTimeout(() => label.textContent = 'Copy', 2000);
+    }
+    showToast('Pickup code copied to clipboard!');
+  }
+
+  // Open external directions
+  function openDirections() {
+    showToast('Opening Maps...');
+    setTimeout(() => {
+      const address = 'Plot 12, Admiralty Way, Lekki Phase 1, Lagos, Nigeria';
+      window.open('https://maps.google.com/?q=' + encodeURIComponent(address), '_blank');
+    }, 400);
+  }
+
+  // Focus search input
+  function focusSearch() {
+    const input = document.getElementById('order-search-input');
+    if (input) {
+      input.focus();
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  // Sheet / Modal Openers
+  function openTrackingModal() {
+    closeAllModals();
+    const modal = document.getElementById('tracking-modal');
+    const panel = document.getElementById('tracking-panel');
+    if (modal && panel) {
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      panel.classList.remove('translate-y-full');
+    }
+  }
+
+  function openPickupModal() {
+    closeAllModals();
+    const modal = document.getElementById('pickup-modal');
+    const panel = document.getElementById('pickup-panel');
+    if (modal && panel) {
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      panel.classList.remove('translate-y-full');
+    }
+  }
+
+  function openOrderDetailsModal(orderId) {
+    closeAllModals();
+    const titleEl = document.getElementById('gen-modal-title');
+    const subtitleEl = document.getElementById('gen-modal-subtitle');
+    const bodyEl = document.getElementById('gen-modal-body');
+    const footerEl = document.getElementById('gen-modal-footer');
+    const modal = document.getElementById('details-modal');
+    const panel = document.getElementById('details-panel');
+
+    if (orderId === 'SLC-65201') {
+      // Completed / Delivered Card Details
+      titleEl.textContent = 'Order #SLC-65201';
+      subtitleEl.textContent = 'Delivered · 15 Sep 2026';
+      bodyEl.innerHTML = `
+        <div class="bg-stone-50 rounded-2xl p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-stone-500">Status</span>
+            <span class="text-emerald-600 font-bold text-xs tracking-tight">Delivered</span>
+          </div>
+          <p class="text-xs text-stone-500 mt-1">Delivered via Sleec Express on 15 Sep 2026, 16:45</p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Item Summary</h4>
+          <div class="flex items-center gap-3 bg-stone-50 p-3 rounded-2xl">
+            <img alt="Amber Eau" class="w-14 h-14 rounded-xl object-cover bg-white flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJwJ-sxzmUP99WR3L___BVnTeFKoBD9Mge-_M8Tad6UN_arFJRb2dUOwpJfvYoNP_rGU25Qs3gKwRjmSgeBSE1DnBHA7QUWx6pfhQ_6s2bG9A5nHVnMAlH0laSwDut2aN24vVjCxtyfHUDe_Z2PfF86D6jj9CCo0ekY52JNEWZkcWUn7pkh0LEyPeGOwfQPF_NN9MEmmu_-sceCmfPS_sTfp0XNss3Nu5atXj5qzDHlehPGB6m9pHbIS8DqHN9aKQh">
+            <div class="flex-1 min-w-0">
+              <p class="text-[11px] text-stone-400 font-medium truncate">Maison Vert</p>
+              <h5 class="text-sm font-semibold text-stone-900 truncate">Amber Eau</h5>
+              <p class="text-xs text-stone-500 mt-0.5">50ml Extrait · Qty: 1</p>
+            </div>
+            <span class="text-xs font-bold text-stone-900">₦24,000</span>
+          </div>
+        </div>
+
+        <div class="bg-stone-50 rounded-2xl p-4 space-y-2">
+          <h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">Delivery Address</h4>
+          <p class="text-xs font-bold text-stone-900">Fuadino O. · +234 801 234 5678</p>
+          <p class="text-xs text-stone-600">Plot 4, Admiralty Way, Lekki Phase 1, Lagos</p>
+        </div>
+
+        <div class="bg-stone-50 rounded-2xl p-4 space-y-2 text-xs">
+          <h4 class="font-bold text-stone-400 uppercase tracking-wider mb-1">Payment & Invoice</h4>
+          <div class="flex justify-between text-stone-600"><span>Item Subtotal</span><span>₦21,500</span></div>
+          <div class="flex justify-between text-stone-600"><span>Delivery Fee</span><span>₦2,500</span></div>
+          <div class="flex justify-between font-bold text-stone-900 pt-2 border-t border-stone-200"><span>Total Paid</span><span>₦24,000</span></div>
+          <p class="text-[11px] text-stone-400 pt-1">Paid with Mastercard •••• 8812</p>
+        </div>
+      `;
+
+      footerEl.innerHTML = `
+        <button class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 py-3 rounded-xl font-semibold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5" onclick="showToast('Receipt PDF ready to download')">
+          <i class="ph ph-receipt"></i> View Receipt
+        </button>
+        <button class="flex-1 bg-[#0c2e1f] hover:bg-[#15432e] text-white py-3 rounded-xl font-semibold text-xs active:scale-95 transition-all shadow-sm" onclick="triggerBuyAgain('Amber Eau'); closeAllModals();">
+          Buy Again
+        </button>
+      `;
+    } else if (orderId === 'SLC-58210') {
+      // Cancelled Card Details with Refund
+      titleEl.textContent = 'Order #SLC-58210';
+      subtitleEl.textContent = 'Cancelled · 02 Sep 2026';
+      bodyEl.innerHTML = `
+        <div class="bg-stone-50 rounded-2xl p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-stone-500">Status</span>
+            <span class="text-stone-500 font-bold text-xs tracking-tight">Cancelled &amp; Refunded</span>
+          </div>
+          <p class="text-xs text-stone-600 mt-1 leading-relaxed">This order was cancelled before shipping was dispatched.</p>
+        </div>
+
+        <div class="bg-stone-50 rounded-2xl p-4">
+          <h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Refund Breakdown</h4>
+          <div class="space-y-1.5 text-xs text-stone-600">
+            <div class="flex justify-between"><span>Product Amount</span><span>₦14,000</span></div>
+            <div class="flex justify-between"><span>Shipping Fee</span><span>₦2,000</span></div>
+            <div class="flex justify-between font-bold text-stone-900 pt-2 border-t border-stone-200">
+              <span>Total Refunded</span>
+              <span class="text-emerald-700">₦16,000</span>
+            </div>
+          </div>
+          <div class="mt-3 p-2.5 bg-white rounded-xl flex items-center gap-2 border border-stone-100">
+            <i class="ph ph-credit-card text-base text-[#0c2e1f]"></i>
+            <span class="text-xs font-medium text-stone-700">Refunded to Visa •••• 4219</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Cancelled Item</h4>
+          <div class="flex items-center gap-3 bg-stone-50 p-3 rounded-2xl opacity-80">
+            <img alt="Tortoise Classic" class="w-14 h-14 rounded-xl object-cover bg-white grayscale flex-shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmfklpBKH9F5xm3-4f6Xc4ldIgBEBBQJkEqPyBBwUaJtCBraUuJTObMbQlcLUn5DEzMUJ7hnHAVnixjOy30lp4smT5gvFUQYGH3StuHjdvIxcm_yu6oGXFY173uf32U6AqzUgvVGctEZJKzbCW9ht9HHzK-8IT6A24N7G56JWNCatDy4T5KrS7BRB4-p6LKJXmxENEWPA_MTlUVKE_kNGZWj41Ug0oBTYIxQjx6ZkQedrbGGMRpHkEpbwO9WqS2VEg">
+            <div class="flex-1 min-w-0">
+              <p class="text-[11px] text-stone-400 font-medium truncate">Studio Optic</p>
+              <h5 class="text-sm font-semibold text-stone-900 truncate">Tortoise Classic</h5>
+              <p class="text-xs text-stone-500 mt-0.5">Handcrafted · Qty: 1</p>
+            </div>
+            <span class="text-xs font-bold text-stone-400 line-through">₦16,000</span>
+          </div>
+        </div>
+      `;
+
+      footerEl.innerHTML = `
+        <button class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 py-3 rounded-xl font-semibold text-xs active:scale-95 transition-all" onclick="showToast('Help center contacted')">
+          Support
+        </button>
+        <button class="flex-1 bg-[#0c2e1f] hover:bg-[#15432e] text-white py-3 rounded-xl font-semibold text-xs active:scale-95 transition-all shadow-sm" onclick="closeAllModals()">
+          Done
+        </button>
+      `;
+    }
+
+    if (modal && panel) {
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      panel.classList.remove('translate-y-full');
+    }
+  }
+
+  // Close all modal sheets smoothly
+  function closeAllModals() {
+    document.querySelectorAll('.sheet-modal').forEach(modal => {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    });
+    document.querySelectorAll('.sheet-panel').forEach(panel => {
+      panel.classList.add('translate-y-full');
+    });
+  }
+
+  // Filter & Search Engine
+  function applyFilters() {
+    let visibleCount = 0;
+    const query = searchQuery.trim().toLowerCase();
+
+    orderCards.forEach(card => {
+      const cardStatus = card.dataset.status;
+      const searchData = (card.dataset.search || '').toLowerCase();
+
+      const matchesStatus = (currentFilter === 'all') || (cardStatus === currentFilter);
+      const matchesQuery = query === '' || searchData.includes(query);
+
+      if (matchesStatus && matchesQuery) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    if (countLabel) {
+      countLabel.textContent = `${visibleCount} Order${visibleCount === 1 ? '' : 's'} Found`;
+    }
+
+    if (visibleCount === 0) {
+      if (emptyState) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+      }
+      if (ordersListContainer) ordersListContainer.classList.add('hidden');
+    } else {
+      if (emptyState) {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+      }
+      if (ordersListContainer) ordersListContainer.classList.remove('hidden');
+    }
+  }
+
+  // DOMContentLoaded initialization
+  window.addEventListener('DOMContentLoaded', () => {
+    searchInput = document.getElementById('order-search-input');
+    clearSearchBtn = document.getElementById('clear-search-btn');
+    filterChips = document.querySelectorAll('.filter-chip');
+    orderCards = document.querySelectorAll('.order-card');
+    emptyState = document.getElementById('empty-state');
+    ordersListContainer = document.getElementById('orders-list-container');
+    countLabel = document.getElementById('active-results-count');
+    resetFiltersBtn = document.getElementById('reset-filters-btn');
+
+    // Filter Chips Event Listener
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        filterChips.forEach(c => {
+          c.classList.remove('bg-[#0c2e1f]', 'text-white', 'shadow-sm');
+          c.classList.add('bg-white', 'text-stone-600');
+        });
+        chip.classList.add('bg-[#0c2e1f]', 'text-white', 'shadow-sm');
+        chip.classList.remove('bg-white', 'text-stone-600');
+
+        currentFilter = chip.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    // Search Input Event Listener
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        if (searchQuery.length > 0) {
+          clearSearchBtn?.classList.remove('hidden');
+        } else {
+          clearSearchBtn?.classList.add('hidden');
+        }
+        applyFilters();
+      });
+    }
+
+    // Clear Search Button
+    if (clearSearchBtn) {
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchQuery = '';
+        clearSearchBtn.classList.add('hidden');
+        applyFilters();
+        searchInput.focus();
+      });
+    }
+
+    // Reset Filters in Empty State
+    if (resetFiltersBtn) {
+      resetFiltersBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchQuery = '';
+        clearSearchBtn?.classList.add('hidden');
+        const allChip = document.querySelector('[data-filter="all"]');
+        if (allChip) allChip.click();
+      });
+    }
+
+    // Card Body Click Listener to open respective detail views
+    orderCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.orderId;
+        if (id === 'SLC-84920') {
+          openTrackingModal();
+        } else if (id === 'SLC-79114') {
+          openPickupModal();
+        } else if (id === 'SLC-65201' || id === 'SLC-58210') {
+          openOrderDetailsModal(id);
+        }
+      });
+    });
+
+    // Dismiss modals when clicking backdrop
+    document.querySelectorAll('.sheet-modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeAllModals();
+        }
+      });
+    });
+  });
+</script>
+<!-- END: Consolidated Vanilla JS -->
+</body></html>
