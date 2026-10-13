@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Sleec Buyer — Search</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              forest: '#0c2e1f',
+              dark: '#081f15',
+              mint: '#194d34',
+              accent: '#26734d',
+              lightMint: '#eaf4ee',
+              bgLight: '#f8faf9',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 8px 30px rgba(0, 0, 0, 0.05)',
+            'float': '0 12px 35px rgba(12, 46, 31, 0.12)',
+            'dock': '0 10px 40px -10px rgba(0, 0, 0, 0.18)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-styling">
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #f8faf9;
+    }
+    /* Hide scrollbars horizontally while keeping smooth drag scroll */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-brand-bgLight text-gray-900 antialiased flex justify-center min-h-screen">
+<!-- Mobile Viewport Container (390px fixed width representation) -->
+<div class="w-full max-w-[390px] min-h-screen bg-brand-bgLight flex flex-col relative pb-32">
+<!-- BEGIN: HeaderSection -->
+<header class="px-4 pt-5 pb-3 sticky top-0 z-30 bg-brand-bgLight/90 backdrop-blur-md transition-all" data-purpose="screen-header">
+<div class="flex items-center justify-between">
+<!-- Circular Glass Hamburger Menu -->
+<button aria-label="Navigation Menu" class="w-10 h-10 rounded-full bg-white/80 border border-gray-200/70 shadow-sm flex items-center justify-center text-gray-800 active:scale-95 transition-transform">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Brand Wordmark Centered -->
+<span class="text-xl font-bold tracking-tight text-brand-forest">Sleec</span>
+<!-- Circular Glass Cart Button with Badge -->
+<button aria-label="Shopping Cart" class="w-10 h-10 rounded-full bg-white/80 border border-gray-200/70 shadow-sm flex items-center justify-center text-gray-800 relative active:scale-95 transition-transform">
+<svg class="w-5 h-5 stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.669 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<!-- Active Green Indicator Badge -->
+<span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-brand-forest text-white text-[11px] font-bold flex items-center justify-center ring-2 ring-white">
+            3
+          </span>
+</button>
+</div>
+<!-- Search Section Title -->
+<div class="mt-4 mb-3">
+<h1 class="text-2xl font-bold tracking-tight text-gray-900">Search</h1>
+</div>
+<!-- Prominent Pill Search Bar -->
+<div class="relative flex items-center" data-purpose="search-input-bar">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="w-full pl-11 pr-10 py-3 rounded-full bg-white text-gray-900 placeholder-gray-400 text-sm font-medium border-0 ring-1 ring-gray-200/80 shadow-soft focus:ring-2 focus:ring-brand-forest focus:outline-none transition-shadow" placeholder="Search products or shops..." type="text" value="Sage"/>
+<!-- Clear Input '✕' Icon -->
+<button aria-label="Clear Search Query" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
+<span class="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-xs font-semibold text-gray-500 hover:bg-gray-200">✕</span>
+</button>
+</div>
+<!-- Filter Tabs: Products vs Shops -->
+<div class="flex items-center gap-2 mt-3.5" data-purpose="tab-filter">
+<button class="px-5 py-2 rounded-full bg-brand-forest text-white text-xs font-semibold shadow-sm transition-all active:scale-95">
+          Products (5)
+        </button>
+<button class="px-5 py-2 rounded-full bg-gray-100/90 text-gray-600 hover:bg-gray-200 text-xs font-semibold transition-all active:scale-95">
+          Shops (2)
+        </button>
+</div>
+</header>
+<!-- END: HeaderSection -->
+<!-- BEGIN: SearchTagsAndHistory -->
+<section class="px-4 py-2 space-y-3" data-purpose="search-history-and-tags">
+<!-- Recent Searches Horizontal Chips -->
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold uppercase tracking-wider text-gray-400">Recent</span>
+<button class="text-xs font-medium text-brand-accent hover:underline">Clear all</button>
+</div>
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-xs font-medium text-gray-700 shadow-sm border border-gray-100 flex-shrink-0 cursor-pointer hover:border-gray-300">
+            Sage Runners
+            <span class="text-[10px] text-gray-400 hover:text-gray-700">✕</span>
+</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-xs font-medium text-gray-700 shadow-sm border border-gray-100 flex-shrink-0 cursor-pointer hover:border-gray-300">
+            Mint Hoodie
+            <span class="text-[10px] text-gray-400 hover:text-gray-700">✕</span>
+</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-xs font-medium text-gray-700 shadow-sm border border-gray-100 flex-shrink-0 cursor-pointer hover:border-gray-300">
+            Tote Bag
+            <span class="text-[10px] text-gray-400 hover:text-gray-700">✕</span>
+</span>
+</div>
+</div>
+<!-- Trending Hashtags -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-0.5">
+<span class="text-xs text-gray-400 font-medium mr-1 flex items-center gap-1 flex-shrink-0">
+<svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          Trending:
+        </span>
+<button class="px-2.5 py-1 rounded-md bg-brand-lightMint text-brand-forest text-xs font-medium hover:bg-emerald-100 transition-colors flex-shrink-0">
+          #LagosStreetwear
+        </button>
+<button class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium hover:bg-gray-200 transition-colors flex-shrink-0">
+          #MonochromeSneakers
+        </button>
+</div>
+</section>
+<!-- END: SearchTagsAndHistory -->
+<!-- BEGIN: ProductGrid -->
+<main class="px-4 pt-3 flex-1" data-purpose="product-results-grid">
+<div class="flex items-center justify-between mb-3">
+<h2 class="text-sm font-semibold text-gray-700">Matched Results (4)</h2>
+<button class="text-xs font-medium text-gray-500 flex items-center gap-1">
+<span>Sort by</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Two-Column Product Grid -->
+<div class="grid grid-cols-2 gap-3.5">
+<!-- Product Card 1: Stride Club Sage Runners -->
+<article class="bg-white rounded-3xl p-2.5 flex flex-col justify-between shadow-soft hover:shadow-float transition-shadow relative" data-purpose="product-card">
+<!-- Image Container -->
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-gray-50">
+<img alt="Stride Club Sage Runners" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA30Zu5tHLb9Hm9g7btAm-Pz4EIoSutaom6NYS9xuNHymsAb89WX1JM3bFZWZGfw4DdA9obKl3xDHyhb54XEpVR-d7iNJZjPIneVBh3a84SZsCo7vH2-b612CakDeLwkncVdeGmaUFbrsKxBo7kPJro1PYVWlj9Qdi0CDuKp6wC3nGWkAABPDjtArRYyPkclU8h4kssSF2il-OtFDBG9sqAzPhjzbv115XzNx2fooDiWrOvfJr4sQW60pge7DlQTHGI"/>
+<!-- Top-Left Rating Pill Badge -->
+<div class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-[11px] font-semibold text-gray-800 shadow-sm flex items-center gap-1">
+<span class="text-amber-500">★</span> 4.9
+            </div>
+<!-- Top-Right Wishlist Heart Button -->
+<button aria-label="Add to wishlist" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-gray-700 shadow-sm active:scale-90 transition-transform">
+<svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Product Details -->
+<div class="mt-2.5 px-1 flex-1 flex flex-col justify-between">
+<div>
+<p class="text-[11px] font-medium text-gray-400">Stride Club</p>
+<h3 class="text-xs font-semibold text-gray-900 line-clamp-1">Sage Runners</h3>
+</div>
+<!-- Price and Add Button Row -->
+<div class="flex items-center justify-between mt-2 pt-1">
+<div>
+<span class="text-sm font-bold text-gray-900 block leading-tight">₦32,000</span>
+<span class="text-[10px] text-gray-400 line-through">₦42,000</span>
+</div>
+<button aria-label="Add to cart" class="w-8 h-8 rounded-full bg-brand-forest text-white flex items-center justify-center shadow-md active:scale-95 transition-transform">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 2: Sleec Everyday Tote -->
+<article class="bg-white rounded-3xl p-2.5 flex flex-col justify-between shadow-soft hover:shadow-float transition-shadow relative" data-purpose="product-card">
+<!-- Image Container -->
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-gray-50">
+<img alt="Sleec Everyday Canvas Tote" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgUOpdm5OuX4TWkIotOZXxURl1UaKVEOCowza-6yYfv7x4FVkMQLM7WVTE5MAoUlTi8g14Yi8r8RWgZSVqFAQnX3mgH2UHqsi9MUDqzntzqGmb6MMI7ED2j6518H1Hk1OuovItoGYDYOvNavAyJvZdwoy2qGHRUq7foO81pVnzfASWavS1nxtW_4lZX03lFYS0xGskDu5hqQHkV2g_0pZqBAEM_86-hchAGtQh2JSw_pSZEkV8YLD4TA6k20lOEo1F"/>
+<!-- Rating Badge -->
+<div class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-[11px] font-semibold text-gray-800 shadow-sm flex items-center gap-1">
+<span class="text-amber-500">★</span> 4.8
+            </div>
+<!-- Wishlist Button -->
+<button aria-label="Add to wishlist" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-rose-500 shadow-sm active:scale-90 transition-transform">
+<svg class="w-4 h-4 fill-rose-500 stroke-none" viewbox="0 0 24 24">
+<path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"></path>
+</svg>
+</button>
+</div>
+<!-- Product Details -->
+<div class="mt-2.5 px-1 flex-1 flex flex-col justify-between">
+<div>
+<p class="text-[11px] font-medium text-gray-400">Sleec Basics</p>
+<h3 class="text-xs font-semibold text-gray-900 line-clamp-1">Everyday Tote</h3>
+</div>
+<!-- Price and Add Button Row -->
+<div class="flex items-center justify-between mt-2 pt-1">
+<div>
+<span class="text-sm font-bold text-gray-900 block leading-tight">₦8,500</span>
+<span class="text-[10px] text-gray-400 line-through">₦12,000</span>
+</div>
+<button aria-label="Add to cart" class="w-8 h-8 rounded-full bg-brand-forest text-white flex items-center justify-center shadow-md active:scale-95 transition-transform">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 3: Maison Vert Amber Eau -->
+<article class="bg-white rounded-3xl p-2.5 flex flex-col justify-between shadow-soft hover:shadow-float transition-shadow relative" data-purpose="product-card">
+<!-- Image Container -->
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-gray-50">
+<img alt="Maison Vert Amber Eau" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNXiPTen8QjqJdgp3ORCP_QKuFmiFJaYplSVG59P7VM94WLdCEkRz1FNkUIeJtHKsb-UaE_yEJN4Xn34g2HxD_zqBnzoF-isv4-3y9fPPpUKtJ2_PP6RKjuXiyYj2cc_603Sobua_thMWL0VZwSMKWRYZMc4ZMAJ_ZOIWr_paIgM74Cb8M0zJW1GXZK7iLjl4xioqNgJOXybTdzJ5YBJpKRYU4iscrXoASLrUanYHWQZiqJKRKW9U6shyBapijj_vp"/>
+<!-- Rating Badge -->
+<div class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-[11px] font-semibold text-gray-800 shadow-sm flex items-center gap-1">
+<span class="text-amber-500">★</span> 4.9
+            </div>
+<!-- Wishlist Button -->
+<button aria-label="Add to wishlist" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-gray-700 shadow-sm active:scale-90 transition-transform">
+<svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Product Details -->
+<div class="mt-2.5 px-1 flex-1 flex flex-col justify-between">
+<div>
+<p class="text-[11px] font-medium text-gray-400">Maison Vert</p>
+<h3 class="text-xs font-semibold text-gray-900 line-clamp-1">Amber Eau</h3>
+</div>
+<!-- Price and Add Button Row -->
+<div class="flex items-center justify-between mt-2 pt-1">
+<div>
+<span class="text-sm font-bold text-gray-900 block leading-tight">₦24,000</span>
+<span class="text-[10px] text-gray-400 line-through">₦30,000</span>
+</div>
+<button aria-label="Add to cart" class="w-8 h-8 rounded-full bg-brand-forest text-white flex items-center justify-center shadow-md active:scale-95 transition-transform">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- Product Card 4: Designer Optics Tortoise -->
+<article class="bg-white rounded-3xl p-2.5 flex flex-col justify-between shadow-soft hover:shadow-float transition-shadow relative" data-purpose="product-card">
+<!-- Image Container -->
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-gray-50">
+<img alt="Designer Optics Tortoise Shades" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB377nHEYt69aFYXJQOXEh5YXu8ot5vFIR9Xz8HXeQiVfMpDV7l1fWvTKs5aXLG0I-p_6MtIz_9arqSxPBSzsms4wkkC06E1aDuhbvGUcxShDMs3OxVO5xI_0f0U18XBF56TrEWZZb-6-GN3i2j_Z1zA-t1F2uhjgg8IDarDPLfNugS6dcqUmqQYAIq9F9CL5H98yg0ov2iZJYAVwXRqz1T1bQG89GicxepI0UuXQ5w4Pi8by2xBSQ8Rd_fRBZuUrkh"/>
+<!-- Rating Badge -->
+<div class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-[11px] font-semibold text-gray-800 shadow-sm flex items-center gap-1">
+<span class="text-amber-500">★</span> 4.7
+            </div>
+<!-- Wishlist Button -->
+<button aria-label="Add to wishlist" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-gray-700 shadow-sm active:scale-90 transition-transform">
+<svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Product Details -->
+<div class="mt-2.5 px-1 flex-1 flex flex-col justify-between">
+<div>
+<p class="text-[11px] font-medium text-gray-400">Optics Lab</p>
+<h3 class="text-xs font-semibold text-gray-900 line-clamp-1">Tortoise Shades</h3>
+</div>
+<!-- Price and Add Button Row -->
+<div class="flex items-center justify-between mt-2 pt-1">
+<div>
+<span class="text-sm font-bold text-gray-900 block leading-tight">₦18,500</span>
+<span class="text-[10px] text-gray-400 line-through">₦22,000</span>
+</div>
+<button aria-label="Add to cart" class="w-8 h-8 rounded-full bg-brand-forest text-white flex items-center justify-center shadow-md active:scale-95 transition-transform">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- END: ProductGrid -->
+<!-- BEGIN: FloatingBottomDock -->
+<nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[360px] z-50" data-purpose="floating-bottom-dock">
+<div class="bg-white/95 backdrop-blur-xl border border-gray-100 shadow-dock rounded-full px-3 py-2 flex items-center justify-between">
+<!-- Tab: Home -->
+<a class="flex flex-col items-center justify-center w-12 h-12 text-gray-400 hover:text-brand-forest transition-colors" href="#">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[9px] font-medium mt-0.5">Home</span>
+</a>
+<!-- Tab: Search (ACTIVE STATE) -->
+<a class="flex flex-col items-center justify-center w-12 h-12 text-brand-forest font-semibold relative" href="#">
+<div class="w-9 h-9 rounded-full bg-brand-lightMint flex items-center justify-center text-brand-forest mb-0.5">
+<svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[9px] text-brand-forest -mt-0.5">Search</span>
+</a>
+<!-- Center Mascot Action: Padi Bear Button -->
+<button aria-label="Padi AI Mascot Assistant" class="w-12 h-12 rounded-full bg-brand-forest text-white shadow-md flex items-center justify-center relative active:scale-95 transition-transform">
+<!-- Bear / Mascot Icon Representation -->
+<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24">
+<circle cx="8" cy="8" fill="currentColor" fill-opacity="0.85" r="3.2"></circle>
+<circle cx="16" cy="8" fill="currentColor" fill-opacity="0.85" r="3.2"></circle>
+<ellipse cx="12" cy="14" fill="currentColor" rx="7" ry="6"></ellipse>
+<ellipse cx="12" cy="15.2" fill="#194d34" rx="3.5" ry="2.6"></ellipse>
+<circle cx="12" cy="14.2" fill="#ffffff" r="1.1"></circle>
+<circle cx="9.5" cy="12.5" fill="#ffffff" r="1.1"></circle>
+<circle cx="14.5" cy="12.5" fill="#ffffff" r="1.1"></circle>
+</svg>
+</button>
+<!-- Tab: Orders / History -->
+<a class="flex flex-col items-center justify-center w-12 h-12 text-gray-400 hover:text-brand-forest transition-colors" href="#">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[9px] font-medium mt-0.5">Orders</span>
+</a>
+<!-- Tab: Saved / Wishlist -->
+<a class="flex flex-col items-center justify-center w-12 h-12 text-gray-400 hover:text-brand-forest transition-colors" href="#">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[9px] font-medium mt-0.5">Saved</span>
+</a>
+</div>
+</nav>
+<!-- END: FloatingBottomDock -->
+</div>
+</body></html>
