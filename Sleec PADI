@@ -1,0 +1,1581 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" name="viewport">
+<title>Padi - Sleec Shop AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          sleec: {
+            deep: '#0F382A',
+            primary: '#10B981',
+            darkPrimary: '#059669',
+            light: '#E6F7F0',
+            mintBg: '#EAF7F0'
+          },
+          emerald: {
+            50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80',
+            500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#0F382A', 950: '#052e16'
+          }
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          heading: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif']
+        },
+        boxShadow: {
+          'soft': '0 4px 20px -2px rgba(16, 185, 129, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04)',
+          'button': '0 4px 14px 0 rgba(16, 185, 129, 0.39)',
+          'dock': '0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0,0,0,0.04)'
+        }
+      }
+    }
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #0f172a;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .app-viewport {
+    width: 100%;
+    max-width: 440px;
+    height: 956px;
+    min-height: 956px;
+    max-height: 956px;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #EAF7F0 0%, #F5FAF6 45%, #EDF7F1 100%);
+  }
+  .no-scroll::-webkit-scrollbar { display: none; }
+  .no-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+  @keyframes bob { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-4px); } }
+  @keyframes subtlePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+  .animate-bob { animation: bob 3.5s ease-in-out infinite; }
+  .animate-subtle-pulse { animation: subtlePulse 2.8s ease-in-out infinite; }
+  #view-chat {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    pointer-events: auto;
+  }
+  .drawer-transition { transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease; }
+</style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-slate-900 select-none">
+<div class="app-viewport flex flex-col justify-between text-neutral-900 shadow-2xl relative" id="app-root">
+<!-- Ambient light blobs -->
+<div class="absolute -top-12 -right-12 w-56 h-56 bg-emerald-200/35 rounded-full blur-3xl pointer-events-none z-0"></div>
+<div class="absolute top-1/3 -left-16 w-60 h-60 bg-teal-100/35 rounded-full blur-3xl pointer-events-none z-0"></div>
+<!-- Toast Notification -->
+<div class="absolute top-14 left-1/2 -translate-x-1/2 z-[60] transition-all duration-300 flex items-center gap-2 bg-[#0F382A] text-white text-xs font-semibold px-4 py-2 rounded-full shadow-lg opacity-0 -translate-y-2 pointer-events-none" id="toast">
+<span id="toast-icon">✨</span>
+<span id="toast-text">Added to Bag!</span>
+</div>
+<!-- 1. TOP HEADER -->
+<header class="w-full z-20 pt-4 px-5 flex-shrink-0 relative">
+<nav class="flex items-center justify-between">
+<!-- Hamburger Menu Button -->
+<button aria-label="Open Menu" class="w-10 h-10 rounded-full bg-white shadow-sm flex flex-col items-center justify-center gap-[3.5px] text-neutral-700 hover:text-emerald-700 active:scale-95 transition border border-emerald-100/70" id="btn-hamburger">
+<span class="w-4 h-[2px] bg-neutral-700 rounded-full"></span>
+<span class="w-4 h-[2px] bg-neutral-700 rounded-full"></span>
+<span class="w-4 h-[2px] bg-neutral-700 rounded-full"></span>
+</button>
+<!-- Centered Padi status pill -->
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-sm text-neutral-800 text-xs font-semibold border border-emerald-100/80 shadow-soft cursor-pointer" id="btn-header-padi">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span>Padi</span>
+</div>
+<!-- Circular Cart / Bag Icon with live badge -->
+<button aria-label="Shopping Bag" class="relative w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-neutral-700 hover:text-emerald-700 active:scale-95 transition border border-emerald-100/70" id="btn-open-bag">
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs" id="cart-badge">2</span>
+</button>
+</nav>
+</header>
+<!-- 2. EMPTY / HOME STATE -->
+<section class="flex-1 flex flex-col items-center justify-center px-6 pb-36 relative z-10 transition-all duration-300" id="view-home">
+<div class="relative w-64 h-64 flex items-center justify-center">
+<!-- Glow circles -->
+<div class="absolute inset-0 rounded-full bg-emerald-100/60 scale-105 blur-md pointer-events-none"></div>
+<div class="absolute w-52 h-52 rounded-full bg-white shadow-soft border border-emerald-100/70"></div>
+<!-- 5 Decorative Floating Shopping Badges encircling mascot -->
+<div class="absolute top-10 left-5 w-9 h-9 rounded-2xl bg-white shadow-soft border border-emerald-100 flex items-center justify-center text-sm z-20">🛍️</div>
+<div class="absolute top-2 inset-x-0 mx-auto w-9 h-9 rounded-2xl bg-white shadow-soft border border-emerald-100 flex items-center justify-center text-sm z-20">🏷️</div>
+<div class="absolute top-10 right-5 w-9 h-9 rounded-2xl bg-white shadow-soft border border-emerald-100 flex items-center justify-center text-sm z-20">🎁</div>
+<div class="absolute bottom-6 right-8 w-9 h-9 rounded-2xl bg-white shadow-soft border border-emerald-100 flex items-center justify-center text-sm z-20">📦</div>
+<div class="absolute bottom-6 left-8 w-9 h-9 rounded-2xl bg-white shadow-soft border border-emerald-100 flex items-center justify-center text-sm z-20">⭐</div>
+<!-- Mascot Bear (Padi) -->
+<div class="relative z-10 w-28 h-28 animate-bob flex items-center justify-center cursor-pointer" id="btn-home-mascot">
+<svg class="w-full h-full drop-shadow-md" viewBox="0 0 120 120">
+<circle cx="28" cy="30" fill="#34d399" r="16"></circle>
+<circle cx="28" cy="30" fill="#a7f3d0" r="9"></circle>
+<circle cx="92" cy="30" fill="#34d399" r="16"></circle>
+<circle cx="92" cy="30" fill="#a7f3d0" r="9"></circle>
+<ellipse cx="60" cy="64" fill="#10b981" rx="46" ry="42"></ellipse>
+<path d="M 30,52 C 35,34 85,34 90,52 C 85,42 35,42 30,52 Z" fill="#34d399" opacity="0.6"></path>
+<ellipse cx="44" cy="58" fill="#0F382A" rx="4.5" ry="5.5"></ellipse>
+<circle cx="42.5" cy="56" fill="#ffffff" r="1.5"></circle>
+<ellipse cx="76" cy="58" fill="#0F382A" rx="4.5" ry="5.5"></ellipse>
+<circle cx="74.5" cy="56" fill="#ffffff" r="1.5"></circle>
+<ellipse cx="33" cy="68" fill="#f87171" opacity="0.45" rx="6" ry="4"></ellipse>
+<ellipse cx="87" cy="68" fill="#f87171" opacity="0.45" rx="6" ry="4"></ellipse>
+<ellipse cx="60" cy="74" fill="#ecfdf5" rx="19" ry="14"></ellipse>
+<path d="M 55,68 C 55,65 65,65 65,68 C 65,72 55,72 55,68 Z" fill="#0F382A"></path>
+<path d="M 54,75 Q 60,82 66,75" fill="none" stroke="#0F382A" stroke-linecap="round" stroke-width="2.2"></path>
+</svg>
+</div>
+</div>
+<!-- Title & Subtitle -->
+<div class="mt-4 text-center px-4 max-w-sm">
+<h1 class="font-heading text-[22px] font-bold text-neutral-800 leading-tight">Find &amp; shop anything on Sleec</h1>
+<p class="text-[13px] text-neutral-500 mt-2 font-normal leading-relaxed">Discover drops, track orders &amp; get curated product styling</p>
+</div>
+</section>
+<!-- 3. ACTIVE CHAT AREA (Scrollable Conversation Thread with pb-52 to guarantee no overlap) -->
+<section class="flex-1 overflow-y-auto no-scroll px-4 pt-3 pb-52 z-10 flex flex-col gap-3 min-h-0 hidden overflow-x-hidden w-full max-w-full" id="view-chat">
+<div class="flex flex-col gap-3.5 w-full max-w-full" id="chat-messages"></div>
+<!-- Typing Indicator -->
+<div class="flex items-end gap-2 max-w-[85%] self-start hidden py-1" id="typing-indicator">
+<div class="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0 text-white shadow-sm p-1">
+<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+<circle cx="6" cy="7" r="2.5"></circle><circle cx="18" cy="7" r="2.5"></circle><circle cx="12" cy="13.5" r="6.5"></circle><ellipse cx="12" cy="15" fill="#0F382A" rx="2.8" ry="2"></ellipse>
+</svg>
+</div>
+<div class="bg-white border border-emerald-100 px-3.5 py-2.5 rounded-2xl rounded-bl-sm shadow-soft flex items-center gap-1.5">
+<span class="text-[11px] text-emerald-800 font-semibold mr-1">Padi is thinking</span>
+<div class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce"></div>
+<div class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+<div class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+</div>
+</div>
+</section>
+<!-- 4. BOTTOM INTERACTION AREA (Quick Actions + Composer) -->
+<div class="absolute bottom-[72px] inset-x-0 px-4 z-40 w-full flex flex-col gap-2 pointer-events-auto">
+<!-- Scroll to bottom pill -->
+<div class="flex justify-center hidden" id="wrap-scroll-latest">
+<button class="items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-emerald-200 text-emerald-800 text-[11px] font-bold shadow-soft hover:bg-emerald-50 active:scale-95 transition-all inline-flex" id="btn-scroll-latest">
+<span class="text-xs">↓</span> Latest message
+</button>
+</div>
+<!-- Quick Action Chips Row (Home state) -->
+<div class="flex items-center gap-2 overflow-x-auto no-scroll py-1 w-full" id="home-quick-actions">
+<button class="quick-chip-btn flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-white border border-emerald-100 shadow-sm text-xs font-semibold text-neutral-700 flex-shrink-0 active:scale-95 transition hover:border-emerald-300" data-q="Show me trending drops">
+<span>🛍️</span> Trending Drops
+</button>
+<button class="quick-chip-btn flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-white border border-emerald-100 shadow-sm text-xs font-semibold text-neutral-700 flex-shrink-0 active:scale-95 transition hover:border-emerald-300" data-q="Help me find my size">
+<span>🔍</span> Find My Size
+</button>
+<button class="quick-chip-btn flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-white border border-emerald-100 shadow-sm text-xs font-semibold text-neutral-700 flex-shrink-0 active:scale-95 transition hover:border-emerald-300" data-q="Track my active order">
+<span>📦</span> Track Order
+</button>
+<button class="quick-chip-btn flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-white border border-emerald-100 shadow-sm text-xs font-semibold text-neutral-700 flex-shrink-0 active:scale-95 transition hover:border-emerald-300" data-q="Find a store that sells electric guitars">
+<span>🏪</span> Find a Shop
+</button>
+</div>
+<!-- Attachment Preview Pill -->
+<div class="hidden flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-2xl px-3 py-1.5 text-xs text-emerald-950" id="attachment-preview">
+<div class="flex items-center gap-2 truncate">
+<img alt="preview" class="w-7 h-7 rounded-lg object-cover border border-emerald-200" id="attachment-thumb" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgcng9IjgiIGZpbGw9IiNlOGVhZWQiLz48cGF0aCBkPSJNMTcwIDEzMCBsMzAgNDAgbDIwLTE1IGw0MCA1NSBIMTQweiIgZmlsbD0iI2JkYzFjNiIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjEyMCIgcj0iMTgiIGZpbGw9IiNiZGMxYzYiLz48L3N2Zz4=">
+<span class="font-semibold truncate max-w-[200px]" id="attachment-name">photo.jpg</span>
+</div>
+<button class="w-6 h-6 rounded-full bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center font-bold text-xs" id="btn-remove-attachment">✕</button>
+</div>
+<!-- Voice Recording Floating Pill -->
+<div class="hidden bg-[#0F382A] text-white rounded-2xl p-3 shadow-lg flex items-center justify-between" id="voice-bar">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+<span class="font-mono text-xs font-semibold text-emerald-200" id="voice-timer">0:03</span>
+<span class="text-xs text-emerald-300">Listening to you...</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="text-xs text-emerald-200 hover:text-white px-2 font-medium" id="btn-cancel-voice">Cancel</button>
+<button class="bg-emerald-500 text-[#0F382A] font-bold text-xs px-3 py-1 rounded-full shadow-sm" id="btn-done-voice">Done</button>
+</div>
+</div>
+<!-- 5. MESSAGE COMPOSER -->
+<div class="bg-white rounded-2xl p-2.5 shadow-md border border-emerald-100 flex flex-col gap-2" id="composer-card">
+<input class="w-full text-xs text-neutral-800 placeholder-neutral-400 border-none p-0 focus:outline-none focus:ring-0 font-medium bg-transparent px-1.5 py-1" id="chat-input" placeholder="Search products, ask for styles, or order info..." type="text">
+<div class="flex items-center justify-between pt-0.5">
+<input accept="image/*" class="hidden" id="file-picker" type="file">
+<div class="flex items-center gap-1">
+<!-- Paperclip -->
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-neutral-400 hover:text-emerald-600 hover:bg-emerald-50 active:scale-90 transition" id="btn-attach" title="Attach file">
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<!-- Camera -->
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-neutral-400 hover:text-emerald-600 hover:bg-emerald-50 active:scale-90 transition" id="btn-camera" title="Take photo">
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<!-- Mic -->
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-neutral-400 hover:text-emerald-600 hover:bg-emerald-50 active:scale-90 transition" id="btn-voice" title="Voice note">
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+</div>
+<!-- Send Button -->
+<button class="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-button hover:bg-emerald-700 active:scale-95 transition" id="btn-send">
+<svg class="w-4 h-4 stroke-[2.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+</div>
+</div>
+</div>
+<!-- 6. BOTTOM NAVIGATION DOCK -->
+<nav class="absolute bottom-3 inset-x-0 px-4 z-50 flex justify-center pointer-events-none">
+<div class="bg-white/95 backdrop-blur-md rounded-full shadow-dock border border-black/5 px-6 py-2 flex items-center justify-between w-[92%] max-w-[360px] mx-auto pointer-events-auto">
+<button class="nav-tab text-neutral-400 hover:text-emerald-700 active:scale-90 transition p-1.5" data-tab="home" title="Buyer Home">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9.75L12 3l9 6.75V20.25a.75.75 0 01-.75.75H14.25v-5.25a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21H3.75a.75.75 0 01-.75-.75V9.75z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<button class="nav-tab text-neutral-400 hover:text-emerald-700 active:scale-90 transition p-1.5" data-tab="discover" title="Discover">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke-linecap="round" stroke-linejoin="round"></circle><path d="M21 21l-4.35-4.35" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<!-- Center Mascot Button (Active State) -->
+<button class="nav-tab w-11 h-11 bg-[#0F382A] text-white rounded-full flex items-center justify-center shadow-lg active:scale-95 transition -my-1" data-tab="ai" title="Shop AI">
+<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+<circle cx="6" cy="7" r="2.5"></circle><circle cx="18" cy="7" r="2.5"></circle><circle cx="12" cy="13.5" r="6.5"></circle><ellipse cx="12" cy="15" fill="#0F382A" rx="2.8" ry="2"></ellipse><circle cx="10.2" cy="12.5" fill="#0F382A" r="0.7"></circle><circle cx="13.8" cy="12.5" fill="#0F382A" r="0.7"></circle><circle cx="12" cy="14.5" fill="white" r="0.6"></circle>
+</svg>
+</button>
+<button class="nav-tab text-neutral-400 hover:text-emerald-700 active:scale-90 transition p-1.5" data-tab="orders" title="My Orders">
+<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><rect height="6.5" rx="1.5" width="6.5" x="3.5" y="3.5"></rect><rect height="6.5" rx="1.5" width="6.5" x="14" y="3.5"></rect><rect height="6.5" rx="1.5" width="6.5" x="3.5" y="14"></rect><rect height="6.5" rx="1.5" width="6.5" x="14" y="14"></rect></svg>
+</button>
+<button class="nav-tab text-neutral-400 hover:text-emerald-700 active:scale-90 transition p-1.5" data-tab="saved" title="Saved Wishlist">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+</div>
+</nav>
+<!-- ==================== MODALS & DRAWERS ==================== -->
+<!-- Drawer 1: HAMBURGER MENU & CHAT DRAWER -->
+<div class="absolute inset-0 z-50 bg-black/50 backdrop-blur-xs transition-opacity duration-300 hidden" id="drawer-history">
+<div class="w-72 max-w-[85%] h-full bg-[#f8fbf9] shadow-2xl flex flex-col justify-between border-r border-emerald-100 -translate-x-full drawer-transition" id="drawer-inner">
+<!-- Drawer Header -->
+<div class="p-4 border-b border-emerald-100 flex items-center justify-between bg-white">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">P</div>
+<h2 class="text-sm font-bold text-neutral-900">Padi Assistant</h2>
+</div>
+<button class="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 font-bold text-xs" id="btn-close-history">✕</button>
+</div>
+<!-- Drawer Content -->
+<div class="flex-1 overflow-y-auto no-scroll p-3 space-y-4">
+<div class="pb-1 border-b border-neutral-100">
+<button class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-neutral-100 text-neutral-800 text-xs font-semibold transition active:scale-95 text-left bg-emerald-50/70 border border-emerald-200" id="btn-drawer-new-chat">
+<span class="flex items-center gap-2"><span>🌱</span> New Chat</span>
+<span class="text-emerald-700 text-sm">→</span>
+</button>
+</div>
+<!-- Section: Chat History -->
+<div>
+<div class="text-[10px] font-bold uppercase tracking-wider text-emerald-800/70 pt-1 pb-1.5 px-2">Chat History</div>
+<div class="space-y-1" id="history-container"></div>
+</div>
+<!-- Section: Shortcuts -->
+<div class="pt-2 border-t border-neutral-100">
+<div class="text-[10px] font-bold uppercase tracking-wider text-neutral-400 pt-1 pb-1.5 px-2">Shortcuts &amp; Seller</div>
+<div class="space-y-1">
+<button class="drawer-nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-neutral-700 hover:bg-neutral-100 transition" data-nav="Buyer Home">
+<span>🏠</span> Buyer Home
+</button>
+<button class="drawer-nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-neutral-700 hover:bg-neutral-100 transition" data-nav="Discover">
+<span>🧭</span> Discover Drops
+</button>
+<button class="drawer-nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-neutral-700 hover:bg-neutral-100 transition" data-nav="My Orders">
+<span>📦</span> My Orders &amp; Delivery
+</button>
+<button class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-emerald-800 bg-emerald-100/60 hover:bg-emerald-100 transition" id="btn-drawer-create-shop">
+<span>🏪</span> Create a Shop
+</button>
+<button class="drawer-nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-neutral-700 hover:bg-neutral-100 transition" data-nav="Settings">
+<span>⚙️</span> Settings
+</button>
+</div>
+</div>
+</div>
+<!-- Drawer Footer -->
+<div class="p-3 bg-white border-t border-emerald-100 text-[11px] text-neutral-500 flex items-center justify-between">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Padi v2.5 Active</span>
+<span class="text-[10px] text-neutral-400 font-semibold">Sleec AI</span>
+</div>
+</div>
+</div>
+<!-- Modal 2: STOREFRONT -->
+<div class="absolute inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end hidden" id="modal-storefront">
+<div class="bg-white rounded-t-[32px] p-5 max-h-[85%] overflow-y-auto no-scroll border-t border-emerald-100 flex flex-col gap-3">
+<div class="w-12 h-1 bg-neutral-300 rounded-full mx-auto -mt-1 mb-1"></div>
+<div class="relative rounded-2xl overflow-hidden bg-neutral-900 h-24 p-3 flex items-end justify-between">
+<img alt="banner" class="absolute inset-0 w-full h-full object-cover opacity-40" id="sf-banner" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgcng9IjgiIGZpbGw9IiNlOGVhZWQiLz48cGF0aCBkPSJNMTcwIDEzMCBsMzAgNDAgbDIwLTE1IGw0MCA1NSBIMTQweiIgZmlsbD0iI2JkYzFjNiIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjEyMCIgcj0iMTgiIGZpbGw9IiNiZGMxYzYiLz48L3N2Zz4=">
+<div class="relative z-10 flex items-center gap-2.5">
+<div class="w-11 h-11 rounded-xl bg-white border-2 border-white flex items-center justify-center text-xl shadow-xs" id="sf-avatar">🎸</div>
+<div class="text-white">
+<div class="flex items-center gap-1.5">
+<h3 class="text-sm font-bold" id="sf-name">SoundWave Audio &amp; Guitars</h3>
+<span class="text-[10px] text-emerald-300">✓ Verified</span>
+</div>
+<p class="text-[10px] text-neutral-200" id="sf-rating">★ 4.9 (128 reviews) • Nationwide</p>
+</div>
+</div>
+<button class="relative z-10 w-7 h-7 rounded-full bg-white/40 text-white flex items-center justify-center text-xs font-bold" id="btn-close-storefront">✕</button>
+</div>
+<p class="text-xs text-neutral-600 leading-relaxed" id="sf-desc">Premier guitar and audio gear outlet. Official dealer for Fender, Yamaha &amp; boutique pedals.</p>
+<div class="flex items-center justify-between text-[11px] bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
+<span class="text-emerald-900 font-semibold" id="sf-delivery">📍 Nationwide Delivery (Inc. Ilorin)</span>
+<span class="text-emerald-700 font-bold">24–48 Hrs</span>
+</div>
+<h4 class="text-xs font-bold text-neutral-800 mt-1">In-Stock Products</h4>
+<div class="grid grid-cols-2 gap-2.5" id="sf-products"></div>
+</div>
+</div>
+<!-- Modal 3: PRODUCT DETAILS SHEET -->
+<div class="absolute inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end hidden" id="modal-product">
+<div class="bg-white rounded-t-[32px] p-5 max-h-[85%] overflow-y-auto no-scroll border-t border-emerald-100 flex flex-col gap-3">
+<div class="w-12 h-1 bg-neutral-300 rounded-full mx-auto -mt-1 mb-1"></div>
+<div class="flex justify-between items-start">
+<div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full" id="ps-seller">Stride Club</span>
+<h3 class="text-base font-bold text-neutral-900 mt-1" id="ps-title">Stride Club Sage Runners</h3>
+</div>
+<button class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 font-bold" id="btn-close-product">✕</button>
+</div>
+<div class="w-full h-44 rounded-2xl overflow-hidden bg-emerald-50 relative flex items-center justify-center">
+<img alt="product" class="w-full h-full object-cover" id="ps-image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgcng9IjgiIGZpbGw9IiNlOGVhZWQiLz48cGF0aCBkPSJNMTcwIDEzMCBsMzAgNDAgbDIwLTE1IGw0MCA1NSBIMTQweiIgZmlsbD0iI2JkYzFjNiIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjEyMCIgcj0iMTgiIGZpbGw9IiNiZGMxYzYiLz48L3N2Zz4=">
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-xl font-extrabold text-neutral-900" id="ps-price">₦32,000</span>
+<span class="text-xs text-neutral-400 line-through" id="ps-original">₦42,000</span>
+</div>
+<p class="text-xs text-neutral-600 leading-relaxed" id="ps-desc">Ultra-lightweight mesh knit runner engineered with responsive adaptive cushioning.</p>
+<div>
+<label class="text-xs font-bold text-neutral-800 block mb-1">Select Size:</label>
+<div class="flex items-center gap-2 flex-wrap" id="ps-sizes"></div>
+</div>
+<div class="flex items-center gap-3 pt-2 pb-4">
+<button class="w-12 h-12 rounded-2xl border border-neutral-200 flex items-center justify-center text-neutral-600 active:scale-95 transition" id="ps-wishlist">❤️</button>
+<button class="flex-1 h-12 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-button flex items-center justify-center gap-2 active:scale-95 transition" id="ps-add-bag">
+<span>Add to Bag</span><span id="ps-btn-price">• ₦32,000</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Modal 4: CART DRAWER -->
+<div class="absolute inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end hidden" id="modal-cart">
+<div class="bg-white rounded-t-[32px] p-5 max-h-[85%] overflow-y-auto no-scroll border-t border-emerald-100 flex flex-col gap-3">
+<div class="w-12 h-1 bg-neutral-300 rounded-full mx-auto -mt-1 mb-1"></div>
+<div class="flex items-center justify-between pb-2 border-b border-neutral-100">
+<div class="flex items-center gap-2">
+<span class="text-base">🛍️</span>
+<h3 class="text-base font-bold text-neutral-900">My Sleec Bag</h3>
+</div>
+<button class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 font-bold text-xs" id="btn-close-cart">✕</button>
+</div>
+<div class="flex flex-col gap-2.5 max-h-64 overflow-y-auto no-scroll" id="cart-items"></div>
+<div class="bg-neutral-50 rounded-2xl p-3 flex justify-between text-neutral-900 font-bold text-sm">
+<span>Subtotal</span><span id="cart-total">₦0</span>
+</div>
+<button class="w-full py-3.5 bg-emerald-600 text-white font-bold text-sm rounded-2xl shadow-button active:scale-95 transition" id="btn-checkout">Checkout with Sleec Pay</button>
+</div>
+</div>
+<!-- Modal 5: CREATE A SHOP ONBOARDING -->
+<div class="absolute inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end hidden" id="modal-create-shop">
+<div class="bg-white rounded-t-[32px] p-5 max-h-[88%] overflow-y-auto no-scroll border-t border-emerald-100 flex flex-col gap-3.5">
+<div class="w-12 h-1 bg-neutral-300 rounded-full mx-auto -mt-1 mb-1"></div>
+<div class="flex items-center justify-between pb-1 border-b border-neutral-100">
+<div class="flex items-center gap-2">
+<span class="text-lg">🏪</span>
+<div>
+<h3 class="text-base font-bold text-neutral-900">Open Your Sleec Shop</h3>
+<p class="text-[11px] text-emerald-700">Start selling to buyers nationwide</p>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 font-bold text-xs" id="btn-close-create-shop">✕</button>
+</div>
+<div class="space-y-3">
+<div>
+<label class="text-xs font-semibold text-neutral-700 block mb-1">Shop / Brand Name</label>
+<input class="w-full text-xs px-3 py-2.5 rounded-xl border border-emerald-200 focus:outline-none focus:ring-1 focus:ring-emerald-500" id="input-shop-name" placeholder="e.g. Lagos Vintage Club" type="text">
+</div>
+<div>
+<label class="text-xs font-semibold text-neutral-700 block mb-1">Store Category</label>
+<select class="w-full text-xs px-3 py-2.5 rounded-xl border border-emerald-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-white" id="input-shop-category">
+<option value="Streetwear &amp; Fashion">Streetwear &amp; Fashion</option>
+<option value="Sneakers &amp; Footwear">Sneakers &amp; Footwear</option>
+<option value="Fragrance &amp; Beauty">Fragrance &amp; Beauty</option>
+<option value="Musical Gear &amp; Audio">Musical Gear &amp; Audio</option>
+<option value="Handmade Crafts &amp; Accessories">Handmade Crafts &amp; Accessories</option>
+</select>
+</div>
+<div>
+<label class="text-xs font-semibold text-neutral-700 block mb-1">Primary Fulfillment City</label>
+<input class="w-full text-xs px-3 py-2.5 rounded-xl border border-emerald-200 focus:outline-none focus:ring-1 focus:ring-emerald-500" id="input-shop-city" placeholder="e.g. Lagos, Abuja, Ilorin" type="text">
+</div>
+<div class="bg-emerald-50 rounded-xl p-3 border border-emerald-100 text-[11px] text-emerald-950 space-y-1">
+<p class="font-bold flex items-center gap-1.5"><span>🚀</span> Verified Seller Perks:</p>
+<ul class="list-disc pl-4 text-[10px] space-y-0.5 text-emerald-800">
+<li>Instant Padi AI product recommendations</li>
+<li>Integrated Sleec Express delivery nationwide</li>
+<li>Safe escrow payments with 24-hr payouts</li>
+</ul>
+</div>
+<button class="w-full py-3 bg-[#0F382A] text-white font-bold text-xs rounded-xl shadow-button hover:bg-emerald-800 active:scale-95 transition" id="btn-submit-create-shop">Launch Storefront</button>
+</div>
+</div>
+</div>
+<!-- Modal 6: CAMERA VIEWFINDER -->
+<div class="hidden absolute inset-0 z-50 bg-black/95 flex flex-col justify-between p-6" id="modal-camera">
+<div class="flex items-center justify-between text-white">
+<span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Padi Visual Search</span>
+<button class="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center text-sm font-bold" id="btn-close-camera">✕</button>
+</div>
+<div class="relative w-full aspect-square border-2 border-dashed border-emerald-400/70 rounded-3xl overflow-hidden flex items-center justify-center bg-neutral-900">
+<img alt="camera viewfinder" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs_ujxNzMcXkl4mb_MX7G7PNEzzklJ6zuQUSaY6yQTTGDm096l-P2bIDIiboBqvGO5t7nw0nr6r1DRQ2G3JKXUdJ31DpuPmezj3I9H7HBpbVk6T8cMapY-jB7puSmtFNKqdssloNaiSvDKc-7fOfJMetQsZ_MRAgXt1EZEr89E8cybldSpv9sDUNoHbruEZyf-zOoYynDPOggxPme-ns-gy3GtI9EORd1xpyeI-Q">
+<div class="absolute inset-0 bg-emerald-950/20 backdrop-blur-[1px]"></div>
+<span class="relative z-10 px-3 py-1 rounded-full bg-black/60 text-white text-[11px] font-medium">Align item in frame</span>
+</div>
+<div class="flex flex-col items-center gap-3">
+<button class="w-16 h-16 rounded-full border-4 border-white flex items-center justify-center bg-emerald-500 text-white shadow-lg active:scale-90 transition" id="btn-snap-photo">
+<div class="w-12 h-12 rounded-full bg-white"></div>
+</button>
+<span class="text-xs text-neutral-300">Tap to snap &amp; search</span>
+</div>
+</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // PRODUCT CATALOGUE
+  const CATALOGUE = {
+    prod_1: {
+      id: 'prod_1',
+      name: 'Stride Club Sage Runners',
+      price: 32000,
+      originalPrice: 42000,
+      seller: 'Stride Club',
+      category: 'sneakers',
+      color: 'sage green',
+      sizes: ['40', '41', '42', '43', '44'],
+      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
+      description: 'Ultra-lightweight mesh knit runner engineered with responsive adaptive cushioning and sage green accents.'
+    },
+    prod_2: {
+      id: 'prod_2',
+      name: 'Sleec Canvas Tote & Essentials',
+      price: 18500,
+      originalPrice: 24000,
+      seller: 'Sleec Basics',
+      category: 'fashion',
+      color: 'cream',
+      sizes: ['One Size'],
+      image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=600&auto=format&fit=crop&q=80',
+      description: 'Heavyweight organic cotton canvas tote paired with soft-wash matching loungewear.'
+    },
+    prod_3: {
+      id: 'prod_3',
+      name: 'Amber Bloom Luxury Eau de Parfum',
+      price: 28000,
+      originalPrice: 35000,
+      seller: 'L’Atelier Parfum',
+      category: 'perfume',
+      color: 'amber gold',
+      sizes: ['50ml', '100ml'],
+      image: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=600&auto=format&fit=crop&q=80',
+      description: 'Warm golden amber, sunlit cedarwood, and rich botanical nectar notes with long-lasting sillage.'
+    },
+    prod_4: {
+      id: 'prod_4',
+      name: 'Tortoise Acetate Sun Optics',
+      price: 15500,
+      originalPrice: 21000,
+      seller: 'Lumina Studio',
+      category: 'accessories',
+      color: 'tortoise',
+      sizes: ['Standard'],
+      image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&auto=format&fit=crop&q=80',
+      description: 'Handcrafted acetate frames with UV400 amber gradient lenses.'
+    },
+    prod_5: {
+      id: 'prod_5',
+      name: 'Midnight Onyx Oversized Hoodie',
+      price: 22000,
+      originalPrice: 28000,
+      seller: 'Nocturne Apparel',
+      category: 'fashion',
+      color: 'black',
+      sizes: ['S', 'M', 'L', 'XL'],
+      image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=600&auto=format&fit=crop&q=80',
+      description: '450 GSM French Terry cotton hoodie with dropped shoulders and ribbed cuffs in deep onyx black.'
+    },
+    prod_6: {
+      id: 'prod_6',
+      name: 'Pacific Blue Low-Tops',
+      price: 19500,
+      originalPrice: 26000,
+      seller: 'Coastline Kicks',
+      category: 'sneakers',
+      color: 'blue/white',
+      sizes: ['39', '40', '41', '42', '43'],
+      image: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&auto=format&fit=crop&q=80',
+      description: 'Retro low-profile vulcanized sneakers with durable suede panels and soft cushioned footbed.'
+    }
+  };
+
+  // VERIFIED SHOPS
+  const SHOPS = {
+    shop_soundwave: {
+      id: 'shop_soundwave',
+      name: 'SoundWave Audio & Guitars',
+      emoji: '🎸',
+      banner: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=80',
+      rating: '★ 4.9 (128 reviews)',
+      specialty: 'Electric & acoustic guitars, amps, pedals • In-stock now',
+      delivery: 'Delivers nationwide including Ilorin • Dispatch 24-48 hrs',
+      desc: 'Premier guitar and audio gear outlet. Official dealer for Fender, Yamaha & boutique pedals. Fast insured dispatch to Lagos, Ilorin, Abuja & nationwide.',
+      productIds: ['prod_1', 'prod_4']
+    },
+    shop_stride: {
+      id: 'shop_stride',
+      name: 'Stride Club Official',
+      emoji: '👟',
+      banner: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&auto=format&fit=crop&q=80',
+      rating: '★ 4.8 (240 reviews)',
+      specialty: 'Performance runners, lifestyle kicks & streetwear',
+      delivery: 'Express Sleec Delivery • Free delivery above ₦50k',
+      desc: 'Engineered street and athletic sneakers handcrafted with premium tech fabrics. Instant sizing advice & easy exchanges.',
+      productIds: ['prod_1', 'prod_6']
+    },
+    shop_latelier: {
+      id: 'shop_latelier',
+      name: 'L’Atelier Parfum Lab',
+      emoji: '✨',
+      banner: 'https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?w=600&auto=format&fit=crop&q=80',
+      rating: '★ 5.0 (96 reviews)',
+      specialty: 'Niche artisanal fragrances & botanical extracts',
+      delivery: 'Insured glass-safe delivery nationwide in 24-48 hrs',
+      desc: 'Handcrafted luxury extraits and pure botanical parfum concentrates with unforgettable all-day sillage.',
+      productIds: ['prod_3']
+    }
+  };
+
+  // ACTIVE ORDER DETAILS
+  const ORDER_DATA = {
+    orderId: '#SL-88492',
+    status: 'Out for Delivery',
+    courier: 'Sleec Express Logistics',
+    rider: 'Tunde Adebayo (+234 802 555 0192)',
+    estimatedArrival: 'Today by 4:30 PM',
+    destination: 'Block B, Ring Road, Ilorin / Nationwide Hub',
+    items: ['Sleec Canvas Tote & Essentials (1x)'],
+    steps: [
+      { label: 'Order Placed & Escrow Secured', done: true, time: 'Yesterday 3:15 PM' },
+      { label: 'Merchant Verified & Dispatched', done: true, time: 'Today 8:40 AM' },
+      { label: 'Out with Sleec Courier', done: true, time: 'Today 1:10 PM', current: true },
+      { label: 'Package Delivered', done: false, time: 'Est. 4:30 PM' }
+    ]
+  };
+
+  // CHAT HISTORY THREADS
+  let chatHistory = [
+    {
+      id: 'chat_sneakers',
+      title: 'Trending sneakers',
+      time: '11:45 AM',
+      messages: [
+        { sender: 'user', text: 'Show me trending sneakers' },
+        { sender: 'padi', text: 'Here are the hottest verified sneakers on Sleec this week with express delivery:', productIds: ['prod_1', 'prod_6'], quickReplies: ['View Stride Runners', 'Find My Size', 'Check Bag'] }
+      ]
+    },
+    {
+      id: 'chat_styling',
+      title: 'Sage Runners styling',
+      time: '10:15 AM',
+      messages: [
+        { sender: 'user', text: 'How do I style the Stride Club Sage Runners?' },
+        { sender: 'padi', text: 'Pair them with our heavyweight canvas tote and relaxed monochrome loungewear:', productIds: ['prod_1', 'prod_2'], quickReplies: ['Add Both to Bag', 'Check Bag'] }
+      ]
+    },
+    {
+      id: 'chat_order',
+      title: 'Order #SL-8842',
+      time: 'Yesterday',
+      messages: [
+        { sender: 'user', text: 'Track order #SL-8842' },
+        { sender: 'padi', text: '📦 **Order #SL-88492** is Out for Delivery! Courier: Sleec Express.\nEstimated arrival: Today by 4:30 PM.', orderCard: true, quickReplies: ['Contact Courier', 'Delivery Cost Policy'] }
+      ]
+    }
+  ];
+
+  // CONVERSATION CONTEXT STATE
+  const state = {
+    currentView: 'home',
+    activeChatId: null,
+    cart: [{ id: 'prod_1', size: '42', qty: 1 }, { id: 'prod_2', size: 'One Size', qty: 1 }],
+    attachedFile: null,
+    activeProdInSheet: null,
+    selectedSize: null,
+    lastCategory: 'drops',
+    lastProduct: 'prod_1',
+    lastShop: 'shop_soundwave'
+  };
+
+  // DOM REFERENCES
+  const viewHome = document.getElementById('view-home');
+  const viewChat = document.getElementById('view-chat');
+  const chatMessages = document.getElementById('chat-messages');
+  const chatInput = document.getElementById('chat-input');
+  const btnSend = document.getElementById('btn-send');
+  const typingIndicator = document.getElementById('typing-indicator');
+  const homeQuickActions = document.getElementById('home-quick-actions');
+  const toast = document.getElementById('toast');
+  const toastText = document.getElementById('toast-text');
+  const toastIcon = document.getElementById('toast-icon');
+  const cartBadge = document.getElementById('cart-badge');
+  const btnHamburger = document.getElementById('btn-hamburger');
+  const drawerHistory = document.getElementById('drawer-history');
+  const drawerInner = document.getElementById('drawer-inner');
+  const btnCloseHistory = document.getElementById('btn-close-history');
+  const btnDrawerNewChat = document.getElementById('btn-drawer-new-chat');
+  const btnDrawerCreateShop = document.getElementById('btn-drawer-create-shop');
+  const historyContainer = document.getElementById('history-container');
+  const modalStorefront = document.getElementById('modal-storefront');
+  const btnCloseStorefront = document.getElementById('btn-close-storefront');
+  const modalProduct = document.getElementById('modal-product');
+  const btnCloseProduct = document.getElementById('btn-close-product');
+  const modalCart = document.getElementById('modal-cart');
+  const btnCloseCart = document.getElementById('btn-close-cart');
+  const btnOpenBag = document.getElementById('btn-open-bag');
+  const modalCreateShop = document.getElementById('modal-create-shop');
+  const btnCloseCreateShop = document.getElementById('btn-close-create-shop');
+  const btnSubmitCreateShop = document.getElementById('btn-submit-create-shop');
+  const filePicker = document.getElementById('file-picker');
+  const btnAttach = document.getElementById('btn-attach');
+  const btnCamera = document.getElementById('btn-camera');
+  const modalCamera = document.getElementById('modal-camera');
+  const btnCloseCamera = document.getElementById('btn-close-camera');
+  const btnSnapPhoto = document.getElementById('btn-snap-photo');
+  const btnVoice = document.getElementById('btn-voice');
+  const voiceBar = document.getElementById('voice-bar');
+  const btnDoneVoice = document.getElementById('btn-done-voice');
+  const btnCancelVoice = document.getElementById('btn-cancel-voice');
+  const attachmentPreview = document.getElementById('attachment-preview');
+  const attachmentThumb = document.getElementById('attachment-thumb');
+  const attachmentName = document.getElementById('attachment-name');
+  const btnRemoveAttachment = document.getElementById('btn-remove-attachment');
+  const wrapScrollLatest = document.getElementById('wrap-scroll-latest');
+  const btnScrollLatest = document.getElementById('btn-scroll-latest');
+  const btnHeaderPadi = document.getElementById('btn-header-padi');
+  const btnHomeMascot = document.getElementById('btn-home-mascot');
+
+  // TOAST NOTIFICATION
+  let toastTimer = null;
+  function showToast(text, icon = '✨') {
+    if (toastTimer) clearTimeout(toastTimer);
+    toastText.textContent = text;
+    toastIcon.textContent = icon;
+    toast.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
+    toast.classList.add('opacity-100', 'translate-y-0');
+    toastTimer = setTimeout(() => {
+      toast.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
+      toast.classList.remove('opacity-100', 'translate-y-0');
+    }, 2200);
+  }
+
+  function formatNaira(num) {
+    return '₦' + Number(num).toLocaleString();
+  }
+
+  // CART LOGIC
+  function updateCartUI() {
+    const totalCount = state.cart.reduce((s, i) => s + i.qty, 0);
+    cartBadge.textContent = totalCount;
+    const list = document.getElementById('cart-items');
+    list.innerHTML = '';
+    let subtotal = 0;
+    if (state.cart.length === 0) {
+      list.innerHTML = `<div class="p-6 text-center text-xs text-neutral-400">Your bag is empty. Ask Padi to find fresh drops!</div>`;
+      document.getElementById('cart-total').textContent = '₦0';
+      return;
+    }
+    state.cart.forEach((item, idx) => {
+      const p = CATALOGUE[item.id];
+      if (!p) return;
+      subtotal += p.price * item.qty;
+      const row = document.createElement('div');
+      row.className = 'flex items-center gap-3 p-2.5 rounded-2xl bg-neutral-50 border border-neutral-100';
+      row.innerHTML = `
+        <img src="${p.image}" class="w-12 h-12 rounded-xl object-cover" alt="${p.name}">
+        <div class="flex-1 min-w-0">
+          <h5 class="text-xs font-bold text-neutral-800 truncate">${p.name}</h5>
+          <p class="text-[10px] text-neutral-400">Size: ${item.size} • Qty: ${item.qty}</p>
+          <span class="text-xs font-bold text-emerald-700">${formatNaira(p.price)}</span>
+        </div>
+        <button class="remove-cart-item text-neutral-300 hover:text-red-500 text-xs px-2" data-idx="${idx}">✕</button>
+      `;
+      list.appendChild(row);
+    });
+    document.getElementById('cart-total').textContent = formatNaira(subtotal);
+  }
+
+  document.getElementById('cart-items').addEventListener('click', (e) => {
+    const rm = e.target.closest('.remove-cart-item');
+    if (rm) {
+      const idx = parseInt(rm.dataset.idx, 10);
+      state.cart.splice(idx, 1);
+      updateCartUI();
+    }
+  });
+
+  // SMART AUTO SCROLL:
+  // Smoothly scrolls the chat viewport so the newest element is completely visible
+  function smartScrollToBottom(force = false) {
+    setTimeout(() => {
+      const distanceToBottom = viewChat.scrollHeight - viewChat.scrollTop - viewChat.clientHeight;
+      if (force || distanceToBottom < 280) {
+        viewChat.scrollTo({
+          top: viewChat.scrollHeight + 100,
+          behavior: 'smooth'
+        });
+        wrapScrollLatest.classList.add('hidden');
+      } else {
+        wrapScrollLatest.classList.remove('hidden');
+      }
+    }, 60);
+  }
+
+  // DRAWER OPEN / CLOSE
+  function openDrawer() {
+    renderHistoryDrawer();
+    drawerHistory.classList.remove('hidden');
+    setTimeout(() => {
+      drawerInner.classList.remove('-translate-x-full');
+    }, 10);
+  }
+
+  function closeDrawer() {
+    drawerInner.classList.add('-translate-x-full');
+    setTimeout(() => {
+      drawerHistory.classList.add('hidden');
+    }, 280);
+  }
+
+  btnHamburger.addEventListener('click', openDrawer);
+  btnCloseHistory.addEventListener('click', closeDrawer);
+  drawerHistory.addEventListener('click', (e) => {
+    if (e.target === drawerHistory) closeDrawer();
+  });
+
+  // RENDER DRAWER HISTORY
+  function renderHistoryDrawer() {
+    historyContainer.innerHTML = '';
+    chatHistory.forEach(c => {
+      const row = document.createElement('div');
+      const isActive = c.id === state.activeChatId && state.currentView === 'chat';
+      row.className = `p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition ${isActive ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-neutral-100 hover:border-emerald-200'}`;
+      row.innerHTML = `
+        <div class="flex items-center gap-2 flex-1 min-w-0" data-chat-id="${c.id}">
+          <span class="text-xs">${isActive ? '🟢' : '💬'}</span>
+          <div class="truncate">
+            <h4 class="text-xs font-medium text-neutral-800 truncate">${c.title}</h4>
+            <p class="text-[10px] text-neutral-400">${c.time}</p>
+          </div>
+        </div>
+      `;
+      historyContainer.appendChild(row);
+    });
+  }
+
+  historyContainer.addEventListener('click', (e) => {
+    const chatTarget = e.target.closest('[data-chat-id]');
+    if (chatTarget) {
+      loadChatThread(chatTarget.dataset.chatId);
+      closeDrawer();
+    }
+  });
+
+  // DRAWER NAVIGATION ITEMS
+  document.querySelectorAll('.drawer-nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const nav = btn.dataset.nav;
+      closeDrawer();
+      if (nav === 'Buyer Home') {
+        startNewChat();
+      } else if (nav === 'Discover') {
+        handleSend('Show me trending drops');
+      } else if (nav === 'My Orders') {
+        handleSend('Track active delivery');
+      } else {
+        showToast(`Navigated to ${nav}`, '📍');
+      }
+    });
+  });
+
+  // CREATE SHOP MODAL
+  function openCreateShopModal() {
+    modalCreateShop.classList.remove('hidden');
+  }
+  btnDrawerCreateShop.addEventListener('click', () => {
+    closeDrawer();
+    openCreateShopModal();
+  });
+  btnCloseCreateShop.addEventListener('click', () => modalCreateShop.classList.add('hidden'));
+  modalCreateShop.addEventListener('click', (e) => {
+    if (e.target === modalCreateShop) modalCreateShop.classList.add('hidden');
+  });
+
+  btnSubmitCreateShop.addEventListener('click', () => {
+    const name = document.getElementById('input-shop-name').value.trim() || 'My Sleec Shop';
+    modalCreateShop.classList.add('hidden');
+    showToast(`Storefront "${name}" created!`, '🎉');
+    renderPadiBubble(`Congratulations! 🎉 Your shop **${name}** has been registered on Sleec. You now have access to nationwide express shipping, instant Sleec Pay checkout, and your catalog is indexed for Padi recommendations.`, [], null, ['View Storefront Settings', 'Add First Product', 'How Sleec Delivery Works']);
+  });
+
+  // RESET TO EMPTY HOME STATE
+  function startNewChat() {
+    state.currentView = 'home';
+    state.activeChatId = null;
+    viewHome.classList.remove('hidden');
+    viewChat.classList.add('hidden');
+    homeQuickActions.classList.remove('hidden');
+    chatMessages.innerHTML = '';
+    closeDrawer();
+    showToast('New chat ready!', '🌱');
+  }
+
+  btnDrawerNewChat.addEventListener('click', startNewChat);
+  btnHeaderPadi.addEventListener('click', () => {
+    if (state.currentView === 'chat') {
+      showToast('Padi is actively listening!', '🐻');
+    } else {
+      startNewChat();
+    }
+  });
+  btnHomeMascot.addEventListener('click', () => {
+    handleSend('Who are you and what can you do?');
+  });
+
+  // SWITCH TO ACTIVE CHAT MODE
+  function switchToChatMode() {
+    state.currentView = 'chat';
+    viewHome.classList.add('hidden');
+    viewChat.classList.remove('hidden');
+    homeQuickActions.classList.add('hidden');
+  }
+
+  function loadChatThread(chatId) {
+    const thread = chatHistory.find(c => c.id === chatId);
+    if (!thread) return;
+    state.activeChatId = thread.id;
+    switchToChatMode();
+    chatMessages.innerHTML = '';
+
+    thread.messages.forEach(msg => {
+      if (msg.sender === 'user') {
+        appendUserBubble(msg.text, false);
+      } else {
+        renderPadiBubble(msg.text, msg.productIds || [], msg.shopId || null, msg.quickReplies || [], msg.orderCard || false);
+      }
+    });
+    smartScrollToBottom(true);
+  }
+
+  // BUBBLE RENDERING
+  function appendUserBubble(text, save = true) {
+    switchToChatMode();
+    const bubble = document.createElement('div');
+    bubble.className = 'flex flex-col items-end self-end max-w-[85%]';
+    bubble.innerHTML = `
+      <div class="bg-[#0F382A] text-white text-xs leading-relaxed px-4 py-2.5 rounded-2xl rounded-tr-sm shadow-soft font-medium" style="word-break: break-word;">
+        ${text}
+      </div>
+      <span class="text-[9px] text-neutral-400 mt-1 mr-1">Just now</span>
+    `;
+    chatMessages.appendChild(bubble);
+    smartScrollToBottom(true);
+
+    if (save) {
+      let active = chatHistory.find(c => c.id === state.activeChatId);
+      if (!active) {
+        active = {
+          id: 'chat_' + Date.now(),
+          title: text.length > 25 ? text.substring(0, 22) + '...' : text,
+          time: 'Just now',
+          messages: []
+        };
+        chatHistory.unshift(active);
+        state.activeChatId = active.id;
+      }
+      active.messages.push({ sender: 'user', text });
+    }
+  }
+
+  function renderPadiBubble(text, productIds = [], shopId = null, quickReplies = [], orderCard = false) {
+    const wrap = document.createElement('div');
+    wrap.className = 'flex items-start gap-2 max-w-[95%] self-start w-full';
+
+    // Interactive Order Tracking Card
+    let orderHtml = '';
+    if (orderCard) {
+      orderHtml = `
+        <div class="mt-2.5 bg-white rounded-2xl border border-emerald-200 shadow-soft overflow-hidden w-full p-3.5">
+          <div class="flex items-center justify-between border-b border-neutral-100 pb-2 mb-2">
+            <div>
+              <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full uppercase tracking-wider">${ORDER_DATA.status}</span>
+              <h4 class="text-xs font-bold text-neutral-900 mt-1">Order ${ORDER_DATA.orderId}</h4>
+            </div>
+            <span class="text-[11px] font-bold text-emerald-800 bg-emerald-100/70 px-2 py-1 rounded-xl">⚡ Express</span>
+          </div>
+
+          <div class="space-y-2 py-1">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-neutral-500">Estimated Delivery:</span>
+              <span class="font-bold text-neutral-900">${ORDER_DATA.estimatedArrival}</span>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-neutral-500">Courier / Dispatch:</span>
+              <span class="font-semibold text-emerald-800">${ORDER_DATA.courier}</span>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-neutral-500">Destination Hub:</span>
+              <span class="font-medium text-neutral-700">${ORDER_DATA.destination}</span>
+            </div>
+          </div>
+
+          <!-- Step Progression Bar -->
+          <div class="mt-3 pt-2 border-t border-neutral-100">
+            <div class="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-2">Delivery Progress</div>
+            <div class="space-y-2">
+              ${ORDER_DATA.steps.map((st, i) => `
+                <div class="flex items-start gap-2 text-[11px]">
+                  <div class="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5 ${st.done ? 'bg-emerald-600 text-white' : 'bg-neutral-200 text-neutral-500'}">
+                    ${st.done ? '✓' : (i + 1)}
+                  </div>
+                  <div class="flex-1 flex items-center justify-between">
+                    <span class="${st.current ? 'font-bold text-emerald-900' : 'text-neutral-600'}">${st.label}</span>
+                    <span class="text-[10px] text-neutral-400">${st.time}</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 mt-3 pt-2.5 border-t border-neutral-100">
+            <button data-action="call-rider" class="flex-1 py-1.5 bg-[#0F382A] text-white text-[11px] font-bold rounded-xl active:scale-95 transition">Call Courier</button>
+            <button data-action="track-map" class="flex-1 py-1.5 bg-emerald-50 text-emerald-800 text-[11px] font-bold rounded-xl border border-emerald-200 active:scale-95 transition">Live GPS</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Store card preview
+    let shopHtml = '';
+    if (shopId && SHOPS[shopId]) {
+      const s = SHOPS[shopId];
+      shopHtml = `
+        <div class="mt-2.5 bg-white rounded-2xl border border-emerald-200 shadow-soft overflow-hidden w-full">
+          <div class="relative h-20 bg-neutral-900">
+            <img src="${s.banner}" class="w-full h-full object-cover opacity-60" alt="${s.name}"/>
+            <span class="absolute top-2 right-2 bg-emerald-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">Verified Store</span>
+          </div>
+          <div class="p-3">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-neutral-900 flex items-center gap-1"><span>${s.emoji}</span> ${s.name} <span class="text-emerald-600">✓</span></h4>
+              <span class="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded font-semibold">${s.rating}</span>
+            </div>
+            <p class="text-[11px] text-neutral-600 mt-1">${s.specialty}</p>
+            <p class="text-[10px] text-emerald-800 bg-emerald-50 p-1.5 rounded-lg mt-1.5 font-medium">📍 ${s.delivery}</p>
+            <div class="flex items-center gap-2 mt-2 pt-2 border-t border-neutral-100">
+              <button data-open-shop="${s.id}" class="flex-1 py-1.5 bg-[#0F382A] text-white text-[11px] font-bold rounded-xl active:scale-95 transition">Visit Shop</button>
+              <button data-shop-prods="${s.id}" class="flex-1 py-1.5 bg-emerald-50 text-emerald-800 text-[11px] font-bold rounded-xl border border-emerald-200 active:scale-95 transition">View Products</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Product recommendation cards
+    let prodsHtml = '';
+    if (productIds && productIds.length > 0) {
+      prodsHtml = '<div class="mt-2.5 flex flex-col gap-2 w-full">';
+      productIds.forEach(pid => {
+        const p = CATALOGUE[pid];
+        if (!p) return;
+        prodsHtml += `
+          <div class="flex items-center gap-3 p-3 bg-white rounded-2xl border border-emerald-100 shadow-sm w-full max-w-full">
+            <img src="${p.image}" class="w-16 h-16 rounded-xl object-cover shrink-0 bg-neutral-100 cursor-pointer" data-view-p="${p.id}" alt="${p.name}"/>
+            <div class="min-w-0 flex-1">
+              <span class="text-[10px] font-semibold text-emerald-700 uppercase tracking-wider block truncate">${p.seller}</span>
+              <h5 class="text-xs font-semibold text-neutral-900 line-clamp-2 mt-0.5 leading-snug cursor-pointer" data-view-p="${p.id}">${p.name}</h5>
+              <span class="text-sm font-bold text-emerald-600 mt-1 block">${formatNaira(p.price)}</span>
+            </div>
+            <div class="shrink-0 flex flex-col gap-1.5 pl-1">
+              <button data-view-p="${p.id}" class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-xl transition active:scale-95 text-center">View</button>
+              <button data-quick-bag="${p.id}" class="text-[11px] font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded-xl shadow-xs transition active:scale-95 text-center">+ Bag</button>
+            </div>
+          </div>
+        `;
+      });
+      prodsHtml += '</div>';
+    }
+
+    // Response-specific quick action chips
+    let qrHtml = '';
+    if (quickReplies && quickReplies.length > 0) {
+      qrHtml = `<div class="mt-2.5 flex items-center gap-1.5 flex-wrap">` +
+        quickReplies.map(qr => `<button class="qr-btn text-[11px] font-semibold text-emerald-900 bg-white border border-emerald-200 px-3 py-1 rounded-full shadow-xs hover:bg-emerald-50 active:scale-95 transition" data-qr="${qr}">${qr}</button>`).join('') +
+        `</div>`;
+    }
+
+    wrap.innerHTML = `
+      <div class="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0 text-white shadow-sm p-1 mt-0.5">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="6" cy="7" r="2.5"></circle><circle cx="18" cy="7" r="2.5"></circle><circle cx="12" cy="13.5" r="6.5"></circle><ellipse cx="12" cy="15" fill="#0F382A" rx="2.8" ry="2"></ellipse>
+        </svg>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="bg-white border border-emerald-100 px-3.5 py-2.5 rounded-2xl rounded-bl-sm shadow-soft text-xs text-neutral-800 leading-relaxed font-normal" style="word-break: break-word;">
+          ${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>')}
+        </div>
+        ${orderHtml}
+        ${shopHtml}
+        ${prodsHtml}
+        ${qrHtml}
+        <span class="text-[9px] text-neutral-400 mt-1 ml-1 block">Padi Assistant • Just now</span>
+      </div>
+    `;
+    chatMessages.appendChild(wrap);
+    smartScrollToBottom(true);
+  }
+
+  // COMPREHENSIVE CONVERSATIONAL AI & INTENT UNDERSTANDING ENGINE
+  function processPadiResponse(query) {
+    const q = query.trim();
+    const lower = q.toLowerCase();
+
+    // 1. IDENTITY & WHO ARE YOU / WHAT CAN YOU DO
+    if (
+      lower.includes("who are you") ||
+      lower.includes("tell me about yourself") ||
+      lower.includes("what can you do") ||
+      lower.includes("are you an ai") ||
+      lower.includes("what is padi") ||
+      lower.includes("help")
+    ) {
+      return {
+        text: "I'm **Padi**, your Sleec shopping companion! 🐻✨\n\nI'm here to help you discover fresh drops, find verified independent shops, track orders and deliveries in real time, recommend styles that match your vibe, and navigate everything on Sleec seamlessly.",
+        productIds: [],
+        shopId: null,
+        quickReplies: ['Find Sneakers', 'Track an Order', 'How Sleec Works', 'Create a Shop']
+      };
+    }
+
+    // 2. SLEEC PLATFORM QUESTIONS & HOW IT WORKS
+    if (
+      lower.includes("what is sleec") ||
+      lower.includes("how does sleec work") ||
+      lower.includes("what can i buy") ||
+      lower.includes("delivery cost") ||
+      lower.includes("sleec delivery") ||
+      lower.includes("how does delivery work")
+    ) {
+      return {
+        text: "✨ **Welcome to Sleec!**\nSleec is Nigeria's curated social shopping platform connecting you with verified independent fashion brands, sneaker creators, and boutique shops.\n\n• **Buyer Protection:** Escrow payment stays secure until you receive and verify items.\n• **Sleec Express:** Fast, reliable tracked delivery across Lagos, Abuja, Ilorin, and nationwide.",
+        productIds: ['prod_1', 'prod_3'],
+        shopId: null,
+        quickReplies: ['Trending Drops', 'Track My Order', 'Create a Shop', 'Check Bag']
+      };
+    }
+
+    // 3. CREATE A SHOP / BECOME A SELLER / OPEN A STORE
+    if (
+      lower.includes("create a shop") ||
+      lower.includes("create my shop") ||
+      lower.includes("i want to sell") ||
+      lower.includes("become a seller") ||
+      lower.includes("open a store") ||
+      lower.includes("open a shop") ||
+      lower.includes("can i sell") ||
+      lower.includes("start selling") ||
+      lower.includes("seller onboarding")
+    ) {
+      return {
+        text: "🏪 **Start selling on Sleec in minutes!**\nIndependent brands and verified merchants get instant discovery, automated AI recommendations through Padi, escrow payments, and door-to-door delivery fulfillment across Nigeria.\n\nTap below to launch your storefront:",
+        productIds: [],
+        shopId: null,
+        quickReplies: ['🚀 Launch Storefront Modal', 'How Seller Escrow Works', 'Delivery Rates for Shops']
+      };
+    }
+
+    // 4. CONTEXTUAL FOLLOW-UPS (Cheaper, Another Shop, Black Color, First item to bag)
+    if (
+      lower.includes("cheaper") ||
+      lower.includes("less expensive") ||
+      lower.includes("lower price") ||
+      lower.includes("budget option")
+    ) {
+      state.lastProduct = 'prod_4';
+      return {
+        text: `Here is our best budget-friendly verified pick under ₦20,000 with standard Sleec delivery warranty:`,
+        productIds: ['prod_4', 'prod_2'],
+        shopId: null,
+        quickReplies: ['Add Tortoise Optics to Bag', 'Show Trending Drops', 'Check Bag']
+      };
+    }
+
+    if (lower.includes("add the first one") || lower.includes("add first item") || lower.includes("add first to bag")) {
+      const targetId = state.lastProduct || 'prod_1';
+      const p = CATALOGUE[targetId];
+      if (p) {
+        state.cart.push({ id: p.id, size: p.sizes[0], qty: 1 });
+        updateCartUI();
+        showToast(`Added ${p.name} to Bag!`, '🛍️');
+        return {
+          text: `Done! ✅ Added **${p.name}** (${formatNaira(p.price)}) to your Sleec Bag. Ready to checkout or explore more styles?`,
+          productIds: [p.id],
+          shopId: null,
+          quickReplies: ['Open My Bag', 'Checkout Now', 'Show Matching Hoodie']
+        };
+      }
+    }
+
+    if (lower.includes("black") || lower.includes("dark")) {
+      state.lastProduct = 'prod_5';
+      state.lastCategory = 'fashion';
+      return {
+        text: `Here is our bestselling black heavyweight piece from **Nocturne Apparel**:`,
+        productIds: ['prod_5'],
+        shopId: null,
+        quickReplies: ['View Nocturne Hoodie', '+ Bag', 'Show Matching Runners']
+      };
+    }
+
+    if (lower.includes("another shop") || lower.includes("more stores") || lower.includes("other sellers")) {
+      return {
+        text: "Here is another top verified store you might love on Sleec:",
+        productIds: ['prod_3'],
+        shopId: 'shop_latelier',
+        quickReplies: ['Visit Shop', 'View Products', 'Trending Drops']
+      };
+    }
+
+    // 5. TRACKING ORDERS & DELIVERY INTENTS
+    if (
+      lower.includes("order") ||
+      lower.includes("track") ||
+      lower.includes("where is my package") ||
+      lower.includes("where is my order") ||
+      lower.includes("has my order shipped") ||
+      lower.includes("delivery coming") ||
+      lower.includes("when is my delivery") ||
+      lower.includes("tracking")
+    ) {
+      return {
+        text: "📦 **Active Order #SL-88492** is currently Out for Delivery with Sleec Express. Here is your live delivery progress:",
+        productIds: ['prod_2'],
+        shopId: null,
+        quickReplies: ['Contact Courier', 'Live GPS Map', 'Delivery Policy'],
+        orderCard: true
+      };
+    }
+
+    // 6. SHOPS SEARCH INTENTS (Guitars, Instruments, Shoes, Perfume, Clothing)
+    if (lower.includes("guitar") || lower.includes("music") || lower.includes("audio") || lower.includes("ilorin")) {
+      state.lastShop = 'shop_soundwave';
+      return {
+        text: "Found a verified audio and instruments merchant! **SoundWave Audio & Guitars** has stock ready with insured nationwide transit (including express to Ilorin):",
+        productIds: ['prod_1', 'prod_4'],
+        shopId: 'shop_soundwave',
+        quickReplies: ['Visit Storefront', 'Show In-Stock Products', 'Check Delivery to Ilorin']
+      };
+    }
+
+    if (lower.includes("perfume") || lower.includes("fragrance") || lower.includes("scent") || lower.includes("cologne")) {
+      state.lastCategory = 'perfume';
+      state.lastShop = 'shop_latelier';
+      state.lastProduct = 'prod_3';
+      return {
+        text: "Discover top verified indie fragrance houses on Sleec. Here is **L’Atelier Parfum Lab**'s flagship extrait:",
+        productIds: ['prod_3'],
+        shopId: 'shop_latelier',
+        quickReplies: ['View Fragrance', '+ Bag', 'Other Fragrances']
+      };
+    }
+
+    if (lower.includes("shoe") || lower.includes("sneaker") || lower.includes("kicks") || lower.includes("runner")) {
+      state.lastCategory = 'sneakers';
+      state.lastShop = 'shop_stride';
+      state.lastProduct = 'prod_1';
+      return {
+        text: "👟 Here are the top trending verified sneakers on Sleec right now:",
+        productIds: ['prod_1', 'prod_6'],
+        shopId: 'shop_stride',
+        quickReplies: ['View Stride Runners', 'Check Size 42', 'Check Bag']
+      };
+    }
+
+    if (lower.includes("hoodie") || lower.includes("clothes") || lower.includes("fashion") || lower.includes("shirt") || lower.includes("tote")) {
+      state.lastCategory = 'fashion';
+      state.lastProduct = 'prod_5';
+      return {
+        text: "👕 Here are curated apparel essentials crafted by independent streetwear labels:",
+        productIds: ['prod_5', 'prod_2'],
+        shopId: null,
+        quickReplies: ['View Nocturne Hoodie', 'Find My Size', 'Check Bag']
+      };
+    }
+
+    // 7. SIZING
+    if (lower.includes("size") || lower.includes("fit")) {
+      state.lastProduct = 'prod_1';
+      return {
+        text: "Our sizing guide for **Stride Club Sage Runners**:\n• Fit: True to EU sneaker size\n• Foot width: Adaptive knit mesh relaxes after 1–2 wears\n• If you are between sizes (e.g. 42.5), we recommend sizing up to 43.",
+        productIds: ['prod_1'],
+        shopId: null,
+        quickReplies: ['Check Size 42', 'Add to Bag', 'Ask about Returns']
+      };
+    }
+
+    // 8. CART & BAG INTENTS
+    if (lower.includes("bag") || lower.includes("cart") || lower.includes("checkout")) {
+      return {
+        text: "Here is your current bag overview. You have items waiting from verified merchants:",
+        productIds: state.cart.map(c => c.id),
+        shopId: null,
+        quickReplies: ['Open My Bag', 'Checkout with Sleec Pay', 'Continue Shopping']
+      };
+    }
+
+    // 9. TRENDING DROPS
+    if (lower.includes("trending") || lower.includes("drop") || lower.includes("popular") || lower.includes("hot")) {
+      return {
+        text: "🔥 **Trending Drops This Week**\nCurated items hand-picked by our editors from verified creators:",
+        productIds: ['prod_1', 'prod_2', 'prod_5'],
+        shopId: null,
+        quickReplies: ['View Stride Runners', 'Find a Shop', 'Check Bag']
+      };
+    }
+
+    // 10. GREETINGS
+    if (/^(hi|hello|hey|yo|padi|good morning|good afternoon)\b/i.test(lower)) {
+      return {
+        text: "Hey! 👋 I’m Padi, your Sleec shopping assistant. What would you like to explore today?",
+        productIds: ['prod_1', 'prod_3'],
+        shopId: null,
+        quickReplies: ['Trending Drops', 'Track My Order', 'Find a Shop', 'Create a Shop']
+      };
+    }
+
+    // 11. FRIENDLY FALLBACK WITH HELPFUL ACTIONS
+    return {
+      text: `I'm not completely sure about "${q}", but I'm learning every day! 🐻\n\nI can help you find products, discover verified shops, track your orders, check nationwide delivery, or answer questions about shopping on Sleec.`,
+      productIds: ['prod_1', 'prod_3'],
+      shopId: null,
+      quickReplies: ['Trending Drops', 'Track Order', 'Find Sneakers', 'Create a Shop']
+    };
+  }
+
+  // HANDLE USER SEND
+  function handleSend(overrideText = null) {
+    const q = (overrideText !== null ? overrideText : chatInput.value).trim();
+    if (!q && !state.attachedFile) return;
+
+    chatInput.value = '';
+    state.attachedFile = null;
+    attachmentPreview.classList.add('hidden');
+
+    appendUserBubble(q || 'Photo uploaded');
+
+    typingIndicator.classList.remove('hidden');
+    smartScrollToBottom(true);
+
+    setTimeout(() => {
+      typingIndicator.classList.add('hidden');
+      const response = processPadiResponse(q);
+      renderPadiBubble(response.text, response.productIds, response.shopId, response.quickReplies, response.orderCard);
+    }, 420);
+  }
+
+  btnSend.addEventListener('click', () => handleSend());
+  chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleSend(); });
+
+  // HOME QUICK ACTION BUTTONS
+  homeQuickActions.addEventListener('click', (e) => {
+    const chip = e.target.closest('.quick-chip-btn');
+    if (chip) {
+      handleSend(chip.dataset.q);
+    }
+  });
+
+  // DELEGATED INTERACTION HANDLERS
+  document.addEventListener('click', (e) => {
+    // Quick replies in chat
+    const qr = e.target.closest('.qr-btn');
+    if (qr) {
+      const val = qr.dataset.qr;
+      if (val === 'Visit Storefront') {
+        openStorefrontModal('shop_soundwave');
+      } else if (val === 'Open My Bag' || val === 'Check Bag') {
+        updateCartUI();
+        modalCart.classList.remove('hidden');
+      } else if (val === 'Checkout Now' || val === 'Checkout with Sleec Pay') {
+        modalCart.classList.remove('hidden');
+      } else if (val === 'View Stride Runners') {
+        openProductModal('prod_1');
+      } else if (val === 'View Fragrance') {
+        openProductModal('prod_3');
+      } else if (val === 'View Nocturne Hoodie') {
+        openProductModal('prod_5');
+      } else if (val === 'Check Size 42') {
+        openProductModal('prod_1');
+      } else if (val === 'Add Both to Bag') {
+        state.cart.push({ id: 'prod_1', size: '42', qty: 1 }, { id: 'prod_2', size: 'One Size', qty: 1 });
+        updateCartUI();
+        showToast('Added Stride Runners & Tote to Bag! 🛍️', '🛍️');
+      } else if (val.includes('Launch Storefront') || val.includes('Create a Shop')) {
+        openCreateShopModal();
+      } else if (val === 'Contact Courier' || val === 'Call Courier') {
+        showToast('Calling Courier Tunde Adebayo...', '📞');
+      } else if (val === 'Live GPS Map' || val === 'Live GPS') {
+        showToast('Courier is 1.8km away (Ring Road)', '📍');
+      } else {
+        handleSend(val);
+      }
+      return;
+    }
+
+    // Call / GPS actions in order card
+    const actBtn = e.target.closest('[data-action]');
+    if (actBtn) {
+      const act = actBtn.dataset.action;
+      if (act === 'call-rider') {
+        showToast(`Dialing ${ORDER_DATA.rider}...`, '📞');
+      } else if (act === 'track-map') {
+        showToast('Live GPS: Courier 12 mins away', '📍');
+      }
+      return;
+    }
+
+    // Open Shop from card
+    const openSf = e.target.closest('[data-open-shop]');
+    if (openSf) {
+      openStorefrontModal(openSf.dataset.openShop);
+      return;
+    }
+
+    // Shop in-stock products
+    const spProds = e.target.closest('[data-shop-prods]');
+    if (spProds) {
+      const s = SHOPS[spProds.dataset.shopProds];
+      if (s) renderPadiBubble(`Here are in-stock items currently available at **${s.name}**:`, s.productIds, null, ['Visit Storefront', 'Check Bag']);
+      return;
+    }
+
+    // View product details
+    const vp = e.target.closest('[data-view-p]');
+    if (vp) {
+      openProductModal(vp.dataset.viewP);
+      return;
+    }
+
+    // Quick add to bag
+    const qb = e.target.closest('[data-quick-bag]');
+    if (qb) {
+      const pid = qb.dataset.quickBag;
+      const p = CATALOGUE[pid];
+      if (p) {
+        state.cart.push({ id: pid, size: p.sizes[0], qty: 1 });
+        updateCartUI();
+        showToast(`Added ${p.name} to Bag!`, '🛍️');
+      }
+      return;
+    }
+  });
+
+  // STOREFRONT MODAL
+  function openStorefrontModal(shopId) {
+    const s = SHOPS[shopId] || SHOPS.shop_soundwave;
+    document.getElementById('sf-name').textContent = s.name;
+    document.getElementById('sf-avatar').textContent = s.emoji;
+    document.getElementById('sf-banner').src = s.banner;
+    document.getElementById('sf-rating').textContent = s.rating + ' • Nationwide';
+    document.getElementById('sf-desc').textContent = s.desc;
+    document.getElementById('sf-delivery').textContent = `📍 ${s.delivery}`;
+
+    const list = document.getElementById('sf-products');
+    list.innerHTML = '';
+    s.productIds.forEach(pid => {
+      const p = CATALOGUE[pid];
+      if (!p) return;
+      const card = document.createElement('div');
+      card.className = 'bg-neutral-50 rounded-2xl p-2.5 border border-neutral-100 flex flex-col justify-between';
+      card.innerHTML = `
+        <div class="h-24 rounded-xl overflow-hidden bg-neutral-200 mb-2 cursor-pointer" data-view-p="${p.id}">
+          <img src="${p.image}" class="w-full h-full object-cover" alt="${p.name}">
+        </div>
+        <h5 class="text-xs font-bold text-neutral-800 truncate">${p.name}</h5>
+        <span class="text-xs font-extrabold text-[#0F382A] mt-0.5 block">${formatNaira(p.price)}</span>
+        <button data-view-p="${p.id}" class="w-full mt-2 py-1.5 bg-emerald-600 text-white font-bold text-[10px] rounded-xl active:scale-95 transition">View &amp; Buy</button>
+      `;
+      list.appendChild(card);
+    });
+    modalStorefront.classList.remove('hidden');
+  }
+
+  btnCloseStorefront.addEventListener('click', () => modalStorefront.classList.add('hidden'));
+  modalStorefront.addEventListener('click', (e) => {
+    if (e.target === modalStorefront) modalStorefront.classList.add('hidden');
+  });
+
+  // PRODUCT MODAL
+  function openProductModal(pid) {
+    const p = CATALOGUE[pid];
+    if (!p) return;
+    state.activeProdInSheet = p;
+    state.selectedSize = p.sizes[0];
+
+    document.getElementById('ps-seller').textContent = p.seller;
+    document.getElementById('ps-title').textContent = p.name;
+    document.getElementById('ps-image').src = p.image;
+    document.getElementById('ps-price').textContent = formatNaira(p.price);
+    document.getElementById('ps-original').textContent = formatNaira(p.originalPrice);
+    document.getElementById('ps-desc').textContent = p.description;
+    document.getElementById('ps-btn-price').textContent = `• ${formatNaira(p.price)}`;
+
+    const szBox = document.getElementById('ps-sizes');
+    szBox.innerHTML = '';
+    p.sizes.forEach((s, idx) => {
+      const b = document.createElement('button');
+      b.className = `px-3 py-1.5 rounded-xl text-xs font-bold border transition ${idx === 0 ? 'bg-[#0F382A] text-white border-[#0F382A]' : 'bg-neutral-50 text-neutral-700 border-neutral-200'}`;
+      b.textContent = s;
+      b.onclick = () => {
+        state.selectedSize = s;
+        szBox.querySelectorAll('button').forEach(btn => btn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold border bg-neutral-50 text-neutral-700 border-neutral-200');
+        b.className = 'px-3 py-1.5 rounded-xl text-xs font-bold border bg-[#0F382A] text-white border-[#0F382A]';
+      };
+      szBox.appendChild(b);
+    });
+
+    modalProduct.classList.remove('hidden');
+  }
+
+  btnCloseProduct.addEventListener('click', () => modalProduct.classList.add('hidden'));
+  modalProduct.addEventListener('click', (e) => {
+    if (e.target === modalProduct) modalProduct.classList.add('hidden');
+  });
+
+  document.getElementById('ps-add-bag').addEventListener('click', () => {
+    const p = state.activeProdInSheet;
+    if (!p) return;
+    state.cart.push({ id: p.id, size: state.selectedSize || p.sizes[0], qty: 1 });
+    updateCartUI();
+    modalProduct.classList.add('hidden');
+    showToast(`Added ${p.name} to Bag!`, '🛍️');
+  });
+
+  document.getElementById('ps-wishlist').addEventListener('click', () => {
+    showToast('Saved to your wishlist ❤️', '❤️');
+  });
+
+  // CART MODAL
+  btnOpenBag.addEventListener('click', () => {
+    updateCartUI();
+    modalCart.classList.remove('hidden');
+  });
+  btnCloseCart.addEventListener('click', () => modalCart.classList.add('hidden'));
+  modalCart.addEventListener('click', (e) => {
+    if (e.target === modalCart) modalCart.classList.add('hidden');
+  });
+  document.getElementById('btn-checkout').addEventListener('click', () => {
+    if (state.cart.length === 0) {
+      showToast('Your bag is currently empty', '🛍️');
+      return;
+    }
+    modalCart.classList.add('hidden');
+    state.cart = [];
+    updateCartUI();
+    showToast('Order confirmed via Sleec Pay! 🎉', '💳');
+    renderPadiBubble("🎉 **Payment Confirmed!** Your order has been placed into secure Sleec Escrow. The verified merchants have been notified to package and dispatch. Track the live stages anytime right here in Padi.", [], null, ['Track Order Status', 'Discover More Drops']);
+  });
+
+  // ATTACHMENT, CAMERA & VOICE
+  btnAttach.addEventListener('click', () => filePicker.click());
+  filePicker.addEventListener('change', (e) => {
+    const f = e.target.files[0];
+    if (f) {
+      state.attachedFile = f;
+      attachmentThumb.src = URL.createObjectURL(f);
+      attachmentName.textContent = f.name;
+      attachmentPreview.classList.remove('hidden');
+    }
+  });
+  btnRemoveAttachment.addEventListener('click', () => {
+    state.attachedFile = null;
+    attachmentPreview.classList.add('hidden');
+  });
+
+  btnCamera.addEventListener('click', () => modalCamera.classList.remove('hidden'));
+  btnCloseCamera.addEventListener('click', () => modalCamera.classList.add('hidden'));
+  btnSnapPhoto.addEventListener('click', () => {
+    modalCamera.classList.add('hidden');
+    attachmentThumb.src = 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80';
+    attachmentName.textContent = 'visual_search.jpg';
+    attachmentPreview.classList.remove('hidden');
+    showToast('Item photo captured!', '📸');
+    handleSend('Find matches for this item');
+  });
+
+  btnVoice.addEventListener('click', () => voiceBar.classList.remove('hidden'));
+  btnCancelVoice.addEventListener('click', () => voiceBar.classList.add('hidden'));
+  btnDoneVoice.addEventListener('click', () => {
+    voiceBar.classList.add('hidden');
+    chatInput.value = 'Show me trending running shoes';
+    showToast('Voice transcribed ✨', '🎙️');
+    handleSend();
+  });
+
+  // SCROLL DETECTION FOR "LATEST MESSAGE" PILL
+  viewChat.addEventListener('scroll', () => {
+    const dist = viewChat.scrollHeight - viewChat.scrollTop - viewChat.clientHeight;
+    if (dist > 90) {
+      wrapScrollLatest.classList.remove('hidden');
+    } else {
+      wrapScrollLatest.classList.add('hidden');
+    }
+  }, { passive: true });
+
+  btnScrollLatest.addEventListener('click', () => {
+    viewChat.scrollTo({ top: viewChat.scrollHeight, behavior: 'smooth' });
+    wrapScrollLatest.classList.add('hidden');
+  });
+
+  // BOTTOM NAVIGATION TABS
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const t = tab.dataset.tab;
+      if (t === 'ai') {
+        if (state.currentView === 'chat') {
+          showToast('In Padi Chat session', '✨');
+        } else {
+          showToast('Padi is ready', '🌱');
+        }
+      } else if (t === 'home') {
+        startNewChat();
+      } else if (t === 'orders') {
+        handleSend('Track my active order');
+      } else if (t === 'discover') {
+        handleSend('Show me trending drops');
+      } else if (t === 'saved') {
+        showToast('Viewing Saved Items (4 items)', '❤️');
+      }
+    });
+  });
+
+  // INITIAL SETUP
+  updateCartUI();
+});
+</script>
+</body></html>
