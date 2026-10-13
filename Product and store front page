@@ -1,0 +1,860 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Sleec - Fashion &amp; Luxury Drops</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16',
+            },
+            deepForest: '#0c2e1f',
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Roboto', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 8px 30px rgba(0, 0, 0, 0.04)',
+            'card': '0 10px 25px -5px rgba(22, 101, 52, 0.08)',
+            'glow': '0 0 20px rgba(74, 222, 128, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    /* iOS frame setup & smooth scrolling */
+    html, body {
+      background-color: #0f291e;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    /* Hide scrollbar for clean app feel */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Smooth background crossfade animations */
+    .hero-slide {
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-slide.inactive {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+    .hero-slide.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    /* Organic slow, elegant decelerating transitions for mini product cards */
+    .product-track {
+      transition: transform 2200ms cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform;
+    }
+
+    /* Subtle parallax, scale cushion, and soft depth fade during swipe transitions */
+    .product-item {
+      transition: transform 2200ms cubic-bezier(0.25, 1, 0.5, 1), opacity 1800ms cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform, opacity;
+    }
+    .product-item img {
+      transition: transform 2400ms cubic-bezier(0.25, 1, 0.5, 1), filter 1800ms ease;
+    }
+    .product-item .item-meta {
+      transition: transform 2000ms cubic-bezier(0.25, 1, 0.5, 1), opacity 1600ms ease;
+    }
+
+    /* Active & inactive slide states inside mini cards */
+    .product-item.item-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .product-item.item-active img {
+      transform: scale(1);
+      filter: blur(0px);
+    }
+    .product-item.item-active .item-meta {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .product-item.item-inactive {
+      opacity: 0.65;
+      transform: scale(0.96);
+    }
+    .product-item.item-inactive img {
+      transform: scale(1.08);
+      filter: blur(0.4px);
+    }
+    .product-item.item-inactive .item-meta {
+      transform: translateY(6px);
+      opacity: 0.4;
+    }
+
+    /* Multi-state interactive container smooth transition */
+    .dynamic-state {
+      transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dynamic-state.hidden-state {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+    }
+    .dynamic-state.active-state {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      position: relative;
+    }
+  </style>
+</head>
+<body class="bg-[#0f291e] min-h-screen flex justify-center items-start p-0 font-sans">
+<!-- BEGIN: PhoneShellContainer -->
+<div class="w-full max-w-[412px] min-h-screen bg-slate-50 relative flex flex-col overflow-x-hidden shadow-2xl" data-purpose="mobile-screen-shell"><!-- BEGIN: ProductDetailsScreen -->
+<div class="w-full min-h-screen bg-[#fbfdfb] flex flex-col relative pb-28" id="product-details-page-root"><!-- Sticky Top Header (Clean surface, subtle shadow, no border) -->
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-4 py-3 flex items-center justify-between shadow-sm">
+<button aria-label="Back to Storefront" class="w-10 h-10 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-800 flex items-center justify-center transition-colors active:scale-95 shadow-sm" id="pdp-back-btn" onclick="if(window.history.length &gt; 1) { window.history.back(); } else { window.location.href='#home'; }">
+<svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<div class="text-center cursor-pointer" onclick="openStorefrontView('sage-co')">
+<span class="text-[10px] font-bold uppercase tracking-wider text-emerald-800">Sage &amp; Co.</span>
+<h2 class="text-xs font-bold text-slate-900 truncate max-w-[180px]">Stride Club Sage Runners</h2>
+</div>
+<div class="flex items-center space-x-1.5">
+<button aria-label="Share" class="w-10 h-10 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-colors active:scale-95 shadow-sm" id="pdp-share-btn" onclick="if(navigator.share){navigator.share({title:'Stride Club Sage Runners',url:window.location.href}).catch(()=&gt;{});}else{navigator.clipboard?navigator.clipboard.writeText(window.location.href):null; showPdpToast('Link copied to clipboard!');}">
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg>
+</button>
+<button aria-label="Favorite" class="w-10 h-10 rounded-full bg-slate-50 hover:bg-rose-50 text-slate-400 flex items-center justify-center transition-colors active:scale-95 shadow-sm" id="pdp-fav-btn" onclick="const isSaved = this.classList.toggle('text-rose-500'); if(isSaved){ this.classList.remove('text-slate-400'); showPdpToast('Saved to your wishlist'); } else { this.classList.add('text-slate-400'); showPdpToast('Removed from wishlist'); }">
+<svg class="w-4 h-4 fill-current stroke-current stroke-2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</div>
+</header>
+<!-- Main Product Scroll Content -->
+<main class="flex-1 px-4 pt-3 space-y-4">
+<!-- Product Image Gallery Preview (No outlines, subtle shadows) -->
+<section class="relative rounded-3xl overflow-hidden bg-slate-100 shadow-md">
+<div class="relative w-full aspect-square bg-[#0c2e1f]/5 flex items-center justify-center overflow-hidden">
+<img alt="Stride Club Sage Runners" class="w-full h-full object-cover transition-all duration-300" id="main-product-display-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwdxrWHwVDyPOIKfXj9lMJWDVhtYv9u0JCRKfAa1qGoXuHqGrY8vqyOmybJYNbP2mxYMGsV51I-GeK6mg7HfLHFunccdY-xa5hRyLhocK2rTEPilPpWH0Cc-m3PvgslWJoVof5vCbwQj3SlQcumwCKLW3y6w0dcfCkgB2oKPzlUXbZKVuACHPrWxwHS2FdcQf1WNtr3afEafqyp-qdHhuUf2MMYMIwcz6tnwbtmahPRrn-6VZ1viZZJ8XWA5zrZ6Av">
+<!-- Clean text over image without pill container background -->
+<span class="absolute top-3 left-3 text-white text-[11px] font-extrabold uppercase tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Limited Drop</span>
+<button class="absolute top-3 right-3 text-white text-xs font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] flex items-center gap-1.5 cursor-pointer hover:opacity-90" onclick="document.getElementById('ratings-section').scrollIntoView({behavior:'smooth'})" type="button">
+<span class="text-amber-400">★</span> 4.9 <span class="text-white/80 font-normal">(128 reviews)</span>
+</button>
+</div>
+<!-- Thumbnail Switcher Row: No borders, active thumbnail indicated by shadow, elevation, and opacity -->
+<div class="p-3 bg-white flex items-center gap-3 overflow-x-auto no-scrollbar" id="gallery-thumbs-row">
+<button class="thumb-btn w-14 h-14 rounded-2xl overflow-hidden flex-shrink-0 shadow-md scale-100 opacity-100 transition-all" onclick="switchGalleryThumb(this, 'https://lh3.googleusercontent.com/aida-public/AB6AXuAwdxrWHwVDyPOIKfXj9lMJWDVhtYv9u0JCRKfAa1qGoXuHqGrY8vqyOmybJYNbP2mxYMGsV51I-GeK6mg7HfLHFunccdY-xa5hRyLhocK2rTEPilPpWH0Cc-m3PvgslWJoVof5vCbwQj3SlQcumwCKLW3y6w0dcfCkgB2oKPzlUXbZKVuACHPrWxwHS2FdcQf1WNtr3afEafqyp-qdHhuUf2MMYMIwcz6tnwbtmahPRrn-6VZ1viZZJ8XWA5zrZ6Av')" type="button">
+<img alt="Angle 1" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwdxrWHwVDyPOIKfXj9lMJWDVhtYv9u0JCRKfAa1qGoXuHqGrY8vqyOmybJYNbP2mxYMGsV51I-GeK6mg7HfLHFunccdY-xa5hRyLhocK2rTEPilPpWH0Cc-m3PvgslWJoVof5vCbwQj3SlQcumwCKLW3y6w0dcfCkgB2oKPzlUXbZKVuACHPrWxwHS2FdcQf1WNtr3afEafqyp-qdHhuUf2MMYMIwcz6tnwbtmahPRrn-6VZ1viZZJ8XWA5zrZ6Av">
+</button>
+<button class="thumb-btn w-14 h-14 rounded-2xl overflow-hidden flex-shrink-0 shadow-sm opacity-60 hover:opacity-100 scale-95 transition-all" onclick="switchGalleryThumb(this, 'https://lh3.googleusercontent.com/aida-public/AB6AXuAGDkVixA7Ks7M5qqihvz_naNmfzvsm3wCGMltkOQ8gXkZ0ioB_lFjv435DzIh-U7L9zQnJ-8EgGu69k0qxukNCZUW3vdShvoTTCb9AzC0yVz7xx4AGq0vdgieGSWYO6CfzAV5anWYa0RkuKPuD6PXNd5Fx8JmIchdXBc4ABuSbcXt30WDKUNOhy_yvX-TJtco1eU4e40nV-VC6ygtowvvNpOMW8WD_nVyyiMdRsv_Kdx5RF6TTjppYIHc7nSctpgoY')" type="button">
+<img alt="Angle 2" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGDkVixA7Ks7M5qqihvz_naNmfzvsm3wCGMltkOQ8gXkZ0ioB_lFjv435DzIh-U7L9zQnJ-8EgGu69k0qxukNCZUW3vdShvoTTCb9AzC0yVz7xx4AGq0vdgieGSWYO6CfzAV5anWYa0RkuKPuD6PXNd5Fx8JmIchdXBc4ABuSbcXt30WDKUNOhy_yvX-TJtco1eU4e40nV-VC6ygtowvvNpOMW8WD_nVyyiMdRsv_Kdx5RF6TTjppYIHc7nSctpgoY">
+</button>
+<button class="thumb-btn w-14 h-14 rounded-2xl overflow-hidden flex-shrink-0 shadow-sm opacity-60 hover:opacity-100 scale-95 transition-all" onclick="switchGalleryThumb(this, 'https://lh3.googleusercontent.com/aida-public/AB6AXuARGYlv99TOcxXOVrW4JsPGbQTel1OhwRULilFcPlQntYZ6QgDkP4ObNxKmBk-fU8ZsgvB54rzR894pyfRlRaV3El_ajlx5-RmFgiFlSa-725LZcFa1ZsHPqz7AWqKRWwpjVzE6LvIryXpFi0mphGfGmuw6tXbWhXYhy7i5DQRpYUdC5jTjJqwVDAvnENcQ_SiYgitRk9jaOGN9QTvNADCPLFd4zkJeDkgDivmzjBK3D2tAlwYOL4OWgWOTPLUYyubw')" type="button">
+<img alt="Angle 3" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARGYlv99TOcxXOVrW4JsPGbQTel1OhwRULilFcPlQntYZ6QgDkP4ObNxKmBk-fU8ZsgvB54rzR894pyfRlRaV3El_ajlx5-RmFgiFlSa-725LZcFa1ZsHPqz7AWqKRWwpjVzE6LvIryXpFi0mphGfGmuw6tXbWhXYhy7i5DQRpYUdC5jTjJqwVDAvnENcQ_SiYgitRk9jaOGN9QTvNADCPLFd4zkJeDkgDivmzjBK3D2tAlwYOL4OWgWOTPLUYyubw">
+</button>
+</div>
+</section>
+<!-- Product Headline & Pricing (No outlines; clean labels without pills) -->
+<section class="bg-white rounded-2xl p-4 shadow-sm space-y-2">
+<div class="flex items-center justify-between">
+<!-- Removed light green capsule background -->
+<span class="text-xs font-semibold tracking-wider uppercase text-emerald-800">AUTHENTIC LUXURY</span>
+<span class="text-[11px] text-emerald-700 font-medium">In Stock (14 left)</span>
+</div>
+<h1 class="text-xl font-extrabold text-slate-900 tracking-tight leading-tight">Stride Club Sage Runners</h1>
+<p class="text-xs text-slate-500 leading-relaxed">Engineered lightweight architectural silhouette in sage mineral suede with custom dynamic cushioning and responsive energy return.</p>
+<div class="flex items-baseline gap-2 pt-1">
+<span class="text-2xl font-extrabold text-[#0c2e1f]" id="display-price">₦32,000</span>
+<span class="text-xs text-slate-400 line-through">₦42,000</span>
+<!-- Removed green pill container/background -->
+<span class="text-xs font-semibold text-emerald-700">Save 24%</span>
+</div>
+</section>
+<!-- Variant Selection & Quantity Stepper (No outlines/borders) -->
+<section class="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+<div>
+<div class="flex justify-between items-center mb-2.5">
+<span class="text-xs font-bold text-slate-800 uppercase tracking-wide">Select Size (EU)</span>
+<!-- Working Size Guide button without underline -->
+<button class="text-xs text-emerald-800 hover:opacity-80 font-semibold cursor-pointer transition-opacity" id="open-size-guide-btn" onclick="openSizeGuideModal()" type="button">
+          Size Guide
+        </button>
+</div>
+<!-- Size selection: No borders. Selected size has soft bg-emerald-50, shadow-sm, text-emerald-800, font-bold -->
+<div class="grid grid-cols-5 gap-2" id="size-pills-row">
+<button class="size-choice-btn py-2.5 rounded-xl bg-slate-50 text-slate-700 text-xs font-medium shadow-sm hover:bg-slate-100 transition-all active:scale-95" data-size="40" onclick="handleSizeSelect(this, '40')" type="button">40</button>
+<button class="size-choice-btn py-2.5 rounded-xl bg-slate-50 text-slate-700 text-xs font-medium shadow-sm hover:bg-slate-100 transition-all active:scale-95" data-size="41" onclick="handleSizeSelect(this, '41')" type="button">41</button>
+<button class="size-choice-btn py-2.5 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-bold shadow-sm transition-all active:scale-95" data-size="42" onclick="handleSizeSelect(this, '42')" type="button">42</button>
+<button class="size-choice-btn py-2.5 rounded-xl bg-slate-50 text-slate-700 text-xs font-medium shadow-sm hover:bg-slate-100 transition-all active:scale-95" data-size="43" onclick="handleSizeSelect(this, '43')" type="button">43</button>
+<button class="size-choice-btn py-2.5 rounded-xl bg-slate-50 text-slate-700 text-xs font-medium shadow-sm hover:bg-slate-100 transition-all active:scale-95" data-size="44" onclick="handleSizeSelect(this, '44')" type="button">44</button>
+</div>
+</div>
+<!-- Quantity Stepper: No borders, soft background and subtle shadow -->
+<div class="flex items-center justify-between pt-2.5">
+<div>
+<span class="text-xs font-bold text-slate-800">Quantity</span>
+<p class="text-[10px] text-slate-400">Max 14 per order</p>
+</div>
+<div class="flex items-center rounded-xl bg-slate-50 shadow-sm overflow-hidden">
+<button aria-label="Decrease quantity" class="w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-200/70 font-bold text-sm transition-colors active:scale-95" onclick="changePdpQty(-1)" type="button">−</button>
+<span class="w-9 text-center text-xs font-bold text-slate-900" id="pdp-qty">1</span>
+<button aria-label="Increase quantity" class="w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-200/70 font-bold text-sm transition-colors active:scale-95" onclick="changePdpQty(1)" type="button">+</button>
+</div>
+</div>
+</section>
+<!-- Seller Profile Card: No outlines, clean surface -->
+<section class="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
+<div class="flex items-center space-x-3 cursor-pointer" onclick="openStorefrontView('sage-co')">
+<div class="w-11 h-11 rounded-full bg-[#1b4332] text-white font-extrabold text-sm flex items-center justify-center shadow-sm">S</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h4 class="text-xs font-bold text-slate-900">Sage &amp; Co.</h4>
+<!-- Removed badge background; inline check icon -->
+<span class="text-xs font-medium text-emerald-800 flex items-center gap-0.5">✓ Verified Brand</span>
+</div>
+<p class="text-[11px] text-slate-400 mt-0.5">Lekki Flagship Store • 98.4% Positive</p>
+</div>
+</div>
+<!-- View Store button: No outline, subtle background and shadow-sm -->
+<button class="px-3.5 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 shadow-sm transition-colors active:scale-95" onclick="showStoreModal()" type="button">View Store</button>
+</section>
+<!-- Ratings & Verified Reviews Section (No borders, clean badges) -->
+<section class="bg-white rounded-2xl p-4 shadow-sm space-y-3" id="ratings-section">
+<div class="flex items-center justify-between pb-2.5 border-b border-slate-50">
+<div>
+<h4 class="text-xs font-bold text-slate-900 uppercase tracking-wide">Ratings &amp; Reviews</h4>
+<p class="text-[10px] text-slate-400 mt-0.5">Based on 128 verified Sleec buyers</p>
+</div>
+<div class="text-right flex items-baseline gap-1">
+<span class="text-base font-extrabold text-slate-900">4.9</span>
+<span class="text-xs text-amber-400 font-bold">★★★★★</span>
+</div>
+</div>
+<!-- Review 1 -->
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-slate-900">Tunde B.</span>
+<!-- Removed pill container, clean check text -->
+<span class="text-[11px] text-emerald-800 font-medium">✓ Verified Purchase</span>
+</div>
+<span class="text-[10px] text-slate-400">2 days ago</span>
+</div>
+<p class="text-[11px] text-slate-600 leading-snug">The quality of the sage leather is unmatched. Delivery to Lekki took only 24 hours. True to size!</p>
+</div>
+<!-- Review 2 -->
+<div class="space-y-1 pt-2 border-t border-slate-50">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-slate-900">Chioma N.</span>
+<!-- Removed pill container, clean check text -->
+<span class="text-[11px] text-emerald-800 font-medium">✓ Verified Purchase</span>
+</div>
+<span class="text-[10px] text-slate-400">1 week ago</span>
+</div>
+<p class="text-[11px] text-slate-600 leading-snug">So soft and comfortable right out of the box. Got so many compliments already.</p>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Add to Bag Bar: No outlines, clean surface, subtle shadow -->
+<nav class="fixed bottom-0 inset-x-0 max-w-[412px] mx-auto bg-white/95 backdrop-blur-md px-4 py-3 z-40 flex items-center gap-3 shadow-2xl">
+<button aria-label="Go Back Home" class="w-11 h-11 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0 transition-colors active:scale-95 shadow-sm" onclick="window.scrollTo({top:0, behavior:'smooth'});">
+<svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+</button>
+<!-- Add to Bag: No outline, clean surface with shadow-sm -->
+<button class="flex-1 py-3.5 px-3 rounded-2xl bg-white hover:bg-slate-50 text-emerald-900 font-bold text-xs shadow-sm transition-all active:scale-95 text-center flex items-center justify-center gap-1.5" id="add-to-bag-cta-btn" onclick="handleAddToBag()" type="button">
+<svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    Add to Bag
+  </button>
+<!-- Buy Now: Solid dark green surface, white text, no outline -->
+<button class="flex-1 py-3.5 px-3 rounded-2xl bg-[#0c2e1f] hover:bg-[#072418] text-white font-bold text-xs shadow-md transition-all active:scale-95 text-center flex items-center justify-center" id="buy-now-cta-btn" onclick="handleBuyNow()" type="button">
+    Buy Now
+  </button>
+</nav>
+<!-- Size Guide Modal / Bottom Sheet Overlay -->
+<div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="size-guide-modal" onclick="if(event.target === this) closeSizeGuideModal();">
+<div class="w-full max-w-[412px] bg-white rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl max-h-[85vh] overflow-y-auto transform translate-y-8 transition-transform duration-300" id="size-guide-modal-content">
+<div class="flex items-center justify-between pb-3 border-b border-slate-100">
+<div>
+<h3 class="text-sm font-extrabold text-slate-900">Size Guide — Footwear</h3>
+<p class="text-[11px] text-slate-500">Standard unisex conversion chart</p>
+</div>
+<button aria-label="Close Size Guide" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm transition-colors" onclick="closeSizeGuideModal()" type="button">
+        ✕
+      </button>
+</div>
+<!-- Conversion Table -->
+<div class="mt-4 overflow-hidden rounded-2xl bg-slate-50 shadow-sm">
+<table class="w-full text-left text-xs">
+<thead>
+<tr class="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+<th class="py-2.5 px-3">EU</th>
+<th class="py-2.5 px-3">UK</th>
+<th class="py-2.5 px-3">US</th>
+<th class="py-2.5 px-3 text-right">CM</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200/50 text-slate-800">
+<tr class="hover:bg-emerald-50/50"><td class="py-2 px-3 font-bold">40</td><td class="py-2 px-3">6.5</td><td class="py-2 px-3">7.5</td><td class="py-2 px-3 text-right">25.0 cm</td></tr>
+<tr class="hover:bg-emerald-50/50"><td class="py-2 px-3 font-bold">41</td><td class="py-2 px-3">7.0</td><td class="py-2 px-3">8.0</td><td class="py-2 px-3 text-right">25.5 cm</td></tr>
+<tr class="bg-emerald-50 text-emerald-900"><td class="py-2 px-3 font-extrabold">42 ★</td><td class="py-2 px-3 font-bold">8.0</td><td class="py-2 px-3 font-bold">9.0</td><td class="py-2 px-3 text-right font-bold">26.5 cm</td></tr>
+<tr class="hover:bg-emerald-50/50"><td class="py-2 px-3 font-bold">43</td><td class="py-2 px-3">9.0</td><td class="py-2 px-3">10.0</td><td class="py-2 px-3 text-right">27.5 cm</td></tr>
+<tr class="hover:bg-emerald-50/50"><td class="py-2 px-3 font-bold">44</td><td class="py-2 px-3">10.0</td><td class="py-2 px-3">11.0</td><td class="py-2 px-3 text-right">28.5 cm</td></tr>
+</tbody>
+</table>
+</div>
+<!-- Measurement Tips -->
+<div class="mt-4 space-y-1.5 p-3.5 rounded-2xl bg-slate-50">
+<h4 class="text-xs font-bold text-slate-800">How to measure your foot</h4>
+<p class="text-[11px] text-slate-600 leading-relaxed">Place your heel against a flat wall on a sheet of paper. Mark the tip of your longest toe and measure length in centimeters. If you are between sizes or prefer a relaxed fit, we recommend selecting one half size up.</p>
+</div>
+<button class="mt-4 w-full py-3 rounded-2xl bg-[#0c2e1f] text-white text-xs font-bold shadow-md hover:bg-[#072418] transition-colors active:scale-95" onclick="closeSizeGuideModal()" type="button">
+      Got It
+    </button>
+</div>
+</div>
+<!-- Store View Modal / Preview Sheet -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="store-info-modal" onclick="if(event.target === this) closeStoreModal();">
+<div class="w-full max-w-[340px] bg-white rounded-3xl p-5 shadow-2xl mx-4 text-center transform scale-95 transition-transform duration-300" id="store-info-modal-content">
+<div class="w-14 h-14 rounded-full bg-[#1b4332] text-white font-extrabold text-lg flex items-center justify-center shadow-sm mx-auto mb-3">S</div>
+<h3 class="text-sm font-extrabold text-slate-900">Sage &amp; Co.</h3>
+<p class="text-xs text-emerald-800 font-semibold mt-0.5">✓ Verified Luxury Retailer</p>
+<p class="text-xs text-slate-500 mt-2 leading-relaxed">Lekki Flagship Store, Lagos. 48 curated drops available. 98.4% positive seller rating across 420+ shipments.</p>
+<div class="mt-5 space-y-2">
+<!-- Prominent Dark Green Open Store Button -->
+<button class="w-full py-3 rounded-2xl bg-[#0c2e1f] hover:bg-[#072418] text-white text-xs font-bold shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5" id="open-storefront-action-btn" onclick="openStorefrontFromModal('sage-co')" type="button">
+<span>Open Store</span>
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<!-- Clean Secondary Text Action to preserve state and close -->
+<button class="w-full py-2.5 text-slate-500 hover:text-slate-800 text-xs font-semibold transition-colors" onclick="closeStoreModal()" type="button">
+        Close
+      </button>
+</div>
+</div>
+</div>
+<!-- Feedback Toast Container -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 z-[70] bg-slate-900/90 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-2xl backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 max-w-[90%] text-center" id="pdp-toast">
+  Notification
+</div>
+<!-- FULL SELLER STOREFRONT OVERLAY VIEW (#storefront-view) -->
+<div class="fixed inset-0 z-50 bg-[#fbfdfb] overflow-y-auto no-scrollbar hidden opacity-0 translate-y-4 transition-all duration-300" id="storefront-view">
+<div class="w-full max-w-[412px] min-h-screen mx-auto bg-[#fbfdfb] flex flex-col relative pb-16">
+<!-- Storefront Top Header Bar -->
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-4 py-3 flex items-center justify-between shadow-sm">
+<button aria-label="Back to Product" class="w-10 h-10 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-800 flex items-center justify-center transition-colors active:scale-95 shadow-sm" id="storefront-back-btn" onclick="closeStorefrontView()" type="button">
+<svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+<div class="text-center">
+<h2 class="text-sm font-extrabold text-slate-900 truncate max-w-[200px]" id="sf-header-title">Sage &amp; Co.</h2>
+<span class="text-[10px] font-medium text-emerald-800">Official Flagship Store</span>
+</div>
+<div class="flex items-center space-x-1.5">
+<button aria-label="Share Store" class="w-10 h-10 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-colors active:scale-95 shadow-sm" id="sf-share-btn" onclick="shareStoreAction()" type="button">
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg>
+</button>
+<button aria-label="View Bag" class="w-10 h-10 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-800 flex items-center justify-center transition-colors active:scale-95 shadow-sm relative" id="sf-cart-btn" onclick="showPdpToast('Bag opened (' + (window.sleecCartCount || 3) + ' items)')" type="button">
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span class="absolute -top-1 -right-1 bg-[#0c2e1f] text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-sm" id="sf-cart-badge">3</span>
+</button>
+</div>
+</header>
+<!-- Storefront Hero Banner & Seller Identity -->
+<div class="relative">
+<div class="w-full h-36 bg-slate-800 overflow-hidden relative">
+<img alt="Sage &amp; Co. Storefront Banner" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWGBtDfhqaZ-iLeFeWKO8cJ2_Yxak83tFQc-RZBD0ty4aFeKWmniXbYE62e_hh6Fmf8iFlTHGfm1lZdv2IjPb7bsejfJexouUkyS6pLe32GZjC3-y00ni6_3yuW_JV0Kwi6wM7YjYsdVcUE26ko3R9Y9DoWszuhC7Stz1kuaNkKApwcRPjUweKhPxrtcLcaTIUkGAHVf3DoYmUCy_XhYPQmFcAs_NNLQFko_Auj0yt52f3_NJH7bjOU3CS9BsZ2Hz8">
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20"></div>
+</div>
+<!-- Store Avatar & Bio Section -->
+<div class="px-4 -mt-10 relative z-10">
+<div class="flex items-end justify-between">
+<div class="w-20 h-20 rounded-3xl bg-[#1b4332] text-white font-extrabold text-3xl flex items-center justify-center shadow-md border-4 border-white">
+            S
+          </div>
+<button class="mb-1 px-4 py-2 rounded-2xl bg-[#0c2e1f] text-white text-xs font-bold shadow-sm hover:bg-[#072418] transition-all active:scale-95" id="sf-follow-btn" onclick="toggleStoreFollow(this)" type="button">
+            Follow Store
+          </button>
+</div>
+<div class="mt-3 space-y-1">
+<div class="flex items-center gap-2">
+<h1 class="text-xl font-extrabold text-slate-900">Sage &amp; Co.</h1>
+<span class="text-xs font-semibold text-emerald-800">✓ Verified Sleec Partner</span>
+</div>
+<p class="text-xs font-medium text-slate-500">Apparel • Footwear • Lifestyle</p>
+<p class="text-xs text-slate-600 leading-relaxed pt-1">Consciously crafted contemporary fashion, footwear, and lifestyle essentials rooted in organic minimalism.</p>
+<div class="flex items-center gap-3 pt-2 text-xs text-slate-600">
+<span class="font-bold text-slate-800 flex items-center gap-1">
+<span class="text-amber-400">★</span> 4.9 <span class="font-normal text-slate-500">(342 reviews)</span>
+</span>
+<span class="text-slate-300">•</span>
+<span class="text-slate-600 font-medium">Victoria Island, Lagos • Flagship</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Search & Filters in Store -->
+<div class="px-4 mt-5 space-y-3">
+<!-- Store Search Input -->
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-white text-xs text-slate-800 rounded-2xl shadow-sm border-0 focus:ring-2 focus:ring-[#0c2e1f] transition-all" id="store-search-input" oninput="filterStoreCatalog(this.value)" placeholder="Search this store..." type="text">
+</div>
+<!-- Category Filter Pills (Horizontal Scroll) -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="store-category-pills">
+<button class="sf-cat-pill px-4 py-2 rounded-2xl bg-[#0c2e1f] text-white text-xs font-bold shadow-sm whitespace-nowrap transition-all" onclick="selectStoreCategory(this, 'all')" type="button">All Products</button>
+<button class="sf-cat-pill px-4 py-2 rounded-2xl bg-white text-slate-700 text-xs font-medium shadow-sm whitespace-nowrap hover:bg-slate-50 transition-all" onclick="selectStoreCategory(this, 'footwear')" type="button">Footwear</button>
+<button class="sf-cat-pill px-4 py-2 rounded-2xl bg-white text-slate-700 text-xs font-medium shadow-sm whitespace-nowrap hover:bg-slate-50 transition-all" onclick="selectStoreCategory(this, 'apparel')" type="button">Apparel</button>
+<button class="sf-cat-pill px-4 py-2 rounded-2xl bg-white text-slate-700 text-xs font-medium shadow-sm whitespace-nowrap hover:bg-slate-50 transition-all" onclick="selectStoreCategory(this, 'bags')" type="button">Bags &amp; Totes</button>
+<button class="sf-cat-pill px-4 py-2 rounded-2xl bg-white text-slate-700 text-xs font-medium shadow-sm whitespace-nowrap hover:bg-slate-50 transition-all" onclick="selectStoreCategory(this, 'fragrance')" type="button">Fragrance</button>
+</div>
+<!-- Sorting Selector Row -->
+<div class="flex items-center justify-between pt-1">
+<span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider" id="store-product-count">5 Items</span>
+<div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl shadow-sm text-xs font-semibold text-slate-700">
+<span class="text-slate-400 text-[10px] uppercase">Sort:</span>
+<select class="bg-transparent border-0 text-xs font-bold text-slate-800 p-0 pr-4 focus:ring-0 cursor-pointer" id="store-sort-select" onchange="sortStoreCatalog(this.value)">
+<option value="newest">Newest</option>
+<option value="low-to-high">Price: Low to High</option>
+<option value="high-to-low">Price: High to Low</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Product Catalogue: 2-Column Grid -->
+<div class="px-4 mt-3">
+<div class="grid grid-cols-2 gap-3" id="store-products-grid">
+<!-- Product 1: Stride Club Sage Runners (returns to PDP) -->
+<div class="sf-product-card bg-white rounded-3xl p-3 shadow-sm flex flex-col justify-between space-y-2.5 transition-all" data-category="footwear" data-name="Stride Club Sage Runners" data-price="32000">
+<div class="cursor-pointer relative rounded-2xl overflow-hidden bg-slate-100 aspect-square" onclick="closeStorefrontView()">
+<img alt="Stride Club Sage Runners" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwdxrWHwVDyPOIKfXj9lMJWDVhtYv9u0JCRKfAa1qGoXuHqGrY8vqyOmybJYNbP2mxYMGsV51I-GeK6mg7HfLHFunccdY-xa5hRyLhocK2rTEPilPpWH0Cc-m3PvgslWJoVof5vCbwQj3SlQcumwCKLW3y6w0dcfCkgB2oKPzlUXbZKVuACHPrWxwHS2FdcQf1WNtr3afEafqyp-qdHhuUf2MMYMIwcz6tnwbtmahPRrn-6VZ1viZZJ8XWA5zrZ6Av">
+<button class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm text-slate-400 flex items-center justify-center shadow-sm" onclick="event.stopPropagation(); toggleSfWishlist(this);" type="button">
+<svg class="w-3.5 h-3.5 fill-current stroke-current" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</div>
+<div class="space-y-1">
+<h3 class="text-xs font-bold text-slate-900 leading-tight cursor-pointer hover:text-emerald-900" onclick="closeStorefrontView()">Stride Club Sage Runners</h3>
+<div class="flex items-baseline gap-1.5">
+<span class="text-xs font-extrabold text-[#0c2e1f]">₦32,000</span>
+<span class="text-[10px] text-slate-400 line-through">₦42,000</span>
+</div>
+</div>
+<button class="w-full py-2 rounded-xl bg-slate-50 hover:bg-[#0c2e1f] hover:text-white text-[#0c2e1f] text-[11px] font-bold shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1" onclick="addStoreItemToBag('Stride Club Sage Runners', 32000)" type="button">
+            + Add to Bag
+          </button>
+</div>
+<!-- Product 2: Cloudnine Mint Hoodie -->
+<div class="sf-product-card bg-white rounded-3xl p-3 shadow-sm flex flex-col justify-between space-y-2.5 transition-all" data-category="apparel" data-name="Cloudnine Mint Hoodie" data-price="18500">
+<div class="cursor-pointer relative rounded-2xl overflow-hidden bg-slate-100 aspect-square" onclick="showPdpToast('Viewing Cloudnine Mint Hoodie')">
+<img alt="Cloudnine Mint Hoodie" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGDkVixA7Ks7M5qqihvz_naNmfzvsm3wCGMltkOQ8gXkZ0ioB_lFjv435DzIh-U7L9zQnJ-8EgGu69k0qxukNCZUW3vdShvoTTCb9AzC0yVz7xx4AGq0vdgieGSWYO6CfzAV5anWYa0RkuKPuD6PXNd5Fx8JmIchdXBc4ABuSbcXt30WDKUNOhy_yvX-TJtco1eU4e40nV-VC6ygtowvvNpOMW8WD_nVyyiMdRsv_Kdx5RF6TTjppYIHc7nSctpgoY">
+<button class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm text-slate-400 flex items-center justify-center shadow-sm" onclick="event.stopPropagation(); toggleSfWishlist(this);" type="button">
+<svg class="w-3.5 h-3.5 fill-current stroke-current" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</div>
+<div class="space-y-1">
+<h3 class="text-xs font-bold text-slate-900 leading-tight">Cloudnine Mint Hoodie</h3>
+<div class="flex items-baseline gap-1.5">
+<span class="text-xs font-extrabold text-[#0c2e1f]">₦18,500</span>
+<span class="text-[10px] text-slate-400 line-through">₦24,000</span>
+</div>
+</div>
+<button class="w-full py-2 rounded-xl bg-slate-50 hover:bg-[#0c2e1f] hover:text-white text-[#0c2e1f] text-[11px] font-bold shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1" onclick="addStoreItemToBag('Cloudnine Mint Hoodie', 18500)" type="button">
+            + Add to Bag
+          </button>
+</div>
+<!-- Product 3: Sleec Canvas Tote -->
+<div class="sf-product-card bg-white rounded-3xl p-3 shadow-sm flex flex-col justify-between space-y-2.5 transition-all" data-category="bags" data-name="Sleec Canvas Tote" data-price="8500">
+<div class="cursor-pointer relative rounded-2xl overflow-hidden bg-slate-100 aspect-square" onclick="showPdpToast('Viewing Sleec Canvas Tote')">
+<img alt="Sleec Canvas Tote" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARGYlv99TOcxXOVrW4JsPGbQTel1OhwRULilFcPlQntYZ6QgDkP4ObNxKmBk-fU8ZsgvB54rzR894pyfRlRaV3El_ajlx5-RmFgiFlSa-725LZcFa1ZsHPqz7AWqKRWwpjVzE6LvIryXpFi0mphGfGmuw6tXbWhXYhy7i5DQRpYUdC5jTjJqwVDAvnENcQ_SiYgitRk9jaOGN9QTvNADCPLFd4zkJeDkgDivmzjBK3D2tAlwYOL4OWgWOTPLUYyubw">
+<button class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm text-slate-400 flex items-center justify-center shadow-sm" onclick="event.stopPropagation(); toggleSfWishlist(this);" type="button">
+<svg class="w-3.5 h-3.5 fill-current stroke-current" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</div>
+<div class="space-y-1">
+<h3 class="text-xs font-bold text-slate-900 leading-tight">Sleec Canvas Tote</h3>
+<div class="flex items-baseline gap-1.5">
+<span class="text-xs font-extrabold text-[#0c2e1f]">₦8,500</span>
+<span class="text-[10px] text-slate-400 line-through">₦12,000</span>
+</div>
+</div>
+<button class="w-full py-2 rounded-xl bg-slate-50 hover:bg-[#0c2e1f] hover:text-white text-[#0c2e1f] text-[11px] font-bold shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1" onclick="addStoreItemToBag('Sleec Canvas Tote', 8500)" type="button">
+            + Add to Bag
+          </button>
+</div>
+<!-- Product 4: Amber Eau Maison Vert -->
+<div class="sf-product-card bg-white rounded-3xl p-3 shadow-sm flex flex-col justify-between space-y-2.5 transition-all" data-category="fragrance" data-name="Amber Eau Maison Vert" data-price="24000">
+<div class="cursor-pointer relative rounded-2xl overflow-hidden bg-slate-100 aspect-square" onclick="showPdpToast('Viewing Amber Eau Maison Vert')">
+<img alt="Amber Eau Maison Vert" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-doD0KozHq9FLXg10cJVAw-pf-5JX5Tg0TFJig8Tx9TF1PNCg1uBuOYfohZMd8k7Khn5tWFjuDLP0nUioqjUc8-1pJwssyGeIhJhnHsakhdxg9eznmOwRcLVlTHWa72-JLCZOzsClhL8P2U_8mrM-O8qqW1NMJU4h8jbaWfumzo_R3SRDUw7Gd5nnjWWXbK75IfUJ5iRkXYIt0L7wzoL9PsQdgcJOu6QhZ6-loDkgqZKGrUL63WCjt1L-ETIso3nh">
+<button class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm text-slate-400 flex items-center justify-center shadow-sm" onclick="event.stopPropagation(); toggleSfWishlist(this);" type="button">
+<svg class="w-3.5 h-3.5 fill-current stroke-current" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</div>
+<div class="space-y-1">
+<h3 class="text-xs font-bold text-slate-900 leading-tight">Amber Eau Maison Vert</h3>
+<div class="flex items-baseline gap-1.5">
+<span class="text-xs font-extrabold text-[#0c2e1f]">₦24,000</span>
+<span class="text-[10px] text-slate-400 line-through">₦30,000</span>
+</div>
+</div>
+<button class="w-full py-2 rounded-xl bg-slate-50 hover:bg-[#0c2e1f] hover:text-white text-[#0c2e1f] text-[11px] font-bold shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1" onclick="addStoreItemToBag('Amber Eau Maison Vert', 24000)" type="button">
+            + Add to Bag
+          </button>
+</div>
+<!-- Product 5: Designer Optics Tortoise Classic -->
+<div class="sf-product-card bg-white rounded-3xl p-3 shadow-sm flex flex-col justify-between space-y-2.5 transition-all" data-category="apparel" data-name="Designer Optics Tortoise Classic" data-price="28000">
+<div class="cursor-pointer relative rounded-2xl overflow-hidden bg-slate-100 aspect-square" onclick="showPdpToast('Viewing Designer Optics Tortoise Classic')">
+<img alt="Designer Optics Tortoise Classic" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5SLMmQFtmpxh1T1RoeoQR9lgqbeNT1NplASbsxuLy-J-GzZmjrJ4AugmMftRZhbRt2u5BSq4VUzxgpHtGJFTVENg2rd6q-0UxGcmOn2wvCmKZOUnBn3HEcQLAmCfjbsI-MrrqMbm9bf4TarA1HF2dU15ddvcp32MiAz4iDpt0mURkVKyoDMmhv8ZNz0sAujBXhsBYgmeiCcCU3ty0qt19G-x3VX6V9cBpX5OjFi1yFFkKX79q67TdE74wJ3CCJNmd">
+<button class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm text-slate-400 flex items-center justify-center shadow-sm" onclick="event.stopPropagation(); toggleSfWishlist(this);" type="button">
+<svg class="w-3.5 h-3.5 fill-current stroke-current" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</button>
+</div>
+<div class="space-y-1">
+<h3 class="text-xs font-bold text-slate-900 leading-tight">Designer Optics Tortoise</h3>
+<div class="flex items-baseline gap-1.5">
+<span class="text-xs font-extrabold text-[#0c2e1f]">₦28,000</span>
+</div>
+</div>
+<button class="w-full py-2 rounded-xl bg-slate-50 hover:bg-[#0c2e1f] hover:text-white text-[#0c2e1f] text-[11px] font-bold shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1" onclick="addStoreItemToBag('Designer Optics Tortoise', 28000)" type="button">
+            + Add to Bag
+          </button>
+</div>
+</div>
+</div>
+<!-- Store Information / About Accordion Section -->
+<div class="px-4 mt-6 space-y-3">
+<div class="bg-white rounded-3xl p-4 shadow-sm space-y-3">
+<button class="w-full flex items-center justify-between text-left" onclick="toggleStoreAboutAccordion()" type="button">
+<div class="flex items-center gap-2">
+<span class="w-7 h-7 rounded-full bg-emerald-50 text-emerald-900 flex items-center justify-center text-xs font-bold">ℹ</span>
+<span class="text-xs font-extrabold text-slate-900">About Sage &amp; Co.</span>
+</div>
+<svg class="w-4 h-4 text-slate-500 transform transition-transform duration-200" fill="none" id="sf-about-arrow" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<div class="space-y-3 pt-2 text-xs text-slate-600 border-t border-slate-50" id="sf-about-content">
+<div>
+<h5 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-1">Brand Philosophy</h5>
+<p class="leading-relaxed text-slate-500">Established in 2022, Sage &amp; Co. blends African modernism with refined textile curation. Every silhouette is engineered for tropical climates while maintaining international luxury standards.</p>
+</div>
+<div>
+<h5 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-1">Physical Store &amp; Hours</h5>
+<p class="text-slate-500 leading-snug">Flagship: 14 Akin Adesola St, Victoria Island, Lagos</p>
+<p class="text-[11px] text-slate-400 mt-0.5">Mon – Sat: 9:00 AM – 8:00 PM<br>Sun: 12:00 PM – 6:00 PM</p>
+</div>
+<div>
+<h5 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-1">Delivery &amp; Pickup Options</h5>
+<p class="text-slate-500 leading-snug">✓ Same-day express delivery within Lagos<br>✓ Free in-store pickup at VI Flagship<br>✓ 48-hour delivery across Nigeria</p>
+</div>
+<div>
+<h5 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-1">Returns Policy</h5>
+<p class="text-slate-500 leading-snug">14-day hassle-free returns on unworn items with original tags intact.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+window.selectedPdpSize = '42';
+window.selectedPdpQty = 1;
+window.sleecCartCount = 3;
+const unitPrice = 32000;
+
+function showPdpToast(msg) {
+  const toast = document.getElementById('pdp-toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.remove('opacity-0', 'pointer-events-none');
+  toast.classList.add('opacity-100');
+  clearTimeout(window._pdpToastTimer);
+  window._pdpToastTimer = setTimeout(() => {
+    toast.classList.remove('opacity-100');
+    toast.classList.add('opacity-0', 'pointer-events-none');
+  }, 2200);
+}
+
+function switchGalleryThumb(btn, imgUrl) {
+  const img = document.getElementById('main-product-display-img');
+  if (img) img.src = imgUrl;
+  document.querySelectorAll('#gallery-thumbs-row .thumb-btn').forEach(b => {
+    b.className = 'thumb-btn w-14 h-14 rounded-2xl overflow-hidden flex-shrink-0 shadow-sm opacity-60 hover:opacity-100 scale-95 transition-all';
+  });
+  btn.className = 'thumb-btn w-14 h-14 rounded-2xl overflow-hidden flex-shrink-0 shadow-md scale-100 opacity-100 transition-all';
+}
+
+function handleSizeSelect(btn, size) {
+  window.selectedPdpSize = size;
+  document.querySelectorAll('.size-choice-btn').forEach(b => {
+    b.className = 'size-choice-btn py-2.5 rounded-xl bg-slate-50 text-slate-700 text-xs font-medium shadow-sm hover:bg-slate-100 transition-all active:scale-95';
+  });
+  btn.className = 'size-choice-btn py-2.5 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-bold shadow-sm transition-all active:scale-95';
+}
+
+function changePdpQty(delta) {
+  const el = document.getElementById('pdp-qty');
+  if (!el) return;
+  let current = parseInt(el.textContent) || 1;
+  current = Math.max(1, Math.min(14, current + delta));
+  window.selectedPdpQty = current;
+  el.textContent = current;
+  const priceEl = document.getElementById('display-price');
+  if (priceEl) {
+    priceEl.textContent = '₦' + (current * unitPrice).toLocaleString();
+  }
+}
+
+function openSizeGuideModal() {
+  const modal = document.getElementById('size-guide-modal');
+  const content = document.getElementById('size-guide-modal-content');
+  if (!modal) return;
+  modal.classList.remove('opacity-0', 'pointer-events-none');
+  modal.classList.add('opacity-100');
+  if (content) {
+    content.classList.remove('translate-y-8');
+    content.classList.add('translate-y-0');
+  }
+}
+
+function closeSizeGuideModal() {
+  const modal = document.getElementById('size-guide-modal');
+  const content = document.getElementById('size-guide-modal-content');
+  if (!modal) return;
+  modal.classList.remove('opacity-100');
+  modal.classList.add('opacity-0', 'pointer-events-none');
+  if (content) {
+    content.classList.remove('translate-y-0');
+    content.classList.add('translate-y-8');
+  }
+}
+
+function showStoreModal() {
+  const modal = document.getElementById('store-info-modal');
+  const content = document.getElementById('store-info-modal-content');
+  if (!modal) return;
+  modal.classList.remove('opacity-0', 'pointer-events-none');
+  modal.classList.add('opacity-100');
+  if (content) {
+    content.classList.remove('scale-95');
+    content.classList.add('scale-100');
+  }
+}
+
+function closeStoreModal() {
+  const modal = document.getElementById('store-info-modal');
+  const content = document.getElementById('store-info-modal-content');
+  if (!modal) return;
+  modal.classList.remove('opacity-100');
+  modal.classList.add('opacity-0', 'pointer-events-none');
+  if (content) {
+    content.classList.remove('scale-100');
+    content.classList.add('scale-95');
+  }
+}
+
+function openStorefrontFromModal(storeId) {
+  closeStoreModal();
+  setTimeout(() => {
+    openStorefrontView(storeId);
+  }, 180);
+}
+
+function openStorefrontView(storeId) {
+  const sfView = document.getElementById('storefront-view');
+  if (!sfView) return;
+  sfView.classList.remove('hidden');
+  setTimeout(() => {
+    sfView.classList.remove('opacity-0', 'translate-y-4');
+    sfView.classList.add('opacity-100', 'translate-y-0');
+    sfView.scrollTo({top: 0, behavior: 'instant'});
+  }, 10);
+}
+
+function closeStorefrontView() {
+  const sfView = document.getElementById('storefront-view');
+  if (!sfView) return;
+  sfView.classList.remove('opacity-100', 'translate-y-0');
+  sfView.classList.add('opacity-0', 'translate-y-4');
+  setTimeout(() => {
+    sfView.classList.add('hidden');
+  }, 300);
+}
+
+function shareStoreAction() {
+  if (navigator.share) {
+    navigator.share({title: 'Sage & Co. Storefront on Sleec', url: window.location.href}).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(window.location.href);
+    showPdpToast('Store link copied to clipboard!');
+  } else {
+    showPdpToast('Store link copied!');
+  }
+}
+
+function toggleStoreFollow(btn) {
+  if (btn.textContent.includes('Follow Store')) {
+    btn.textContent = 'Following ✓';
+    btn.className = 'mb-1 px-4 py-2 rounded-2xl bg-slate-100 text-[#0c2e1f] text-xs font-bold shadow-sm transition-all active:scale-95';
+    showPdpToast('You are now following Sage & Co.');
+  } else {
+    btn.textContent = 'Follow Store';
+    btn.className = 'mb-1 px-4 py-2 rounded-2xl bg-[#0c2e1f] text-white text-xs font-bold shadow-sm hover:bg-[#072418] transition-all active:scale-95';
+    showPdpToast('Unfollowed Sage & Co.');
+  }
+}
+
+function selectStoreCategory(btn, category) {
+  document.querySelectorAll('#store-category-pills .sf-cat-pill').forEach(p => {
+    p.className = 'sf-cat-pill px-4 py-2 rounded-2xl bg-white text-slate-700 text-xs font-medium shadow-sm whitespace-nowrap hover:bg-slate-50 transition-all';
+  });
+  btn.className = 'sf-cat-pill px-4 py-2 rounded-2xl bg-[#0c2e1f] text-white text-xs font-bold shadow-sm whitespace-nowrap transition-all';
+
+  const cards = document.querySelectorAll('.sf-product-card');
+  let visibleCount = 0;
+  cards.forEach(card => {
+    const cardCat = card.getAttribute('data-category');
+    if (category === 'all' || cardCat === category) {
+      card.style.display = 'flex';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  const countEl = document.getElementById('store-product-count');
+  if (countEl) countEl.textContent = visibleCount + ' Items';
+}
+
+function filterStoreCatalog(query) {
+  const q = query.toLowerCase().trim();
+  const cards = document.querySelectorAll('.sf-product-card');
+  let visibleCount = 0;
+  cards.forEach(card => {
+    const name = (card.getAttribute('data-name') || '').toLowerCase();
+    if (!q || name.includes(q)) {
+      card.style.display = 'flex';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  const countEl = document.getElementById('store-product-count');
+  if (countEl) countEl.textContent = visibleCount + ' Items';
+}
+
+function sortStoreCatalog(criteria) {
+  const grid = document.getElementById('store-products-grid');
+  if (!grid) return;
+  const cards = Array.from(grid.querySelectorAll('.sf-product-card'));
+  if (criteria === 'low-to-high') {
+    cards.sort((a, b) => parseInt(a.getAttribute('data-price')) - parseInt(b.getAttribute('data-price')));
+  } else if (criteria === 'high-to-low') {
+    cards.sort((a, b) => parseInt(b.getAttribute('data-price')) - parseInt(a.getAttribute('data-price')));
+  }
+  cards.forEach(card => grid.appendChild(card));
+}
+
+function toggleSfWishlist(btn) {
+  const isSaved = btn.classList.toggle('text-rose-500');
+  if (isSaved) {
+    btn.classList.remove('text-slate-400');
+    showPdpToast('Added to wishlist');
+  } else {
+    btn.classList.add('text-slate-400');
+    showPdpToast('Removed from wishlist');
+  }
+}
+
+function addStoreItemToBag(productName, price) {
+  window.sleecCartCount = (window.sleecCartCount || 3) + 1;
+  const badge = document.getElementById('sf-cart-badge');
+  if (badge) badge.textContent = window.sleecCartCount;
+  showPdpToast('Added ' + productName + ' to Bag');
+}
+
+function toggleStoreAboutAccordion() {
+  const content = document.getElementById('sf-about-content');
+  const arrow = document.getElementById('sf-about-arrow');
+  if (!content) return;
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    if (arrow) arrow.classList.add('rotate-180');
+  } else {
+    content.classList.add('hidden');
+    if (arrow) arrow.classList.remove('rotate-180');
+  }
+}
+
+function handleAddToBag() {
+  const size = window.selectedPdpSize || '42';
+  const qty = window.selectedPdpQty || 1;
+  window.sleecCartCount = (window.sleecCartCount || 3) + qty;
+  const badge = document.getElementById('sf-cart-badge');
+  if (badge) badge.textContent = window.sleecCartCount;
+
+  if (window.sleecState && Array.isArray(window.sleecState.cart)) {
+    const existing = window.sleecState.cart.find(item => item.id === 'stride-sage' && item.size === size);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      window.sleecState.cart.push({
+        id: 'stride-sage',
+        name: 'Stride Club Sage Runners',
+        variant: 'Size ' + size,
+        size: size,
+        store: 'Sage & Co.',
+        price: unitPrice,
+        qty: qty,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAwdxrWHwVDyPOIKfXj9lMJWDVhtYv9u0JCRKfAa1qGoXuHqGrY8vqyOmybJYNbP2mxYMGsV51I-GeK6mg7HfLHFunccdY-xa5hRyLhocK2rTEPilPpWH0Cc-m3PvgslWJoVof5vCbwQj3SlQcumwCKLW3y6w0dcfCkgB2oKPzlUXbZKVuACHPrWxwHS2FdcQf1WNtr3afEafqyp-qdHhuUf2MMYMIwcz6tnwbtmahPRrn-6VZ1viZZJ8XWA5zrZ6Av'
+      });
+    }
+    if (typeof window.renderCartBagUI === 'function') window.renderCartBagUI();
+  }
+  showPdpToast('Added ' + qty + ' Stride Club Sage Runners (Size ' + size + ') to Bag');
+}
+
+function handleBuyNow() {
+  const size = window.selectedPdpSize || '42';
+  const qty = window.selectedPdpQty || 1;
+  const total = (qty * unitPrice).toLocaleString();
+  showPdpToast('Proceeding to Checkout: ₦' + total + ' (Size ' + size + ')');
+}
+</script></div>
+<script>
+function selectSizePill(btn) {
+  const row = document.getElementById('size-pills-row');
+  if (!row) return;
+  row.querySelectorAll('button').forEach(b => {
+    b.className = 'py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:border-emerald-600 transition-all';
+  });
+  btn.className = 'py-2 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-emerald-800 text-xs font-extrabold transition-all';
+}
+</script>
+<!-- END: ProductDetailsScreen --></div>
+<!-- END: PhoneShellContainer -->
+<script>(function() { window.openBuyerDrawer = function() { const overlay = document.getElementById('buyer-drawer-overlay'); const content = document.getElementById('buyer-drawer-content'); if (overlay && content) { overlay.style.cssText = ''; overlay.classList.remove('hidden'); setTimeout(() => { overlay.classList.remove('opacity-0', 'pointer-events-none'); overlay.classList.add('opacity-100', 'pointer-events-auto'); content.classList.remove('-translate-x-full'); content.classList.add('translate-x-0'); }, 10); } }; window.closeBuyerDrawer = function() { const overlay = document.getElementById('buyer-drawer-overlay'); const content = document.getElementById('buyer-drawer-content'); if (overlay && content) { overlay.classList.remove('opacity-100', 'pointer-events-auto'); overlay.classList.add('opacity-0', 'pointer-events-none'); content.classList.remove('translate-x-0'); content.classList.add('-translate-x-full'); setTimeout(() => { overlay.classList.add('hidden'); overlay.style.cssText = 'display: none !important;'; }, 300); } }; const btnHam = document.getElementById('btn-hamburger-menu'); if (btnHam) btnHam.onclick = window.openBuyerDrawer; window.selectCategoryPill = function(btn) { const pills = document.querySelectorAll('.category-pill'); pills.forEach(p => { p.className = 'px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 transition-colors flex-shrink-0 category-pill'; }); btn.className = 'px-4 py-1.5 rounded-full bg-[#205739] text-white text-xs font-semibold shadow-sm flex-shrink-0 category-pill'; }; const tabAi = document.getElementById('tab-btn-ai'); if (tabAi) { tabAi.onclick = function() { window.openSleecBag(); }; } const tabSearch = document.getElementById('tab-btn-search'); if (tabSearch) { tabSearch.onclick = function() { window.location.hash = '#search'; const grid = document.querySelector('section[data-purpose="picked-for-you-section"]'); if (grid) grid.scrollIntoView({ behavior: 'smooth' }); }; } const tabCats = document.getElementById('tab-btn-categories'); if (tabCats) { tabCats.onclick = function() { const catRow = document.querySelector('section[data-purpose="picked-for-you-section"] .overflow-x-auto'); if (catRow) catRow.scrollIntoView({ behavior: 'smooth' }); }; } const tabSaved = document.getElementById('tab-btn-saved'); if (tabSaved) { tabSaved.onclick = function() { alert('Saved Items: 2 items saved to your Wishlist.'); }; } const tabHome = document.getElementById('tab-btn-home'); if (tabHome) { tabHome.onclick = function() { window.scrollTo({ top: 0, behavior: 'smooth' }); }; } const origAdd = window.addSampleItemToBag; window.addSampleItemToBag = function(type) { if (type === 'tote') { const ex = window.sleecState.cart.find(i => i.id === 'tote'); if (ex) { ex.qty += 1; } else { window.sleecState.cart.push({ id: 'tote', name: 'Sleec Canvas Tote & Essentials', variant: 'Size: One Size', store: 'Sage & Co.', price: 8500, qty: 1, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuARGYlv99TOcxXOVrW4JsPGbQTel1OhwRULilFcPlQntYZ6QgDkP4ObNxKmBk-fU8ZsgvB54rzR894pyfRlRaV3El_ajlx5-RmFgiFlSa-725LZcFa1ZsHPqz7AWqKRWwpjVzE6LvIryXpFi0mphGfGmuw6tXbWhXYhy7i5DQRpYUdC5jTjJqwVDAvnENcQ_SiYgitRk9jaOGN9QTvNADCPLFd4zkJeDkgDivmzjBK3D2tAlwYOL4OWgWOTPLUYyubw' }); } window.renderCartBagUI(); window.openSleecBag(); } else if (type === 'perfume') { const ex = window.sleecState.cart.find(i => i.id === 'perfume'); if (ex) { ex.qty += 1; } else { window.sleecState.cart.push({ id: 'perfume', name: 'Amber Eau Maison Vert', variant: '50ml Eau de Parfum', store: 'Maison Vert', price: 24000, qty: 1, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB-doD0KozHq9FLXg10cJVAw-pf-5JX5Tg0TFJig8Tx9TF1PNCg1uBuOYfohZMd8k7Khn5tWFjuDLP0nUioqjUc8-1pJwssyGeIhJhnHsakhdxg9eznmOwRcLVlTHWa72-JLCZOzsClhL8P2U_8mrM-O8qqW1NMJU4h8jbaWfumzo_R3SRDUw7Gd5nnjWWXbK75IfUJ5iRkXYIt0L7wzoL9PsQdgcJOu6QhZ6-loDkgqZKGrUL63WCjt1L-ETIso3nh' }); } window.renderCartBagUI(); window.openSleecBag(); } else if (origAdd) { origAdd(type); } }; })();</script>
+</body></html>
