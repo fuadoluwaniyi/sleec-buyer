@@ -1,0 +1,1468 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Sleec - Fashion &amp; Luxury Drops</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16',
+            },
+            deepForest: '#0c2e1f',
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Roboto', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 8px 30px rgba(0, 0, 0, 0.04)',
+            'card': '0 10px 25px -5px rgba(22, 101, 52, 0.08)',
+            'glow': '0 0 20px rgba(74, 222, 128, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    /* iOS frame setup & smooth scrolling */
+    html, body {
+      background-color: #0f291e;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    /* Hide scrollbar for clean app feel */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Smooth background crossfade animations */
+    .hero-slide {
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-slide.inactive {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+    .hero-slide.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    /* Organic slow, elegant decelerating transitions for mini product cards */
+    .product-track {
+      transition: transform 2200ms cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform;
+    }
+
+    /* Subtle parallax, scale cushion, and soft depth fade during swipe transitions */
+    .product-item {
+      transition: transform 2200ms cubic-bezier(0.25, 1, 0.5, 1), opacity 1800ms cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform, opacity;
+    }
+    .product-item img {
+      transition: transform 2400ms cubic-bezier(0.25, 1, 0.5, 1), filter 1800ms ease;
+    }
+    .product-item .item-meta {
+      transition: transform 2000ms cubic-bezier(0.25, 1, 0.5, 1), opacity 1600ms ease;
+    }
+
+    /* Active & inactive slide states inside mini cards */
+    .product-item.item-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .product-item.item-active img {
+      transform: scale(1);
+      filter: blur(0px);
+    }
+    .product-item.item-active .item-meta {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .product-item.item-inactive {
+      opacity: 0.65;
+      transform: scale(0.96);
+    }
+    .product-item.item-inactive img {
+      transform: scale(1.08);
+      filter: blur(0.4px);
+    }
+    .product-item.item-inactive .item-meta {
+      transform: translateY(6px);
+      opacity: 0.4;
+    }
+
+    /* Multi-state interactive container smooth transition */
+    .dynamic-state {
+      transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dynamic-state.hidden-state {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+    }
+    .dynamic-state.active-state {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      position: relative;
+    }
+  </style>
+</head>
+<body class="bg-[#0f291e] min-h-screen flex justify-center items-start p-0 font-sans">
+<!-- BEGIN: PhoneShellContainer -->
+<div class="w-full max-w-[412px] min-h-screen bg-slate-50 relative flex flex-col overflow-x-hidden shadow-2xl" data-purpose="mobile-screen-shell">
+<!-- Glowing emerald ambient dynamic hero backdrop with crossfade -->
+<div class="absolute top-0 left-0 right-0 h-80 pointer-events-none z-0 overflow-hidden" data-purpose="animated-hero-backdrop">
+<!-- Slide 1 -->
+<div class="hero-slide absolute inset-0 w-full h-full inactive" id="hero-slide-0">
+<img alt="Luxury Emerald Glass Minimalist" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida/AEtjO1U-zUzgRna20E65aBL9WcyElkMEQnh8ttdD0ZRLPZvxQAm7zcbk1yJrWyE6IxMDNhutFc50coj9JLsH58dS0lUIBCn9mCfXWozvuaunC_xMDUIEHELt_LY9dRx2H7slT7pNpxWAatMcoqumjGxGwSailyeGvmTVxqU7gpK_hbXXb9wPwM1mp94759lhJujT1wcc7oTbwi7R2cWoW0e6Zx3YZOxIKcCiJOggGlsOD2qAz4NRiob28OnGUw">
+</div>
+<!-- Slide 2 -->
+<div class="hero-slide absolute inset-0 w-full h-full inactive" id="hero-slide-1">
+<img alt="Mint &amp; Deep Forest Green Shopping Aesthetic" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida/AEtjO1W-BLv38FhVNxTdjONOKkLHfaytAZWFHXfP6vNQG8q-uJxGpuHm6P2cz8dHBkBjV3nDFdU0tf4lK1fLu1V_SZyIfliwpC0NPytBOlTNi7mxuT6kQMUWHduskkLLSGzufZKjdjwuPR7l1YvAIBq7ZItEoF-pjn2_kVK6kBBwUuRaBh9hopjWQ9womxgwXlpoppCwbP6jHtbomiIfi2SF0W65Xix2-sZ_KCCDkwYdlmz2wQ1Gvc-D6iRqYA">
+</div>
+<!-- Slide 3 -->
+<div class="hero-slide absolute inset-0 w-full h-full active" id="hero-slide-2">
+<img alt="Sleec App Feature Model &amp; Showcase" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf2KosHaPce84SUSv-V8EHDvhcU9R7IaflLN1tk5BGVfRfl54Z2o3EXqPDGQsENPT5K-ueIAzsfOOee1h4FZxqMTdpTd1RNP4_kpEl8ldWzTotR89Yp1vzSXIVCb8iUsR1alOuPPsbAkwCJp8jJBhcxfZc7w0P13Gx-hQUkOeDS7bLgMtwVcxfpBN-ROfOvrKR-mTxX7xx7VXVJ59a334zEpt2oR8f3uThXvkeTfqETtacZkftJUo-w6z1krWN6Bhp">
+</div>
+<!-- Slide 4: Eco Canvas Tote Bag on Pedestal -->
+<div class="hero-slide absolute inset-0 w-full h-full inactive" id="hero-slide-3">
+<img alt="Sleec Eco-Canvas Tote Bag on Green Pedestal" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfPVZLhvRNwK1ztp-tHtuf3W9A8sBIIOqeGcGGfPLE1IxO7z9k-0MS4WCNVk4oiXrUR9AuEUyKpHg8xe6JIelXZLh_aUPE_xYWUobZLGIZCKia43tM_HEbljdGnUHGao00O8YQiDUsB6C4o0ay9c7bKN7Hm3I9WdYL4ZNtxQtBoGcziruSe6ts-gtuF4PG6ycdfv6KYHkO905sKM5tWr-C9H9TH5bRpEhm9hwFB5EkWLXC3WneStxr6RDx6hkWPA-r">
+</div>
+<!-- Premium emerald gradient veil for top legibility and soft fade to content -->
+<div class="absolute inset-0 bg-gradient-to-b from-emerald-950/85 via-emerald-900/60 to-slate-50"></div>
+<!-- Subtle mini indicator dots for 4-slide background carousel -->
+<div class="absolute bottom-5 right-6 z-10 flex items-center space-x-1.5 pointer-events-auto">
+<button aria-label="Slide 1" class="hero-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300" data-slide="0"></button>
+<button aria-label="Slide 2" class="hero-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300" data-slide="1"></button>
+<button aria-label="Slide 3" class="hero-dot w-4 h-1.5 rounded-full bg-white transition-all duration-300" data-slide="2"></button>
+<button aria-label="Slide 4" class="hero-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300" data-slide="3"></button>
+</div></div>
+<div class="absolute -top-16 -right-10 w-64 h-64 bg-emerald-400/25 rounded-full blur-3xl pointer-events-none z-0"></div>
+<!-- BEGIN: MainContentScrollableArea -->
+<main class="relative z-10 flex-1 overflow-y-auto px-5 pt-2 scroll-smooth pb-28 no-scrollbar" data-purpose="scrollable-dashboard">
+<!-- BEGIN: NavigationBar -->
+<nav class="flex justify-between items-center py-2" data-purpose="top-navigation-row">
+<!-- Menu Button -->
+<button aria-label="Menu" class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-transform border border-white/25 shadow-sm" id="btn-hamburger-menu">
+<svg class="w-5 h-5 stroke-current fill-none stroke-2 stroke-round" viewBox="0 0 24 24">
+<line x1="4" x2="20" y1="7" y2="7"></line>
+<line x1="4" x2="16" y1="12" y2="12"></line>
+<line x1="4" x2="13" y1="17" y2="17"></line>
+</svg>
+</button>
+<!-- Right actions: Shopping Cart -->
+<div class="flex items-center space-x-2.5">
+<button aria-label="Shopping Bag" class="relative w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/25 active:scale-95 transition-all shadow-sm cursor-pointer" id="header-bag-btn" onclick="window.openSleecBag &amp;&amp; window.openSleecBag()"><svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] font-bold flex items-center justify-center leading-none shadow-sm" id="top-cart-badge" style="display: flex;">3</span></button>
+</div>
+</nav>
+<!-- END: NavigationBar -->
+<!-- BEGIN: HeroGreetingAndMascot -->
+<section class="flex justify-between items-end mt-2 mb-3 relative" data-purpose="hero-section">
+<!-- Text Greetings -->
+<div class="z-10 pb-1">
+<h1 class="text-2xl font-bold text-white tracking-tight leading-tight drop-shadow-sm" id="greeting-user-name">Hey, Fuadino</h1>
+<p class="text-emerald-100/90 text-sm font-medium mt-0.5 drop-shadow-sm">Ready to discover fresh drops?</p>
+</div>
+<!-- Mascot with speech bubble -->
+<div class="relative flex flex-col items-center" data-purpose="mascot-container">
+<div class="bg-white/30 backdrop-blur-md border border-white/40 text-white font-medium text-[11px] px-3 py-1 rounded-full shadow-sm mb-1 animate-pulse">Let's shop!</div>
+<div class="relative w-20 h-20 -mb-2">
+<svg class="w-full h-full drop-shadow-md" viewBox="0 0 100 100">
+<path d="M 68,18 C 90,14 96,38 72,44 C 54,49 46,24 68,18 Z" fill="#22c55e"></path>
+<path d="M 70,22 Q 62,38 52,56" fill="none" stroke="#166534" stroke-linecap="round" stroke-width="3"></path>
+<ellipse cx="48" cy="62" fill="#4ade80" rx="26" ry="22"></ellipse>
+<circle cx="32" cy="67" fill="#fca5a5" opacity="0.8" r="4.5"></circle>
+<circle cx="64" cy="67" fill="#fca5a5" opacity="0.8" r="4.5"></circle>
+<circle cx="34" cy="46" fill="#4ade80" r="11"></circle>
+<circle cx="34" cy="46" fill="#ffffff" r="8"></circle>
+<circle cx="35" cy="45" fill="#0f172a" r="4.5"></circle>
+<circle cx="60" cy="46" fill="#4ade80" r="11"></circle>
+<circle cx="60" cy="46" fill="#ffffff" r="8"></circle>
+<circle cx="59" cy="45" fill="#0f172a" r="4.5"></circle>
+<path d="M 40,66 Q 48,74 56,66" fill="none" stroke="#166534" stroke-linecap="round" stroke-width="2.5"></path>
+</svg>
+</div>
+</div>
+</section>
+<!-- END: HeroGreetingAndMascot -->
+<!-- BEGIN: MetricQuickCards -->
+<section class="grid grid-cols-3 gap-2.5 my-3 relative z-10 overflow-visible" data-purpose="quick-metrics-row">
+<article class="relative rounded-2xl overflow-hidden group h-[150px] bg-slate-900 border-0 outline-none ring-0 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5" id="card-box-1" style="box-shadow: 0 16px 32px -6px rgba(0, 0, 0, 0.4), 0 8px 16px -4px rgba(0, 0, 0, 0.25);">
+<div class="product-track w-full h-[300px] flex flex-col" id="track-box-1" style="transform: translateY(0%);">
+<div class="product-item relative w-full h-[150px] flex flex-col justify-between p-2 flex-shrink-0 item-active" id="card-1-item-0">
+<img alt="Sage Runner Sneakers" class="absolute inset-0 w-full h-full object-cover object-center opacity-85 group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdp8TYW9VhssmsUCroN4Tvq51i6BBWd_oVZ0dTYyCxkjLmxt4jtIcPHnmEuP5gAOPsbVKGPBpUnu-SjrLUKDsaZXrKsI8cAqmR8JbRMCG2Atv33IidhRloXKL252yJK13hFTRsjBp1J2DhV5NJWkkEikxtUcj2mSiBl0PPNCx94Reui1N-LNYeuXoi1pYBiykOoXgN2ImfG_EpvkrXC9Y4jdxPhhNowoH1GoiO5akh1z44gFIuf0ZW7oUANKYl88Y6">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-black/30 pointer-events-none"></div>
+<div class="item-meta relative z-10 mt-auto pt-2">
+<span class="font-semibold text-emerald-300 block uppercase tracking-widest leading-none mb-0.5" style="font-size: 6.5px;">SAGE RUNNER</span>
+<h3 class="font-semibold text-white leading-tight drop-shadow-sm" style="font-size: 8px;">Aura Edition</h3>
+<a class="mt-1 inline-flex items-center font-medium text-white/90 group-hover:text-emerald-300 transition-colors" href="#drops" style="font-size: 7px;">Shop</a>
+</div>
+</div>
+<div class="product-item relative w-full h-[150px] flex flex-col justify-between p-2 flex-shrink-0 item-inactive" id="card-1-item-1">
+<img alt="Amber Essence Perfume" class="absolute inset-0 w-full h-full object-cover object-center opacity-85 group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDjbwuGJe6YgOCFs1hr0ZKTYgBfB7fSXUurU0-TX8sKyNkhuatWDCkp4NrOgGm2lNs3XokY8SSWYtpwFbwC9FkrsuWPNai3oKU9fZMOtyp1j4UX0uNwGp9czf601rYo09O9IBI25rbk2w94GaEzH3U3FSxWxBkwTXKsIRC5wADoTK30JwyV44aCMeZ-U7WybZZhaQe81YfbWhpkdlL_KSpNudO80DaZDlESPIFgJ3Gu2aZcUkonwnVFA8KgRNWj3Ew">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-black/30 pointer-events-none"></div>
+<div class="item-meta relative z-10 mt-auto pt-2">
+<span class="font-semibold text-amber-300 block uppercase tracking-widest leading-none mb-0.5" style="font-size: 6.5px;">LUXURY SCENT</span>
+<h3 class="font-semibold text-white leading-tight drop-shadow-sm" style="font-size: 8px;">Amber Essence</h3>
+<a class="mt-1 inline-flex items-center font-medium text-white/90 group-hover:text-amber-300 transition-colors" href="#shop-ai" style="font-size: 7px;">Claim</a>
+</div>
+</div>
+</div>
+</article>
+<article class="relative rounded-2xl overflow-hidden group h-[150px] bg-slate-900 border-0 outline-none ring-0 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5" id="card-box-2" style="box-shadow: 0 16px 32px -6px rgba(0, 0, 0, 0.4), 0 8px 16px -4px rgba(0, 0, 0, 0.25);">
+<div class="product-track w-full h-[300px] flex flex-col" id="track-box-2" style="transform: translateY(-50%);">
+<div class="product-item relative w-full h-[150px] flex flex-col justify-between p-2 flex-shrink-0 item-inactive" id="card-2-item-0">
+<img alt="Tortoise Classic Sunglasses" class="absolute inset-0 w-full h-full object-cover object-center opacity-85 group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCatlX9fl96JbmtTIozN_EbW1cCgYmvqyraob9Dm_grGjOX_Gmprgwa5ENZ-Ft9gimej1imDKTwVDFo6BYuBN_awxShyFvCNvqpRM8dJKOaBdK-0mUHk5_qHI3RqgMEBx85lHM7r5UCieY0uvLGyV-z9jJN6tAYSgfyuRWjzP-tf7eMjo4jFewwgTuphSwMre7qUdtxWELoBvcjuV4cPH7yjfAP7ic4mlAJY-QmnykFcA0k9BiZaKIgvw_4-CTuvW9W">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-black/30 pointer-events-none"></div>
+<div class="item-meta relative z-10 mt-auto pt-2">
+<span class="font-semibold text-cyan-200 block uppercase tracking-widest leading-none mb-0.5" style="font-size: 6.5px;">DESIGNER OPTICS</span>
+<h3 class="font-semibold text-white leading-tight drop-shadow-sm" style="font-size: 8px;">Tortoise Classic</h3>
+<a class="mt-1 inline-flex items-center font-medium text-white/90 group-hover:text-cyan-200 transition-colors" href="#drops" style="font-size: 7px;">View</a>
+</div>
+</div>
+<div class="product-item relative w-full h-[150px] flex flex-col justify-between p-2 flex-shrink-0 item-active" id="card-2-item-1">
+<img alt="Amber Essence Perfume" class="absolute inset-0 w-full h-full object-cover object-center opacity-85 group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDjbwuGJe6YgOCFs1hr0ZKTYgBfB7fSXUurU0-TX8sKyNkhuatWDCkp4NrOgGm2lNs3XokY8SSWYtpwFbwC9FkrsuWPNai3oKU9fZMOtyp1j4UX0uNwGp9czf601rYo09O9IBI25rbk2w94GaEzH3U3FSxWxBkwTXKsIRC5wADoTK30JwyV44aCMeZ-U7WybZZhaQe81YfbWhpkdlL_KSpNudO80DaZDlESPIFgJ3Gu2aZcUkonwnVFA8KgRNWj3Ew">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-black/30 pointer-events-none"></div>
+<div class="item-meta relative z-10 mt-auto pt-2">
+<span class="font-semibold text-amber-300 block uppercase tracking-widest leading-none mb-0.5" style="font-size: 6.5px;">LUXURY SCENT</span>
+<h3 class="font-semibold text-white leading-tight drop-shadow-sm" style="font-size: 8px;">Amber Essence</h3>
+<a class="mt-1 inline-flex items-center font-medium text-white/90 group-hover:text-amber-300 transition-colors" href="#shop-ai" style="font-size: 7px;">Claim</a>
+</div>
+</div>
+</div>
+</article>
+<article class="relative rounded-2xl overflow-hidden group h-[150px] bg-slate-900 border-0 outline-none ring-0 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5" id="card-box-3" style="box-shadow: 0 16px 32px -6px rgba(0, 0, 0, 0.4), 0 8px 16px -4px rgba(0, 0, 0, 0.25);">
+<div class="product-track w-full h-[300px] flex flex-col" id="track-box-3" style="transform: translateY(0%);">
+<div class="product-item relative w-full h-[150px] flex flex-col justify-between p-2 flex-shrink-0 item-active" id="card-3-item-0">
+<img alt="Tortoise Classic Sunglasses" class="absolute inset-0 w-full h-full object-cover object-center opacity-85 group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxxUmZMwfbowOlPV-PFCJRnRAbTjFWeRtatOAQlWpL7RwiT6zi-704e5XRY2-Z1SLUp0WAP2ir2U8YRw54nvLg4BjJLW8n-mKb4jMlWyhHsfB5EGx1fq___76A9X7fBcPw5kHQDHp2Vgb218914jA5CylD2PTuPnfLbH3tsp7F-BjI9KDsD06FCjiG1gSOVU5SuNd13uH1ULyhY8r2eZWLvnAGFOBpsxSy_TxEzUR6Winz7aoBdzEghJ9DpyJ_Grle">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-black/30 pointer-events-none"></div>
+<div class="item-meta relative z-10 mt-auto pt-2">
+<span class="font-semibold text-cyan-200 block uppercase tracking-widest leading-none mb-0.5" style="font-size: 6.5px;">DESIGNER OPTICS</span>
+<h3 class="font-semibold text-white leading-tight drop-shadow-sm" style="font-size: 8px;">Tortoise Classic</h3>
+<a class="mt-1 inline-flex items-center font-medium text-white/90 group-hover:text-cyan-200 transition-colors" href="#drops" style="font-size: 7px;">View</a>
+</div>
+</div>
+<div class="product-item relative w-full h-[150px] flex flex-col justify-between p-2 flex-shrink-0 item-inactive" id="card-3-item-1">
+<img alt="Sage Runner Sneakers" class="absolute inset-0 w-full h-full object-cover object-center opacity-85 group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdp8TYW9VhssmsUCroN4Tvq51i6BBWd_oVZ0dTYyCxkjLmxt4jtIcPHnmEuP5gAOPsbVKGPBpUnu-SjrLUKDsaZXrKsI8cAqmR8JbRMCG2Atv33IidhRloXKL252yJK13hFTRsjBp1J2DhV5NJWkkEikxtUcj2mSiBl0PPNCx94Reui1N-LNYeuXoi1pYBiykOoXgN2ImfG_EpvkrXC9Y4jdxPhhNowoH1GoiO5akh1z44gFIuf0ZW7oUANKYl88Y6">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-black/30 pointer-events-none"></div>
+<div class="item-meta relative z-10 mt-auto pt-2">
+<span class="font-semibold text-emerald-300 block uppercase tracking-widest leading-none mb-0.5" style="font-size: 6.5px;">SAGE RUNNER</span>
+<h3 class="font-semibold text-white leading-tight drop-shadow-sm" style="font-size: 8px;">Aura Edition</h3>
+<a class="mt-1 inline-flex items-center font-medium text-white/90 group-hover:text-emerald-300 transition-colors" href="#drops" style="font-size: 7px;">Shop</a>
+</div>
+</div>
+</div>
+</article>
+</section>
+<!-- END: MetricQuickCards -->
+<!-- BEGIN: MultiStateDynamicBox -->
+<section class="my-3.5 relative overflow-hidden rounded-[26px] bg-[#eef6ed] border border-emerald-900/10 shadow-lg h-[132px] min-h-[132px] max-h-[132px] flex items-center transition-all duration-500" data-purpose="multi-state-hero-box" id="multi-state-box">
+<div class="absolute -right-6 -bottom-6 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="absolute -left-6 -top-6 w-32 h-32 bg-emerald-400/10 rounded-full blur-xl pointer-events-none"></div>
+<div class="dynamic-state absolute inset-0 px-4 py-3 flex items-center justify-between transition-opacity duration-500 ease-in-out z-10 opacity-100 pointer-events-auto active-state" id="state-screen-0">
+<div class="w-full flex items-center justify-between gap-3">
+<div class="min-w-0 flex-1 flex flex-col justify-center px-1">
+<h2 class="text-sm font-bold text-[#0c2e1f] tracking-tight leading-tight truncate">Find more on Sleec</h2>
+<p class="text-[11px] text-[#2d523e] mt-0.5 leading-snug truncate">Fresh arrivals &amp; perks.</p>
+</div>
+<button class="px-5 py-2 rounded-full bg-[#0c2e1f] text-white text-xs font-semibold shadow-sm hover:opacity-95 transition-opacity active:scale-95 flex-shrink-0 whitespace-nowrap" id="btn-explore-sleec" onclick="window.openSleecBag &amp;&amp; window.openSleecBag()">Shop</button>
+</div>
+</div>
+</section>
+<!-- END: MultiStateDynamicBox -->
+<!-- BEGIN: PickedForYouSection -->
+<section class="mt-4" data-purpose="picked-for-you-section">
+<div class="flex justify-between items-center mb-2.5">
+<h2 class="text-lg font-bold text-slate-900 tracking-tight">Picked for you</h2>
+<a class="text-xs font-semibold text-slate-700 hover:text-emerald-700 flex items-center gap-0.5 transition-colors" href="#picks">
+<span class="">See all</span>
+</a>
+</div>
+<div class="flex items-center space-x-2 border-0 overflow-x-auto no-scrollbar pb-1 mb-3"><button class="px-4 py-1.5 rounded-full bg-[#205739] text-white text-xs font-semibold shadow-sm flex-shrink-0 category-pill" onclick="window.selectCategoryPill(this)">Trending</button><button class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 transition-colors flex-shrink-0 category-pill" onclick="window.selectCategoryPill(this)">Fashion</button><button class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 transition-colors flex-shrink-0 category-pill" onclick="window.selectCategoryPill(this)">Beauty</button><button class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 transition-colors flex-shrink-0 category-pill" onclick="window.selectCategoryPill(this)">Home</button><button class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 transition-colors flex-shrink-0 category-pill" onclick="window.selectCategoryPill(this)">Accessories</button></div>
+<!-- 2x2 Product Card Grid -->
+<div class="grid grid-cols-2 gap-3"><div class="relative group pt-1.5"><div class="absolute inset-x-2 top-0 bottom-3 bg-[#dff0e5] rounded-[22px] -rotate-1 group-hover:rotate-0 transition-transform duration-300 pointer-events-none"></div><article class="relative z-10 bg-[#fbfdfb] rounded-[22px] p-2.5 pb-3 border border-emerald-950/5 shadow-sm group-hover:shadow-md transition-all duration-300 flex flex-col justify-between"><div class="flex items-center justify-between w-full mb-1 px-1 z-10"><div class="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-100 shadow-sm"><svg class="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg><span class="text-[10px] font-bold text-slate-700 leading-none">4.8</span></div><button aria-label="Favorite Mint Hoodie" onclick="this.classList.toggle('text-rose-500'); this.classList.toggle('text-slate-400');" class="w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-500 shadow-sm transition-colors active:scale-90"><svg class="w-3.5 h-3.5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button></div><div class="relative w-full aspect-square rounded-xl overflow-hidden bg-white flex items-center justify-center p-1.5 mb-2"><img alt="Mint Hoodie Cloudnine" class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCroMfzDZH2_RPk8jp3qi_gRVf8U6i6uboQ0xQ_finNQb7Acy430dhYpIpklfwBimKmgZHegK3xIpL5N4dyY7yKIwOSAQsq_LAVwIVudDygL9uMaR52xef1c4xxjOt1YHhbtSCPE6NXDm95og02ger2l2Xf4Jnpw2uJAjiUye_M6IZblyaYsUTQV8sox3IeLWhGJWpcbCtXlc_NWBdEROoNDOUghllMApIz93z8KYyQc64bnnrnNMFqM2wbRY5Yv3iD"></div><div class="px-0.5"><h3 class="text-[11px] font-medium text-slate-500 truncate mb-1 capitalize">Cloudnine Mint Hoodie</h3><div class="flex items-center justify-between gap-1"><div class="flex items-baseline gap-1 truncate"><span class="text-xs font-bold text-[#0c2e1f]">₦18,500</span><span class="text-[9px] text-slate-400 line-through">₦24,000</span></div><button aria-label="Add to cart" class="w-7 h-7 rounded-xl bg-gradient-to-tr from-[#0c2e1f] to-[#1b5e3f] text-white flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all flex-shrink-0" onclick="window.addSampleItemToBag('hoodie')"><svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div></div></article></div><div class="relative group pt-1.5"><div class="absolute inset-x-2 top-0 bottom-3 bg-[#dff0e5] rounded-[22px] 1 group-hover:rotate-0 transition-transform duration-300 pointer-events-none"></div><article class="relative z-10 bg-[#fbfdfb] rounded-[22px] p-2.5 pb-3 border border-emerald-950/5 shadow-sm group-hover:shadow-md transition-all duration-300 flex flex-col justify-between"><div class="flex items-center justify-between w-full mb-1 px-1 z-10"><div class="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-100 shadow-sm"><svg class="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg><span class="text-[10px] font-bold text-slate-700 leading-none">4.9</span></div><button aria-label="Favorite Sage Runners" onclick="this.classList.toggle('text-rose-500'); this.classList.toggle('text-slate-400');" class="w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-slate-100 flex items-center justify-center text-rose-500 shadow-sm transition-colors active:scale-90"><svg class="w-3.5 h-3.5 fill-current stroke-current stroke-2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button></div><div class="relative w-full aspect-square rounded-xl overflow-hidden bg-white flex items-center justify-center p-1.5 mb-2"><img alt="Sage Runners Stride Club" class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdp8TYW9VhssmsUCroN4Tvq51i6BBWd_oVZ0dTYyCxkjLmxt4jtIcPHnmEuP5gAOPsbVKGPBpUnu-SjrLUKDsaZXrKsI8cAqmR8JbRMCG2Atv33IidhRloXKL252yJK13hFTRsjBp1J2DhV5NJWkkEikxtUcj2mSiBl0PPNCx94Reui1N-LNYeuXoi1pYBiykOoXgN2ImfG_EpvkrXC9Y4jdxPhhNowoH1GoiO5akh1z44gFIuf0ZW7oUANKYl88Y6"></div><div class="px-0.5"><h3 class="text-[11px] font-medium text-slate-500 truncate mb-1 capitalize">Stride Club Sage Runners</h3><div class="flex items-center justify-between gap-1"><div class="flex items-baseline gap-1 truncate"><span class="text-xs font-bold text-[#0c2e1f]">₦32,000</span><span class="text-[9px] text-slate-400 line-through">₦42,000</span></div><button aria-label="Add to cart" class="w-7 h-7 rounded-xl bg-gradient-to-tr from-[#0c2e1f] to-[#1b5e3f] text-white flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all flex-shrink-0" onclick="window.addSampleItemToBag('sage')"><svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div></div></article></div><div class="relative group pt-1.5"><div class="absolute inset-x-2 top-0 bottom-3 bg-[#dff0e5] rounded-[22px] -rotate-1 group-hover:rotate-0 transition-transform duration-300 pointer-events-none"></div><article class="relative z-10 bg-[#fbfdfb] rounded-[22px] p-2.5 pb-3 border border-emerald-950/5 shadow-sm group-hover:shadow-md transition-all duration-300 flex flex-col justify-between"><div class="flex items-center justify-between w-full mb-1 px-1 z-10"><div class="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-100 shadow-sm"><svg class="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg><span class="text-[10px] font-bold text-slate-700 leading-none">4.7</span></div><button aria-label="Favorite Everyday Tote" onclick="this.classList.toggle('text-rose-500'); this.classList.toggle('text-slate-400');" class="w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-500 shadow-sm transition-colors active:scale-90"><svg class="w-3.5 h-3.5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button></div><div class="relative w-full aspect-square rounded-xl overflow-hidden bg-white flex items-center justify-center p-1.5 mb-2"><img alt="Everyday Tote Sleec Basics" class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfPVZLhvRNwK1ztp-tHtuf3W9A8sBIIOqeGcGGfPLE1IxO7z9k-0MS4WCNVk4oiXrUR9AuEUyKpHg8xe6JIelXZLh_aUPE_xYWUobZLGIZCKia43tM_HEbljdGnUHGao00O8YQiDUsB6C4o0ay9c7bKN7Hm3I9WdYL4ZNtxQtBoGcziruSe6ts-gtuF4PG6ycdfv6KYHkO905sKM5tWr-C9H9TH5bRpEhm9hwFB5EkWLXC3WneStxr6RDx6hkWPA-r"></div><div class="px-0.5"><h3 class="text-[11px] font-medium text-slate-500 truncate mb-1 capitalize">Sleec Canvas Tote</h3><div class="flex items-center justify-between gap-1"><div class="flex items-baseline gap-1 truncate"><span class="text-xs font-bold text-[#0c2e1f]">₦8,500</span><span class="text-[9px] text-slate-400 line-through">₦12,000</span></div><button aria-label="Add to cart" class="w-7 h-7 rounded-xl bg-gradient-to-tr from-[#0c2e1f] to-[#1b5e3f] text-white flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all flex-shrink-0" onclick="window.addSampleItemToBag('tote')"><svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div></div></article></div><div class="relative group pt-1.5"><div class="absolute inset-x-2 top-0 bottom-3 bg-[#dff0e5] rounded-[22px] 1 group-hover:rotate-0 transition-transform duration-300 pointer-events-none"></div><article class="relative z-10 bg-[#fbfdfb] rounded-[22px] p-2.5 pb-3 border border-emerald-950/5 shadow-sm group-hover:shadow-md transition-all duration-300 flex flex-col justify-between"><div class="flex items-center justify-between w-full mb-1 px-1 z-10"><div class="flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-slate-100 shadow-sm"><svg class="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg><span class="text-[10px] font-bold text-slate-700 leading-none">5.0</span></div><button aria-label="Favorite Amber Eau" onclick="this.classList.toggle('text-rose-500'); this.classList.toggle('text-slate-400');" class="w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-500 shadow-sm transition-colors active:scale-90"><svg class="w-3.5 h-3.5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button></div><div class="relative w-full aspect-square rounded-xl overflow-hidden bg-white flex items-center justify-center p-1.5 mb-2"><img alt="Amber Eau Maison Vert" class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDjbwuGJe6YgOCFs1hr0ZKTYgBfB7fSXUurU0-TX8sKyNkhuatWDCkp4NrOgGm2lNs3XokY8SSWYtpwFbwC9FkrsuWPNai3oKU9fZMOtyp1j4UX0uNwGp9czf601rYo09O9IBI25rbk2w94GaEzH3U3FSxWxBkwTXKsIRC5wADoTK30JwyV44aCMeZ-U7WybZZhaQe81YfbWhpkdlL_KSpNudO80DaZDlESPIFgJ3Gu2aZcUkonwnVFA8KgRNWj3Ew"></div><div class="px-0.5"><h3 class="text-[11px] font-medium text-slate-500 truncate mb-1 capitalize">Amber Eau Maison Vert</h3><div class="flex items-center justify-between gap-1"><div class="flex items-baseline gap-1 truncate"><span class="text-xs font-bold text-[#0c2e1f]">₦24,000</span><span class="text-[9px] text-slate-400 line-through">₦30,000</span></div><button aria-label="Add to cart" class="w-7 h-7 rounded-xl bg-gradient-to-tr from-[#0c2e1f] to-[#1b5e3f] text-white flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all flex-shrink-0" onclick="window.addSampleItemToBag('perfume')"><svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div></div></article></div></div>
+</section><section class="mt-5 mb-2" data-purpose="discover-shops-section"><div class="flex justify-between items-center mb-2.5"><h2 class="text-lg font-bold text-slate-900 tracking-tight">Discover shops</h2><a class="text-xs font-semibold text-slate-700 hover:text-emerald-700 flex items-center gap-0.5 transition-colors" href="#shops"><span class="">See all</span></a></div><div class="grid grid-cols-2 gap-3"><article class="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm group hover:shadow-md transition-all flex flex-col"><div class="relative w-full h-24 overflow-hidden bg-slate-200"><img alt="The Daily Edit Shop Preview" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2YntA6Ap039wDQH_D6qcCjiT6nOI1SBmUvhtmXOdFnWMWAIWja8O37XjpL_K4GV_viDEzXHI0YqtgMI3HeBZmFSylM4WJp7A8QVWb8QBJAiuCAYYKoclOX_pW8vYJrkHFFEZCqD3bnxUuFpQ_upzzwvi9_H8K9IhNYeI-gnqk2kNQJYoYkCEwIQFjsqfrs8__QKcbnWTny3wEURaHKKlAstVgr-6t4AMo5RKGNFsGWhhbmerOO58"></div><div class="p-2.5 flex items-center space-x-2 relative"><div class="w-8 h-8 rounded-full bg-[#1b4332] text-white font-bold text-xs flex items-center justify-center flex-shrink-0 -mt-5 ring-2 ring-white shadow-sm">D</div><div class="min-w-0 flex-1"><h4 class="text-xs font-bold text-slate-900 truncate">The Daily Edit</h4><p class="text-[10px] text-slate-400 truncate">Everyday essentials</p></div></div></article><article class="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm group hover:shadow-md transition-all flex flex-col"><div class="relative w-full h-24 overflow-hidden bg-slate-200"><img alt="Sage &amp; Co Shop Preview" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_prWS4imkEVClpkxhb-vGhydI6G_1vdZSf-ytG2bm-Kb0jMA8i8f5kBcMhyGFOKDRPu43G5fcbh3DhDcTqnID_d2hfNUOHBSgqFytZKYY_AoSw3N3P-UVGgj456cBLZy8vAIzkrLqV7ua-YKjAPyxfyfyc6_Gcz2bqUxHlAMalJifQEikNGqwIKMEV9E7Hh5zvZMT2Jx36tcpJ0S7br1thxWHVo7ASiJteE3BZ7Oism0uqzY5YBI"></div><div class="p-2.5 flex items-center space-x-2 relative"><div class="w-8 h-8 rounded-full bg-[#1b4332] text-white font-bold text-xs flex items-center justify-center flex-shrink-0 -mt-5 ring-2 ring-white shadow-sm">S</div><div class="min-w-0 flex-1"><h4 class="text-xs font-bold text-slate-900 truncate">Sage &amp; Co.</h4><p class="text-[10px] text-slate-400 truncate">Style, naturally</p></div></div></article></div></section>
+</main>
+<!-- END: MainContentScrollableArea -->
+<!-- BEGIN: BottomNavigationBar -->
+<nav class="bottom-5 inset-x-4 max-w-[360px] mx-auto rounded-full bg-white/95 backdrop-blur-md shadow-2xl border border-slate-100 py-2 z-30 flex justify-between items-center px-3.5 fixed" data-purpose="bottom-tab-bar">
+<button aria-label="Home" class="flex items-center justify-center text-[#0c2e1f]" id="tab-btn-home"><div class="p-2 flex items-center justify-center active:scale-95 transition-all"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg></div></button>
+<button aria-label="Search" class="flex items-center justify-center p-2 text-slate-400 hover:text-emerald-700 active:scale-95 transition-all" id="tab-btn-search"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" x2="21" y1="16.5" y2="21"></line></svg></button>
+<button aria-label="Shop with AI" class="flex flex-col items-center justify-center -my-1 group" id="tab-btn-ai"><div class="w-11 h-11 rounded-full bg-[#0c2e1f] text-white flex items-center justify-center shadow-md active:scale-95 transition-all relative"><svg class="w-6 h-6 stroke-white fill-none" viewBox="0 0 24 24"><circle cx="6.5" cy="7.5" r="2.5" stroke-width="1.5"></circle><circle cx="6.5" cy="7.5" fill="white" r="1" stroke="none"></circle><circle cx="17.5" cy="7.5" r="2.5" stroke-width="1.5"></circle><circle cx="17.5" cy="7.5" fill="white" r="1" stroke="none"></circle><rect height="13" rx="6.5" stroke-width="1.5" width="16" x="4" y="6.5"></rect><circle cx="9" cy="11.5" fill="white" r="1.2" stroke="none"></circle><circle cx="15" cy="11.5" fill="white" r="1.2" stroke="none"></circle><ellipse cx="12" cy="14.2" rx="3.2" ry="2.2" stroke-width="1.2"></ellipse><ellipse cx="12" cy="13.3" fill="white" rx="1.1" ry="0.8" stroke="none"></ellipse><path d="M10.8 14.5 Q12 15.5 13.2 14.5" stroke-linecap="round" stroke-width="1.2"></path></svg></div></button>
+<button aria-label="Categories" class="flex items-center justify-center p-2 text-slate-400 hover:text-emerald-700 active:scale-95 transition-all" id="tab-btn-categories"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><rect height="7" rx="1.5" width="7" x="3" y="3"></rect><rect height="7" rx="1.5" width="7" x="14" y="3"></rect></svg></button>
+<button aria-label="Saved" class="flex items-center justify-center p-2 text-slate-400 hover:text-rose-500 active:scale-95 transition-all" id="tab-btn-saved"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button>
+</nav>
+<!-- ========================================== -->
+<!-- 1. CART DRAWER SHEET OVERLAY ('My Sleec Bag') (CLOSED/HIDDEN INITIALLY) -->
+<!-- ========================================== -->
+<div class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none hidden" id="buyer-drawer-overlay" onclick="if(event.target === this) window.closeBuyerDrawer()" style="display: none !important;"><div class="absolute top-0 bottom-0 left-0 w-[310px] max-w-[85vw] bg-white shadow-2xl flex flex-col transform transition-transform duration-300 ease-out z-50 overflow-y-auto -translate-x-full" id="buyer-drawer-content" onclick="event.stopPropagation()"><div class="pt-7 pb-8 px-5 relative border-0" id="drawer-header-box" style="background: linear-gradient(rgb(18, 62, 47) 0%, rgb(22, 78, 59) 55%, rgb(42, 111, 86) 70%, rgb(104, 164, 139) 85%, rgb(209, 231, 220) 93%, rgb(255, 255, 255) 100%);"><button aria-label="Close Drawer" class="absolute top-4 right-4 w-8 h-8 rounded-full text-white/80 hover:text-white bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" id="btn-close-drawer" onclick="window.closeBuyerDrawer()"><svg class="w-4 h-4 stroke-current stroke-2" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg></button><div class="flex items-center space-x-3.5 mt-1" id="drawer-user-info"><div class="relative flex-shrink-0"><div class="w-14 h-14 rounded-full overflow-hidden shadow-sm bg-white ring-2 ring-white/30"><img alt="Fuadino Adebayo" class="w-full h-full object-cover" id="drawer-avatar-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf2KosHaPce84SUSv-V8EHDvhcU9R7IaflLN1tk5BGVfRfl54Z2o3EXqPDGQsENPT5K-ueIAzsfOOee1h4FZxqMTdpTd1RNP4_kpEl8ldWzTotR89Yp1vzSXIVCb8iUsR1alOuPPsbAkwCJp8jJBhcxfZc7w0P13Gx-hQUkOeDS7bLgMtwVcxfpBN-ROfOvrKR-mTxX7xx7VXVJ59a334zEpt2oR8f3uThXvkeTfqETtacZkftJUo-w6z1krWN6Bhp"></div></div><div class="min-w-0 flex-1"><h3 class="font-semibold text-lg text-white leading-tight truncate drop-shadow-sm" id="drawer-display-name">Fuadino Adebayo</h3><p class="text-xs text-white/80 font-normal mt-0.5 truncate" id="drawer-display-email">fuadino@sleec.app</p></div></div></div><div class="flex-1 px-3 py-2 space-y-1" id="drawer-menu-list"><button class="w-full flex items-center p-3 rounded-xl text-slate-800 hover:bg-emerald-50/70 transition-colors group" onclick="window.closeBuyerDrawer(); window.openSleecBag();"><div class="flex items-center space-x-3.5"><div class="w-6 h-6 flex items-center justify-center flex-shrink-0 text-[#0c2e1f]"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div><span class="text-sm font-semibold text-slate-900">My Profile</span></div></button><button class="w-full flex items-center p-3 rounded-xl text-slate-800 hover:bg-emerald-50/70 transition-colors group" onclick="window.closeBuyerDrawer(); window.openSleecBag();"><div class="flex items-center space-x-3.5"><div class="w-6 h-6 flex items-center justify-center flex-shrink-0 text-[#0c2e1f]"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="5"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg></div><div class="flex flex-col text-left"><span class="text-sm font-semibold text-slate-900 leading-tight">My Wallet</span><span class="text-[11px] text-emerald-700 font-medium mt-0.5" id="drawer-menu-wallet-val">₦145,000</span></div></div></button><button class="w-full flex items-center p-3 rounded-xl text-slate-800 hover:bg-emerald-50/70 transition-colors group" onclick="window.closeBuyerDrawer(); window.openAddressPickerModal();"><div class="flex items-center space-x-3.5"><div class="w-6 h-6 flex items-center justify-center flex-shrink-0 text-[#0c2e1f]"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg></div><span class="text-sm font-semibold text-slate-900">Saved Addresses</span></div></button><button class="w-full flex items-center p-3 rounded-xl text-slate-800 hover:bg-emerald-50/70 transition-colors group" onclick="window.closeBuyerDrawer(); alert('Support is available 24/7 at support@sleec.app');"><div class="flex items-center space-x-3.5"><div class="w-6 h-6 flex items-center justify-center flex-shrink-0 text-[#0c2e1f]"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div><span class="text-sm font-semibold text-slate-900">Help &amp; Support</span></div></button><button class="w-full flex items-center p-3 rounded-xl text-rose-600 hover:bg-rose-50 transition-colors group mt-1" onclick="window.closeBuyerDrawer(); alert('Signed out successfully.');"><div class="flex items-center space-x-3.5"><div class="w-6 h-6 flex items-center justify-center flex-shrink-0 text-rose-600"><svg class="w-5 h-5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg></div><span class="text-sm font-medium text-rose-600">Log Out</span></div></button></div><div class="p-4 border-t border-slate-100 text-center text-[11px] text-slate-400">Sleec App v2.4.0 • Verified Buyer Session</div></div></div><div class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm transition-opacity duration-300 flex justify-center items-end opacity-0 pointer-events-none hidden" id="cart-drawer-overlay" onclick="if(event.target === this) window.closeSleecBag()" style="display: none !important;">
+<div class="w-full max-w-[412px] bg-white rounded-t-[32px] shadow-2xl flex flex-col max-h-[88vh] transform transition-transform duration-300 ease-out translate-y-full" id="cart-sheet-content" onclick="event.stopPropagation()">
+<div class="p-5 flex flex-col max-h-[88vh] overflow-y-auto no-scrollbar">
+<div class="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4 flex-shrink-0"></div>
+<div class="flex items-center justify-between flex-shrink-0">
+<div class="flex items-center gap-2">
+<h2 class="text-base font-bold text-gray-900">🛍️ My Sleec Bag</h2>
+<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-bold text-xs" id="sleec-bag-item-count">3</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="text-[11px] text-slate-400 hover:text-rose-500 font-medium transition-colors" onclick="window.clearSleecBag()" type="button">Clear Bag</button>
+<button class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 transition-colors" id="btn-close-cart-sheet" onclick="window.closeSleecBag()" type="button"><svg class="w-4 h-4 stroke-current stroke-2" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg></button>
+</div>
+</div>
+<div class="border-b border-gray-100 my-3 flex-shrink-0"></div>
+<!-- Complete Itemized Cart Container -->
+<div class="space-y-3 flex-1" id="sleec-bag-items-container">
+      <div class="p-3 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-between gap-3 cart-item-row" data-id="sage">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+          <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100">
+            <img alt="Stride Club Sage Runners" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdp8TYW9VhssmsUCroN4Tvq51i6BBWd_oVZ0dTYyCxkjLmxt4jtIcPHnmEuP5gAOPsbVKGPBpUnu-SjrLUKDsaZXrKsI8cAqmR8JbRMCG2Atv33IidhRloXKL252yJK13hFTRsjBp1J2DhV5NJWkkEikxtUcj2mSiBl0PPNCx94Reui1N-LNYeuXoi1pYBiykOoXgN2ImfG_EpvkrXC9Y4jdxPhhNowoH1GoiO5akh1z44gFIuf0ZW7oUANKYl88Y6">
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] uppercase tracking-wider font-semibold text-emerald-700">The Daily Edit</span>
+              <button onclick="window.removeCartItem('sage')" class="text-slate-400 hover:text-rose-500 text-xs px-1" title="Remove">✕</button>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900 truncate mt-0.5">Stride Club Sage Runners</h4>
+            <p class="text-[10px] text-slate-400 truncate">Size: 42</p>
+            <div class="flex items-center justify-between mt-1.5">
+              <span class="text-xs font-bold text-[#0c2e1f]">₦32,000</span>
+              <!-- Stepper -->
+              <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                <button type="button" onclick="window.changeItemQty('sage', -1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 font-bold text-xs">−</button>
+                <span class="w-6 text-center text-xs font-bold text-slate-800">1</span>
+                <button type="button" onclick="window.changeItemQty('sage', 1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 font-bold text-xs">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="p-3 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-between gap-3 cart-item-row" data-id="tote">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+          <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100">
+            <img alt="Sleec Canvas Tote &amp; Essentials" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfPVZLhvRNwK1ztp-tHtuf3W9A8sBIIOqeGcGGfPLE1IxO7z9k-0MS4WCNVk4oiXrUR9AuEUyKpHg8xe6JIelXZLh_aUPE_xYWUobZLGIZCKia43tM_HEbljdGnUHGao00O8YQiDUsB6C4o0ay9c7bKN7Hm3I9WdYL4ZNtxQtBoGcziruSe6ts-gtuF4PG6ycdfv6KYHkO905sKM5tWr-C9H9TH5bRpEhm9hwFB5EkWLXC3WneStxr6RDx6hkWPA-r">
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] uppercase tracking-wider font-semibold text-emerald-700">Sage &amp; Co.</span>
+              <button onclick="window.removeCartItem('tote')" class="text-slate-400 hover:text-rose-500 text-xs px-1" title="Remove">✕</button>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900 truncate mt-0.5">Sleec Canvas Tote &amp; Essentials</h4>
+            <p class="text-[10px] text-slate-400 truncate">Size: One Size</p>
+            <div class="flex items-center justify-between mt-1.5">
+              <span class="text-xs font-bold text-[#0c2e1f]">₦18,500</span>
+              <!-- Stepper -->
+              <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                <button type="button" onclick="window.changeItemQty('tote', -1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 font-bold text-xs">−</button>
+                <span class="w-6 text-center text-xs font-bold text-slate-800">1</span>
+                <button type="button" onclick="window.changeItemQty('tote', 1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 font-bold text-xs">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="p-3 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-between gap-3 cart-item-row" data-id="perfume">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+          <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100">
+            <img alt="Amber Eau Maison Vert" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDjbwuGJe6YgOCFs1hr0ZKTYgBfB7fSXUurU0-TX8sKyNkhuatWDCkp4NrOgGm2lNs3XokY8SSWYtpwFbwC9FkrsuWPNai3oKU9fZMOtyp1j4UX0uNwGp9czf601rYo09O9IBI25rbk2w94GaEzH3U3FSxWxBkwTXKsIRC5wADoTK30JwyV44aCMeZ-U7WybZZhaQe81YfbWhpkdlL_KSpNudO80DaZDlESPIFgJ3Gu2aZcUkonwnVFA8KgRNWj3Ew">
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] uppercase tracking-wider font-semibold text-emerald-700">Maison Vert</span>
+              <button onclick="window.removeCartItem('perfume')" class="text-slate-400 hover:text-rose-500 text-xs px-1" title="Remove">✕</button>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900 truncate mt-0.5">Amber Eau Maison Vert</h4>
+            <p class="text-[10px] text-slate-400 truncate">50ml Eau de Parfum</p>
+            <div class="flex items-center justify-between mt-1.5">
+              <span class="text-xs font-bold text-[#0c2e1f]">₦24,000</span>
+              <!-- Stepper -->
+              <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                <button type="button" onclick="window.changeItemQty('perfume', -1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 font-bold text-xs">−</button>
+                <span class="w-6 text-center text-xs font-bold text-slate-800">1</span>
+                <button type="button" onclick="window.changeItemQty('perfume', 1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 font-bold text-xs">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- Coupon code container -->
+<div class="my-3 pt-2 border-t border-slate-100 flex-shrink-0">
+<div class="flex items-center gap-2">
+<div class="relative flex-1">
+<input class="w-full bg-slate-50 border-0 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 placeholder-slate-400 uppercase tracking-wider focus:ring-1 focus:ring-emerald-600 focus:outline-none" id="bag-coupon-input" placeholder="Promo code (try SLEEC10)" type="text">
+<span class="absolute right-2.5 top-2 text-[10px] text-emerald-600 font-bold" id="coupon-applied-tag">10% OFF</span>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold active:scale-95 transition-all flex-shrink-0" onclick="window.applyCouponCode()" type="button">Apply</button>
+</div>
+<p class="text-[10px] text-emerald-600 font-medium mt-1.5" id="coupon-msg">Coupon SLEEC10 applied (-10% discount)</p>
+</div>
+<!-- Subtotal Breakdown -->
+<div class="p-3.5 rounded-2xl bg-gray-50 mb-3 flex-shrink-0 space-y-1.5 text-xs">
+<div class="flex items-center justify-between"><span class="font-semibold text-slate-600">Subtotal</span><span class="font-bold text-slate-900" id="sleec-bag-subtotal">₦74,500</span></div>
+<div class="flex items-center justify-between text-emerald-700 hidden" id="sleec-bag-discount-row"><span class="font-semibold">Discount (SLEEC10)</span><span class="font-bold" id="sleec-bag-discount">-₦7,450</span></div>
+<div class="flex items-center justify-between pt-1 border-t border-slate-200/60 font-bold text-slate-900"><span class="text-xs">Est. Total</span><span class="text-sm font-extrabold text-[#0c2e1f]" id="sleec-bag-total">₦74,500</span></div>
+</div>
+<button class="w-full py-3.5 rounded-2xl bg-[#0c2e1f] hover:bg-[#072418] text-white text-xs font-bold shadow-md active:scale-95 transition-all text-center flex-shrink-0" id="btn-cart-checkout-pay" onclick="window.launchSleecPayCheckout &amp;&amp; window.launchSleecPayCheckout()" type="button">Checkout with Sleec Pay</button>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- 2. UNIFIED SLEEC CHECKOUT MODAL (STEPS 1–4) (CLOSED/HIDDEN INITIALLY) -->
+<!-- ========================================== -->
+<div class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-300 flex justify-center items-end opacity-0 pointer-events-none hidden" id="checkout-modal-overlay" onclick="if(event.target === this) window.closeSleecCheckout()" style="display: none !important;">
+<div class="w-full max-w-[412px] bg-white rounded-t-[32px] shadow-2xl flex flex-col max-h-[92vh] transform transition-transform duration-300 ease-out overflow-hidden translate-y-full" id="checkout-sheet-content" onclick="event.stopPropagation()">
+<!-- Top Navigation Header -->
+<div class="p-4 border-b border-slate-100 flex items-center justify-between bg-white flex-shrink-0">
+<div class="flex items-center space-x-2">
+<button class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 text-xs hidden" id="btn-checkout-back" onclick="window.navigateCheckoutBack()" type="button">←</button>
+<div>
+<h3 class="text-sm font-bold text-slate-900" id="checkout-modal-title">Step 1: Fulfilment Method</h3>
+<p class="text-[10px] text-slate-400" id="checkout-step-indicator">Step 1 of 4</p>
+</div>
+</div>
+<button class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 text-sm font-semibold transition-colors" id="btn-close-checkout" onclick="window.closeSleecCheckout()" type="button">×</button>
+</div>
+<!-- EXACT 4 PROGRESS SEGMENTS -->
+<div class="flex items-center justify-between px-4 py-2.5 bg-white flex-shrink-0">
+<div class="flex-1 h-1 bg-emerald-600 rounded-full mx-0.5 transition-colors" id="step-node-1"></div>
+<div class="flex-1 h-1 bg-slate-200 rounded-full mx-0.5 transition-colors" id="step-node-2"></div>
+<div class="flex-1 h-1 bg-slate-200 rounded-full mx-0.5 transition-colors" id="step-node-3"></div>
+<div class="flex-1 h-1 bg-slate-200 rounded-full mx-0.5 transition-colors" id="step-node-4"></div>
+</div>
+<!-- Scrollable Checkout Body Area (Dynamically rendered based on Step) -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-slate-50" id="checkout-step-body">
+<div class="space-y-4 text-slate-800" id="sleec-checkout-container">
+<!-- Rendered dynamically -->
+</div>
+</div>
+<!-- Dynamic Footer Area -->
+<div class="p-4 border-t border-slate-100 bg-white flex items-center gap-3 flex-shrink-0" id="checkout-footer-container">
+<button aria-label="Back" class="text-slate-700 hover:text-emerald-800 text-xl font-bold p-1 cursor-pointer transition-colors active:scale-90 flex items-center justify-center bg-transparent border-0 flex-shrink-0" id="btn-checkout-return-bag-icon" onclick="window.navigateCheckoutBack()" type="button">←</button>
+<button class="flex-1 py-3.5 px-4 rounded-2xl bg-[#0c2e1f] hover:bg-[#072418] text-white font-bold text-xs shadow-md transition-all active:scale-95 text-center flex items-center justify-center gap-2" id="btn-checkout-next" onclick="window.advanceCheckoutSequence()" type="button">
+        Continue to Review
+      </button>
+</div>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- PICKUP STORES SELECTOR MODAL (CLOSED/HIDDEN INITIALLY) -->
+<!-- ============================================================== -->
+<div class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-200 flex justify-center items-end opacity-0 pointer-events-none hidden" id="stores-picker-modal" onclick="if(event.target === this) window.closeStoresPickerModal()" style="display: none !important;">
+<div class="w-full max-w-[412px] bg-white rounded-t-[32px] shadow-2xl p-5 space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
+<div class="flex justify-between items-center pb-2 border-b border-slate-100">
+<h4 class="text-sm font-bold text-slate-900">Select Pickup Store</h4>
+<button class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 text-sm font-bold transition-colors" onclick="window.closeStoresPickerModal()" type="button">✕</button>
+</div>
+<p class="text-[11px] text-slate-500">Pick up in store is completely Free. Select an authorized seller store location:</p>
+<div class="space-y-2.5" id="stores-list-container">
+<!-- Store 1 -->
+<div class="p-3.5 rounded-2xl bg-white shadow-sm border-0 cursor-pointer flex justify-between items-center transition hover:shadow-md store-option-row" onclick="window.selectStorePickup('The Daily Edit — Lekki Flagship Store', '12 Admiralty Way, Lekki Phase 1, Lagos (~0.8 km)')">
+<div class="min-w-0 pr-2">
+<p class="text-xs font-bold text-slate-900">Lekki Flagship Store</p>
+<p class="text-[11px] text-slate-500 mt-0.5">12 Admiralty Way, Lekki Phase 1</p>
+<span class="text-[10px] text-emerald-600 font-semibold mt-1 block">~0.8 km away • Open until 8 PM</span>
+</div>
+<span class="text-xs font-bold text-emerald-600">Select</span>
+</div>
+<!-- Store 2 -->
+<div class="p-3.5 rounded-2xl bg-white shadow-sm border-0 cursor-pointer flex justify-between items-center transition hover:shadow-md store-option-row" onclick="window.selectStorePickup('The Daily Edit — Victoria Island Branch', '4B Akin Adesola St, Victoria Island, Lagos (~4.2 km)')">
+<div class="min-w-0 pr-2">
+<p class="text-xs font-bold text-slate-900">Victoria Island Branch</p>
+<p class="text-[11px] text-slate-500 mt-0.5">4B Akin Adesola St, Victoria Island</p>
+<span class="text-[10px] text-slate-400 font-medium mt-1 block">~4.2 km away • Open until 7 PM</span>
+</div>
+<span class="text-xs font-bold text-emerald-600">Select</span>
+</div>
+<!-- Store 3 -->
+<div class="p-3.5 rounded-2xl bg-white shadow-sm border-0 cursor-pointer flex justify-between items-center transition hover:shadow-md store-option-row" onclick="window.selectStorePickup('The Daily Edit — Ikeja Mall Hub', 'Shop G12, Ikeja City Mall, Alausa, Ikeja (~14.5 km)')">
+<div class="min-w-0 pr-2">
+<p class="text-xs font-bold text-slate-900">Ikeja Mall Hub</p>
+<p class="text-[11px] text-slate-500 mt-0.5">Shop G12, Ikeja City Mall, Alausa</p>
+<span class="text-[10px] text-slate-400 font-medium mt-1 block">~14.5 km away • Open until 9 PM</span>
+</div>
+<span class="text-xs font-bold text-emerald-600">Select</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- DELIVERY ADDRESSES SELECTOR & ADD MODAL (CLOSED/HIDDEN INITIALLY) -->
+<!-- ============================================================== -->
+<div class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-200 flex justify-center items-end opacity-0 pointer-events-none hidden" id="addresses-picker-modal" onclick="if(event.target === this) window.closeAddressPickerModal()" style="display: none !important;">
+<div class="w-full max-w-[412px] bg-white rounded-t-[32px] shadow-2xl p-5 space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
+<div class="flex justify-between items-center pb-2 border-b border-slate-100">
+<h4 class="text-sm font-bold text-slate-900">Select Delivery Address</h4>
+<button class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 text-sm font-bold transition-colors" onclick="window.closeAddressPickerModal()" type="button">✕</button>
+</div>
+<div class="space-y-2.5" id="saved-buyer-addresses">
+<!-- Address 1 -->
+<div class="p-3.5 rounded-2xl bg-white shadow-sm border-0 cursor-pointer flex justify-between items-center hover:shadow-md transition" onclick="window.selectBuyerAddress('HOME', 'Fuadino Adebayo • +234 812 345 6789', '14 Admiralty Way, Lekki Phase 1, Lagos')">
+<div class="min-w-0 pr-2">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-slate-900">Fuadino Adebayo</span>
+<span class="text-[10px] text-emerald-600 font-semibold">HOME</span>
+</div>
+<p class="text-[11px] text-slate-500 mt-0.5 truncate">14 Admiralty Way, Lekki Phase 1, Lagos</p>
+<p class="text-[10px] text-slate-400 mt-0.5">+234 812 345 6789</p>
+</div>
+<span class="text-xs font-bold text-emerald-600">Select</span>
+</div>
+<!-- Address 2 -->
+<div class="p-3.5 rounded-2xl bg-white shadow-sm border-0 cursor-pointer flex justify-between items-center hover:shadow-md transition" onclick="window.selectBuyerAddress('WORK', 'Fuadino Adebayo • +234 809 111 2233', '42 Isaac John St, Ikeja GRA, Lagos')">
+<div class="min-w-0 pr-2">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-slate-900">Fuadino Adebayo</span>
+<span class="text-[10px] text-emerald-600 font-semibold">WORK</span>
+</div>
+<p class="text-[11px] text-slate-500 mt-0.5 truncate">42 Isaac John St, Ikeja GRA, Lagos</p>
+<p class="text-[10px] text-slate-400 mt-0.5">+234 809 111 2233</p>
+</div>
+<span class="text-xs font-bold text-emerald-600">Select</span>
+</div>
+</div>
+<!-- Toggle Add Address Button -->
+<div class="pt-1">
+<button class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition" onclick="document.getElementById('add-new-address-inline-form').classList.toggle('hidden')" type="button">+ Add New Address</button>
+</div>
+<!-- Add New Address Form -->
+<div class="p-3.5 rounded-2xl bg-slate-50 space-y-2.5 hidden" id="add-new-address-inline-form">
+<h5 class="text-xs font-bold text-slate-900 uppercase tracking-wide">New Address Details</h5>
+<input class="w-full px-3 py-2 bg-white border-0 rounded-xl text-xs font-medium text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20" id="in-new-name" placeholder="Recipient Name" type="text" value="Fuadino Adebayo">
+<input class="w-full px-3 py-2 bg-white border-0 rounded-xl text-xs font-medium text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20" id="in-new-phone" placeholder="Phone Number" type="tel" value="+234 812 345 6789">
+<input class="w-full px-3 py-2 bg-white border-0 rounded-xl text-xs font-medium text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20" id="in-new-street" placeholder="Street Address" type="text">
+<div class="grid grid-cols-2 gap-2">
+<input class="w-full px-3 py-2 bg-white border-0 rounded-xl text-xs font-medium text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20" id="in-new-city" placeholder="City" type="text">
+<input class="w-full px-3 py-2 bg-white border-0 rounded-xl text-xs font-medium text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20" id="in-new-state" placeholder="State" type="text" value="Lagos">
+</div>
+<button class="w-full py-2.5 bg-[#0c2e1f] text-white text-xs font-bold rounded-xl active:scale-95 transition-all shadow-sm" onclick="window.saveAndApplyNewAddress()" type="button">Save &amp; Use Address</button>
+</div>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- PRINTABLE RECEIPT MODAL (CLOSED/HIDDEN INITIALLY) -->
+<!-- ============================================================== -->
+<div class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm transition-opacity duration-200 flex justify-center items-center p-4 opacity-0 pointer-events-none hidden" id="receipt-modal" onclick="if(event.target === this) window.closeReceiptModal()" style="display: none !important;">
+<div class="w-full max-w-[360px] bg-white rounded-3xl shadow-2xl p-6 relative space-y-4" onclick="event.stopPropagation()">
+<button class="absolute top-4 right-4 w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold hover:bg-slate-200 transition-colors" onclick="window.closeReceiptModal()" type="button">×</button>
+<div class="text-center pb-2 border-b border-slate-100">
+<div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center font-bold text-lg mb-2">✓</div>
+<h3 class="text-base font-extrabold text-slate-900">Sleec Official Receipt</h3>
+<p class="text-[11px] text-slate-400" id="rcpt-order-id">#SLC-94821</p>
+</div>
+<div class="space-y-2 text-xs" id="receipt-items-breakdown">
+</div>
+<div class="pt-2 border-t border-dashed border-slate-200 space-y-1.5 text-xs">
+<div class="flex justify-between text-slate-500"><span class="">Payment Method:</span><span class="font-bold text-slate-800" id="rcpt-payment-type">Bank Transfer</span></div>
+<div class="flex justify-between text-slate-500"><span class="">Fulfilment:</span><span class="font-bold text-slate-800" id="rcpt-fulfilment-type">Delivery: 14 Admiralty Way, Lekki Phase 1, Lagos</span></div>
+<div class="flex justify-between font-bold text-slate-900 pt-1 border-t border-slate-100"><span class="">Total Paid:</span><span class="text-emerald-700 font-extrabold text-sm" id="rcpt-total-paid">₦69,050</span></div>
+</div>
+<div class="pt-3">
+<button class="w-full py-2.5 rounded-xl bg-[#0c2e1f] text-white text-xs font-bold hover:bg-[#072418] transition-colors" onclick="window.printReceipt()" type="button">Print / Save Receipt</button>
+</div>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- SINGLE UNIFIED GLOBAL CONTROLLER JAVASCRIPT ARCHITECTURE -->
+<!-- ============================================================== -->
+<script id="sleec-unified-checkout-controller">
+(function() {
+  // Global Persisted Shopping & Checkout State
+  window.sleecState = {
+    cart: [
+      {
+        id: 'sage',
+        name: 'Stride Club Sage Runners',
+        variant: 'Size: 42',
+        store: 'The Daily Edit',
+        price: 32000,
+        qty: 1,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBdp8TYW9VhssmsUCroN4Tvq51i6BBWd_oVZ0dTYyCxkjLmxt4jtIcPHnmEuP5gAOPsbVKGPBpUnu-SjrLUKDsaZXrKsI8cAqmR8JbRMCG2Atv33IidhRloXKL252yJK13hFTRsjBp1J2DhV5NJWkkEikxtUcj2mSiBl0PPNCx94Reui1N-LNYeuXoi1pYBiykOoXgN2ImfG_EpvkrXC9Y4jdxPhhNowoH1GoiO5akh1z44gFIuf0ZW7oUANKYl88Y6'
+      },
+      {
+        id: 'tote',
+        name: 'Sleec Canvas Tote & Essentials',
+        variant: 'Size: One Size',
+        store: 'Sage & Co.',
+        price: 18500,
+        qty: 1,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCfPVZLhvRNwK1ztp-tHtuf3W9A8sBIIOqeGcGGfPLE1IxO7z9k-0MS4WCNVk4oiXrUR9AuEUyKpHg8xe6JIelXZLh_aUPE_xYWUobZLGIZCKia43tM_HEbljdGnUHGao00O8YQiDUsB6C4o0ay9c7bKN7Hm3I9WdYL4ZNtxQtBoGcziruSe6ts-gtuF4PG6ycdfv6KYHkO905sKM5tWr-C9H9TH5bRpEhm9hwFB5EkWLXC3WneStxr6RDx6hkWPA-r'
+      },
+      {
+        id: 'perfume',
+        name: 'Amber Eau Maison Vert',
+        variant: '50ml Eau de Parfum',
+        store: 'Maison Vert',
+        price: 24000,
+        qty: 1,
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCDjbwuGJe6YgOCFs1hr0ZKTYgBfB7fSXUurU0-TX8sKyNkhuatWDCkp4NrOgGm2lNs3XokY8SSWYtpwFbwC9FkrsuWPNai3oKU9fZMOtyp1j4UX0uNwGp9czf601rYo09O9IBI25rbk2w94GaEzH3U3FSxWxBkwTXKsIRC5wADoTK30JwyV44aCMeZ-U7WybZZhaQe81YfbWhpkdlL_KSpNudO80DaZDlESPIFgJ3Gu2aZcUkonwnVFA8KgRNWj3Ew'
+      }
+    ],
+    couponCode: '',
+    discountPercent: 0,
+    fulfilment: 'pickup', // 'pickup', 'courier', 'seller'
+    pickupStore: {
+      name: 'The Daily Edit — Lekki Flagship Store',
+      details: '12 Admiralty Way, Lekki Phase 1, Lagos (~0.8 km)'
+    },
+    deliveryAddress: {
+      tag: 'HOME',
+      namePhone: 'Fuadino Adebayo • +234 812 345 6789',
+      details: '14 Admiralty Way, Lekki Phase 1, Lagos'
+    },
+    paymentMethod: 'wallet', // 'wallet', 'card', 'bank'
+    checkoutStep: 1, // 1: Fulfilment, 2: Review, 3: Payment, 4: Confirmed
+    orderId: '#SLC-94821',
+    isProcessingPayment: false
+  };
+
+  // 1. Calculations Helper
+  window.getCartTotals = function() {
+    const subtotal = window.sleecState.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    const discount = Math.round(subtotal * (window.sleecState.discountPercent / 100));
+    let fee = 0;
+    if (window.sleecState.fulfilment === 'courier') fee = 2000;
+    if (window.sleecState.fulfilment === 'seller') fee = 3500;
+    const total = Math.max(0, subtotal - discount) + fee;
+    const totalItemCount = window.sleecState.cart.reduce((count, item) => count + item.qty, 0);
+
+    return { subtotal, discount, fee, total, totalItemCount };
+  };
+
+  // 2. Bag UI Render
+  window.renderCartBagUI = function() {
+    const container = document.getElementById('sleec-bag-items-container');
+    const badge = document.getElementById('top-cart-badge');
+    const headerCount = document.getElementById('sleec-bag-item-count');
+    const subtotalEl = document.getElementById('sleec-bag-subtotal');
+    const totalEl = document.getElementById('sleec-bag-total');
+    const discRow = document.getElementById('sleec-bag-discount-row');
+    const discEl = document.getElementById('sleec-bag-discount');
+    const checkoutBtn = document.getElementById('btn-cart-checkout-pay');
+
+    const { subtotal, discount, total, totalItemCount } = window.getCartTotals();
+
+    // Top badge sync
+    if (badge) {
+      badge.textContent = totalItemCount;
+      badge.style.display = totalItemCount > 0 ? 'flex' : 'none';
+    }
+    if (headerCount) headerCount.textContent = totalItemCount;
+    if (subtotalEl) subtotalEl.textContent = '₦' + subtotal.toLocaleString();
+    if (totalEl) totalEl.textContent = '₦' + total.toLocaleString();
+
+    if (discount > 0 && discRow && discEl) {
+      discRow.classList.remove('hidden');
+      discEl.textContent = '-₦' + discount.toLocaleString();
+    } else if (discRow) {
+      discRow.classList.add('hidden');
+    }
+
+    if (!container) return;
+
+    if (window.sleecState.cart.length === 0) {
+      container.innerHTML = `
+        <div class="p-8 text-center text-slate-400 space-y-2">
+          <div class="text-3xl">🛍️</div>
+          <p class="text-xs font-semibold text-slate-600">Your bag is empty</p>
+          <p class="text-[11px]">Discover fresh fashion and luxury scent drops on the homepage.</p>
+        </div>
+      `;
+      if (checkoutBtn) {
+        checkoutBtn.disabled = true;
+        checkoutBtn.classList.add('opacity-50', 'pointer-events-none');
+      }
+      return;
+    }
+
+    if (checkoutBtn) {
+      checkoutBtn.disabled = false;
+      checkoutBtn.classList.remove('opacity-50', 'pointer-events-none');
+    }
+
+    container.innerHTML = window.sleecState.cart.map(item => `
+      <div class="p-3 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-between gap-3 cart-item-row" data-id="${item.id}">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+          <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100">
+            <img alt="${item.name}" class="w-full h-full object-cover" src="${item.image}"/>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] uppercase tracking-wider font-semibold text-emerald-700">${item.store}</span>
+              <button onclick="window.removeCartItem('${item.id}')" class="text-slate-400 hover:text-rose-500 text-xs px-1" title="Remove">✕</button>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900 truncate mt-0.5">${item.name}</h4>
+            <p class="text-[10px] text-slate-400 truncate">${item.variant}</p>
+            <div class="flex items-center justify-between mt-1.5">
+              <span class="text-xs font-bold text-[#0c2e1f]">₦${(item.price * item.qty).toLocaleString()}</span>
+              <!-- Stepper -->
+              <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                <button type="button" onclick="window.changeItemQty('${item.id}', -1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 font-bold text-xs">−</button>
+                <span class="w-6 text-center text-xs font-bold text-slate-800">${item.qty}</span>
+                <button type="button" onclick="window.changeItemQty('${item.id}', 1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 font-bold text-xs">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  };
+
+  // Cart Mutators
+  window.changeItemQty = function(id, delta) {
+    const item = window.sleecState.cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) {
+      window.sleecState.cart = window.sleecState.cart.filter(i => i.id !== id);
+    }
+    window.renderCartBagUI();
+  };
+
+  window.removeCartItem = function(id) {
+    window.sleecState.cart = window.sleecState.cart.filter(i => i.id !== id);
+    window.renderCartBagUI();
+  };
+
+  window.clearSleecBag = function() {
+    window.sleecState.cart = [];
+    window.renderCartBagUI();
+  };
+
+  window.applyCouponCode = function() {
+    const input = document.getElementById('bag-coupon-input');
+    const msg = document.getElementById('coupon-msg');
+    const tag = document.getElementById('coupon-applied-tag');
+    if (!input) return;
+    const code = input.value.trim().toUpperCase();
+    if (code === 'SLEEC10') {
+      window.sleecState.couponCode = 'SLEEC10';
+      window.sleecState.discountPercent = 10;
+      if (msg) {
+        msg.textContent = 'Coupon SLEEC10 applied (-10% discount)';
+        msg.classList.remove('hidden', 'text-rose-500');
+        msg.classList.add('text-emerald-600');
+      }
+      if (tag) tag.classList.remove('hidden');
+      window.renderCartBagUI();
+    } else {
+      if (msg) {
+        msg.textContent = 'Invalid promo code. Try SLEEC10';
+        msg.classList.remove('hidden', 'text-emerald-600');
+        msg.classList.add('text-rose-500');
+      }
+    }
+  };
+
+  window.addSampleItemToBag = function(type) {
+    if (type === 'hoodie') {
+      const existing = window.sleecState.cart.find(i => i.id === 'hoodie');
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        window.sleecState.cart.push({
+          id: 'hoodie',
+          name: 'Cloudnine Mint Hoodie',
+          variant: 'Size: L',
+          store: 'Cloudnine Studio',
+          price: 18500,
+          qty: 1,
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCroMfzDZH2_RPk8jp3qi_gRVf8U6i6uboQ0xQ_finNQb7Acy430dhYpIpklfwBimKmgZHegK3xIpL5N4dyY7yKIwOSAQsq_LAVwIVudDygL9uMaR52xef1c4xxjOt1YHhbtSCPE6NXDm95og02ger2l2Xf4Jnpw2uJAjiUye_M6IZblyaYsUTQV8sox3IeLWhGJWpcbCtXlc_NWBdEROoNDOUghllMApIz93z8KYyQc64bnnrnNMFqM2wbRY5Yv3iD'
+        });
+      }
+    } else if (type === 'sage') {
+      const existing = window.sleecState.cart.find(i => i.id === 'sage');
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        window.sleecState.cart.push({
+          id: 'sage',
+          name: 'Stride Club Sage Runners',
+          variant: 'Size: 42',
+          store: 'The Daily Edit',
+          price: 32000,
+          qty: 1,
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBdp8TYW9VhssmsUCroN4Tvq51i6BBWd_oVZ0dTYyCxkjLmxt4jtIcPHnmEuP5gAOPsbVKGPBpUnu-SjrLUKDsaZXrKsI8cAqmR8JbRMCG2Atv33IidhRloXKL252yJK13hFTRsjBp1J2DhV5NJWkkEikxtUcj2mSiBl0PPNCx94Reui1N-LNYeuXoi1pYBiykOoXgN2ImfG_EpvkrXC9Y4jdxPhhNowoH1GoiO5akh1z44gFIuf0ZW7oUANKYl88Y6'
+        });
+      }
+    }
+    window.renderCartBagUI();
+    window.openSleecBag();
+  };
+
+  // 3. BAG OVERLAY OPEN / CLOSE
+  window.openSleecBag = function() {
+    window.closeSleecCheckout();
+    window.renderCartBagUI();
+    const overlay = document.getElementById('cart-drawer-overlay');
+    const sheet = document.getElementById('cart-sheet-content');
+    if (overlay && sheet) {
+      overlay.style.cssText = '';
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+        sheet.classList.remove('translate-y-full');
+        sheet.classList.add('translate-y-0');
+      }, 10);
+    }
+  };
+
+  window.closeSleecBag = function() {
+    const overlay = document.getElementById('cart-drawer-overlay');
+    const sheet = document.getElementById('cart-sheet-content');
+    if (overlay && sheet) {
+      overlay.classList.remove('opacity-100', 'pointer-events-auto');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      sheet.classList.remove('translate-y-0');
+      sheet.classList.add('translate-y-full');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        overlay.style.cssText = 'display: none !important;';
+      }, 300);
+    }
+  };
+
+  // 4. CHECKOUT CONTROLLER (STEPS 1–4)
+  window.launchSleecPayCheckout = function() {
+    if (window.sleecState.cart.length === 0) return;
+    window.closeSleecBag();
+    window.sleecState.checkoutStep = 1;
+    window.renderCheckoutStep();
+    const overlay = document.getElementById('checkout-modal-overlay');
+    const sheet = document.getElementById('checkout-sheet-content');
+    if (overlay && sheet) {
+      overlay.style.cssText = '';
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+        sheet.classList.remove('translate-y-full');
+        sheet.classList.add('translate-y-0');
+      }, 10);
+    }
+  };
+
+  window.closeSleecCheckout = function() {
+    const overlay = document.getElementById('checkout-modal-overlay');
+    const sheet = document.getElementById('checkout-sheet-content');
+    if (overlay && sheet) {
+      overlay.classList.remove('opacity-100', 'pointer-events-auto');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      sheet.classList.remove('translate-y-0');
+      sheet.classList.add('translate-y-full');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        overlay.style.cssText = 'display: none !important;';
+      }, 300);
+    }
+  };
+
+  window.navigateCheckoutBack = function() {
+    if (window.sleecState.checkoutStep === 1) {
+      window.closeSleecCheckout();
+      setTimeout(() => {
+        window.openSleecBag();
+      }, 150);
+    } else if (window.sleecState.checkoutStep === 2) {
+      window.sleecState.checkoutStep = 1;
+      window.renderCheckoutStep();
+    } else if (window.sleecState.checkoutStep === 3) {
+      window.sleecState.checkoutStep = 2;
+      window.renderCheckoutStep();
+    }
+  };
+
+  window.advanceCheckoutSequence = function() {
+    if (window.sleecState.checkoutStep === 1) {
+      window.sleecState.checkoutStep = 2;
+      window.renderCheckoutStep();
+    } else if (window.sleecState.checkoutStep === 2) {
+      window.sleecState.checkoutStep = 3;
+      window.renderCheckoutStep();
+    } else if (window.sleecState.checkoutStep === 3) {
+      window.executePaymentSimulation();
+    }
+  };
+
+  // 5. MASTER STEP RENDERER
+  window.renderCheckoutStep = function() {
+    const step = window.sleecState.checkoutStep;
+    const body = document.getElementById('sleec-checkout-container');
+    const headTitle = document.getElementById('checkout-modal-title');
+    const headInd = document.getElementById('checkout-step-indicator');
+    const btnBack = document.getElementById('btn-checkout-back');
+    const btnNext = document.getElementById('btn-checkout-next');
+    const footer = document.getElementById('checkout-footer-container');
+
+    // Update 4-segment progress bar
+    for (let i = 1; i <= 4; i++) {
+      const node = document.getElementById('step-node-' + i);
+      if (node) {
+        if (i <= step) {
+          node.className = 'flex-1 h-1 bg-emerald-600 rounded-full mx-0.5 transition-colors';
+        } else {
+          node.className = 'flex-1 h-1 bg-slate-200 rounded-full mx-0.5 transition-colors';
+        }
+      }
+    }
+
+    if (btnBack) {
+      if (step === 1) {
+        btnBack.classList.add('hidden');
+      } else if (step <= 3) {
+        btnBack.classList.remove('hidden');
+      } else {
+        btnBack.classList.add('hidden');
+      }
+    }
+
+    if (!body) return;
+
+    const { subtotal, discount, fee, total } = window.getCartTotals();
+    const isPickup = window.sleecState.fulfilment === 'pickup';
+
+    // STEP 1: FULFILMENT METHOD
+    if (step === 1) {
+      if (headTitle) headTitle.textContent = 'Step 1: Fulfilment Method';
+      if (headInd) headInd.textContent = 'Step 1 of 4';
+      if (footer) footer.classList.remove('hidden');
+      if (btnNext) {
+        btnNext.textContent = 'Continue to Review';
+        btnNext.className = 'flex-1 py-3.5 px-4 rounded-2xl bg-[#0c2e1f] hover:bg-[#072418] text-white font-bold text-xs shadow-md transition-all active:scale-95 text-center';
+      }
+
+      const locHeader = isPickup ? 'Pickup Location' : 'Delivery Address';
+      const locTag = isPickup ? 'STORE' : window.sleecState.deliveryAddress.tag;
+      const mainTitle = isPickup ? window.sleecState.pickupStore.name : window.sleecState.deliveryAddress.namePhone;
+      const subTitle = isPickup ? window.sleecState.pickupStore.details : window.sleecState.deliveryAddress.details;
+
+      body.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border-0 space-y-2" id="unified-location-card">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-start gap-2.5 min-w-0 flex-1">
+              <svg class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5 fill-current" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path>
+              </svg>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-1.5">
+                  <p class="text-xs font-bold text-slate-900" id="loc-header-title">${locHeader}</p>
+                  <span class="text-emerald-600 font-semibold text-[10px] tracking-wide" id="loc-header-tag">${locTag}</span>
+                </div>
+                <p class="text-xs font-semibold text-slate-800 mt-1 truncate" id="loc-main-title">${mainTitle}</p>
+                <p class="text-[11px] text-slate-500 leading-snug mt-0.5" id="loc-sub-title">${subTitle}</p>
+              </div>
+            </div>
+            <button class="text-xs font-semibold text-emerald-700 hover:text-emerald-800 px-2 py-1 transition-colors flex-shrink-0" onclick="window.handleChangeLocationTrigger()" type="button">Change</button>
+          </div>
+        </div>
+
+        <div class="space-y-2.5">
+          <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-0.5">CHOOSE FULFILMENT</h4>
+
+          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white ${isPickup ? 'shadow-md ring-1 ring-emerald-500/20' : 'shadow-sm'} border-0 cursor-pointer transition-all fulfilment-card" onclick="window.selectFulfilmentType('pickup')">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-4 h-4 rounded-full border-2 ${isPickup ? 'border-emerald-600' : 'border-slate-300'} flex items-center justify-center flex-shrink-0">
+                <div class="w-2 h-2 rounded-full ${isPickup ? 'bg-emerald-600' : 'bg-transparent'}"></div>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs ${isPickup ? 'font-bold text-slate-900' : 'font-semibold text-slate-700'}">In-Store Pickup</p>
+                <p class="text-[10px] text-slate-400 mt-0.5">Collect from the store.</p>
+              </div>
+            </div>
+            <span class="text-xs font-semibold text-emerald-600 flex-shrink-0">Free</span>
+          </div>
+
+          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white ${window.sleecState.fulfilment === 'courier' ? 'shadow-md ring-1 ring-emerald-500/20' : 'shadow-sm'} border-0 cursor-pointer transition-all fulfilment-card" onclick="window.selectFulfilmentType('courier')">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-4 h-4 rounded-full border-2 ${window.sleecState.fulfilment === 'courier' ? 'border-emerald-600' : 'border-slate-300'} flex items-center justify-center flex-shrink-0">
+                <div class="w-2 h-2 rounded-full ${window.sleecState.fulfilment === 'courier' ? 'bg-emerald-600' : 'bg-transparent'}"></div>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <p class="text-xs ${window.sleecState.fulfilment === 'courier' ? 'font-bold text-slate-900' : 'font-semibold text-slate-700'}">Sleec Courier</p>
+                  <span class="text-emerald-600 font-semibold text-[10px]">Tracked</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-0.5">Estimated delivery: 2–4 business days.</p>
+              </div>
+            </div>
+            <span class="text-xs font-bold text-slate-900 flex-shrink-0">₦2,000</span>
+          </div>
+
+          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white ${window.sleecState.fulfilment === 'seller' ? 'shadow-md ring-1 ring-emerald-500/20' : 'shadow-sm'} border-0 cursor-pointer transition-all fulfilment-card" onclick="window.selectFulfilmentType('seller')">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-4 h-4 rounded-full border-2 ${window.sleecState.fulfilment === 'seller' ? 'border-emerald-600' : 'border-slate-300'} flex items-center justify-center flex-shrink-0">
+                <div class="w-2 h-2 rounded-full ${window.sleecState.fulfilment === 'seller' ? 'bg-emerald-600' : 'bg-transparent'}"></div>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <p class="text-xs ${window.sleecState.fulfilment === 'seller' ? 'font-bold text-slate-900' : 'font-semibold text-slate-700'}">Seller Standard Delivery</p>
+                  <span class="text-emerald-600 font-semibold text-[10px]">Tracked</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-0.5">Estimated delivery: 3–5 business days.</p>
+              </div>
+            </div>
+            <span class="text-xs font-bold text-slate-900 flex-shrink-0">₦3,500</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // STEP 2: ORDER REVIEW
+    else if (step === 2) {
+      if (headTitle) headTitle.textContent = 'Step 2: Order Review';
+      if (headInd) headInd.textContent = 'Step 2 of 4';
+      if (footer) footer.classList.remove('hidden');
+      if (btnNext) {
+        btnNext.textContent = 'Proceed to Payment';
+        btnNext.className = 'flex-1 py-3.5 px-4 rounded-2xl bg-[#0c2e1f] hover:bg-[#072418] text-white font-bold text-xs shadow-md transition-all active:scale-95 text-center';
+      }
+
+      const fulfilmentLabel = isPickup ? 'In-Store Pickup (Free)' : (window.sleecState.fulfilment === 'courier' ? 'Sleec Courier (₦2,000)' : 'Seller Standard Delivery (₦3,500)');
+      const destName = isPickup ? window.sleecState.pickupStore.name : window.sleecState.deliveryAddress.namePhone;
+      const destDetail = isPickup ? window.sleecState.pickupStore.details : window.sleecState.deliveryAddress.details;
+
+      const itemsHtml = window.sleecState.cart.map(item => `
+        <div class="flex items-center gap-3 py-2 border-b border-slate-100 last:border-0">
+          <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover"/>
+          </div>
+          <div class="min-w-0 flex-1">
+            <h5 class="text-xs font-bold text-slate-900 truncate">${item.name}</h5>
+            <p class="text-[10px] text-slate-400">${item.variant} • Qty: ${item.qty}</p>
+          </div>
+          <div class="text-right flex-shrink-0">
+            <span class="text-xs font-bold text-slate-900">₦${(item.price * item.qty).toLocaleString()}</span>
+            <span class="block text-[9px] text-slate-400">₦${item.price.toLocaleString()} each</span>
+          </div>
+        </div>
+      `).join('');
+
+      body.innerHTML = `
+        <div class="space-y-3">
+          <div class="bg-white rounded-2xl p-4 shadow-sm border-0 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${isPickup ? 'PICKUP DESTINATION' : 'DELIVERY DESTINATION'}</span>
+              <button onclick="window.sleecState.checkoutStep = 1; window.renderCheckoutStep()" class="text-xs font-semibold text-emerald-700">Edit</button>
+            </div>
+            <div class="flex items-start gap-2 pt-1">
+              <svg class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              <div>
+                <p class="text-xs font-bold text-slate-800 leading-snug">${destName}</p>
+                <p class="text-[11px] text-slate-500 leading-snug mt-0.5">${destDetail}</p>
+                <span class="text-[10px] font-semibold text-emerald-600 mt-1 block">${fulfilmentLabel}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 shadow-sm border-0">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ORDER ITEMS (${window.sleecState.cart.reduce((s,i)=>s+i.qty, 0)})</span>
+            </div>
+            <div class="divide-y divide-slate-100">
+              ${itemsHtml}
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 shadow-sm border-0 space-y-2 text-xs">
+            <div class="flex justify-between text-slate-600">
+              <span>Items Subtotal</span>
+              <span class="font-bold text-slate-800">₦${subtotal.toLocaleString()}</span>
+            </div>
+            <div class="flex justify-between text-slate-600">
+              <span>Fulfilment Fee</span>
+              <span class="font-bold ${fee === 0 ? 'text-emerald-600' : 'text-slate-800'}">${fee === 0 ? 'Free' : '₦' + fee.toLocaleString()}</span>
+            </div>
+            ${discount > 0 ? `
+              <div class="flex justify-between text-emerald-700">
+                <span>Coupon Discount (${window.sleecState.couponCode})</span>
+                <span class="font-bold">-₦${discount.toLocaleString()}</span>
+              </div>
+            ` : ''}
+            <div class="flex justify-between items-center pt-2 border-t border-slate-100 font-bold text-sm text-[#0c2e1f]">
+              <span>Final Total Payable</span>
+              <span class="font-extrabold text-base">₦${total.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // STEP 3: PAYMENT METHOD
+    else if (step === 3) {
+      if (headTitle) headTitle.textContent = 'Step 3: Payment Method';
+      if (headInd) headInd.textContent = 'Step 3 of 4';
+      if (footer) footer.classList.remove('hidden');
+      if (btnNext) {
+        btnNext.textContent = `Pay ₦${total.toLocaleString()}`;
+        btnNext.className = 'flex-1 py-3.5 px-4 rounded-2xl bg-[#0c2e1f] hover:bg-[#072418] text-white font-bold text-xs shadow-md transition-all active:scale-95 text-center flex items-center justify-center gap-2';
+      }
+
+      body.innerHTML = `
+        <div class="space-y-3">
+          <div class="bg-gradient-to-r from-emerald-900 to-[#0c2e1f] text-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-[10px] text-emerald-200 uppercase font-semibold tracking-wider">AMOUNT DUE</p>
+              <h3 class="text-xl font-extrabold mt-0.5">₦${total.toLocaleString()}</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-700/60 text-[10px] font-bold tracking-wide">Demo Simulation</span>
+          </div>
+
+          <div class="space-y-2.5">
+            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-0.5">CHOOSE PAYMENT OPTION</h4>
+
+            <div class="p-3.5 rounded-2xl bg-white ${window.sleecState.paymentMethod === 'wallet' ? 'shadow-md ring-1 ring-emerald-500/20' : 'shadow-sm'} border-0 cursor-pointer transition-all flex items-center justify-between" onclick="window.selectPaymentMethod('wallet')">
+              <div class="flex items-center gap-3">
+                <div class="w-4 h-4 rounded-full border-2 ${window.sleecState.paymentMethod === 'wallet' ? 'border-emerald-600' : 'border-slate-300'} flex items-center justify-center flex-shrink-0">
+                  <div class="w-2 h-2 rounded-full ${window.sleecState.paymentMethod === 'wallet' ? 'bg-emerald-600' : 'bg-transparent'}"></div>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-900">Sleec Pay Wallet</span>
+                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">Recommended</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Available Balance: <strong class="text-emerald-700">₦145,000</strong></p>
+                </div>
+              </div>
+              <span class="text-base">💳</span>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-white ${window.sleecState.paymentMethod === 'card' ? 'shadow-md ring-1 ring-emerald-500/20' : 'shadow-sm'} border-0 cursor-pointer transition-all flex items-center justify-between" onclick="window.selectPaymentMethod('card')">
+              <div class="flex items-center gap-3">
+                <div class="w-4 h-4 rounded-full border-2 ${window.sleecState.paymentMethod === 'card' ? 'border-emerald-600' : 'border-slate-300'} flex items-center justify-center flex-shrink-0">
+                  <div class="w-2 h-2 rounded-full ${window.sleecState.paymentMethod === 'card' ? 'bg-emerald-600' : 'bg-transparent'}"></div>
+                </div>
+                <div>
+                  <span class="text-xs font-bold text-slate-900">Debit / Credit Card</span>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Mastercard, Visa, Verve (Instant)</p>
+                </div>
+              </div>
+              <span class="text-base">🔒</span>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-white ${window.sleecState.paymentMethod === 'bank' ? 'shadow-md ring-1 ring-emerald-500/20' : 'shadow-sm'} border-0 cursor-pointer transition-all flex items-center justify-between" onclick="window.selectPaymentMethod('bank')">
+              <div class="flex items-center gap-3">
+                <div class="w-4 h-4 rounded-full border-2 ${window.sleecState.paymentMethod === 'bank' ? 'border-emerald-600' : 'border-slate-300'} flex items-center justify-center flex-shrink-0">
+                  <div class="w-2 h-2 rounded-full ${window.sleecState.paymentMethod === 'bank' ? 'bg-emerald-600' : 'bg-transparent'}"></div>
+                </div>
+                <div>
+                  <span class="text-xs font-bold text-slate-900">Direct Bank Transfer</span>
+                  <p class="text-[11px] text-slate-500 mt-0.5">Automated confirmation within 60s</p>
+                </div>
+              </div>
+              <span class="text-base">🏦</span>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center gap-2 text-emerald-800 text-[11px]">
+            <span>🛡️</span>
+            <span>Payments encrypted & protected with 256-bit Sleec Shield.</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // STEP 4: ORDER CONFIRMATION & RECEIPT
+    else if (step === 4) {
+      if (headTitle) headTitle.textContent = 'Step 4: Order Confirmed';
+      if (headInd) headInd.textContent = 'Step 4 of 4';
+      if (footer) footer.classList.add('hidden');
+
+      const trackingPin = isPickup ? 'PICKUP PIN: 849-210' : 'TRACKING: SLC-NG-77402';
+      const destSummary = isPickup ? window.sleecState.pickupStore.name : window.sleecState.deliveryAddress.details;
+
+      body.innerHTML = `
+        <div class="space-y-4 text-center py-2">
+          <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center text-3xl font-extrabold shadow-sm animate-bounce">
+            ✓
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">Payment Successful!</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Thank you, Fuadino! Your order is being fulfilled.</p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 shadow-sm border-0 text-left space-y-2 text-xs">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+              <span class="text-slate-500">Order ID:</span>
+              <span class="font-extrabold text-slate-900">${window.sleecState.orderId}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">Fulfilment:</span>
+              <span class="font-bold text-slate-800">${isPickup ? 'Store Pickup' : 'Home Delivery'}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">${isPickup ? 'Store:' : 'Address:'}</span>
+              <span class="font-semibold text-slate-700 truncate max-w-[200px]">${destSummary}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">Total Paid:</span>
+              <span class="font-extrabold text-emerald-700 text-sm">₦${total.toLocaleString()}</span>
+            </div>
+            <div class="pt-2 border-t border-slate-100 text-center">
+              <span class="inline-block px-3 py-1 bg-slate-100 rounded-full font-mono font-bold text-[11px] text-slate-700">${trackingPin}</span>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-2">
+            <button onclick="window.openReceiptModal()" class="w-full py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all" type="button">
+              📄 View & Print Receipt
+            </button>
+            <button onclick="window.finishAndContinueShopping()" class="w-full py-3.5 rounded-2xl bg-[#0c2e1f] hover:bg-[#072418] text-white text-xs font-bold shadow-md transition-all active:scale-95" type="button">
+              Continue Shopping
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  };
+
+  // 6. FULFILMENT & PAYMENT SELECTIONS
+  window.selectFulfilmentType = function(type) {
+    window.sleecState.fulfilment = type;
+    window.renderCheckoutStep();
+  };
+
+  window.selectPaymentMethod = function(method) {
+    window.sleecState.paymentMethod = method;
+    window.renderCheckoutStep();
+  };
+
+  window.handleChangeLocationTrigger = function() {
+    if (window.sleecState.fulfilment === 'pickup') {
+      window.openStoresPickerModal();
+    } else {
+      window.openAddressPickerModal();
+    }
+  };
+
+  // 7. STORE PICKER MODAL
+  window.openStoresPickerModal = function() {
+    const modal = document.getElementById('stores-picker-modal');
+    if (modal) {
+      modal.style.cssText = '';
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+      }, 10);
+    }
+  };
+
+  window.closeStoresPickerModal = function() {
+    const modal = document.getElementById('stores-picker-modal');
+    if (modal) {
+      modal.classList.remove('opacity-100', 'pointer-events-auto');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.style.cssText = 'display: none !important;';
+      }, 200);
+    }
+  };
+
+  window.selectStorePickup = function(name, details) {
+    window.sleecState.pickupStore = { name, details };
+    window.closeStoresPickerModal();
+    window.renderCheckoutStep();
+  };
+
+  // 8. BUYER ADDRESS PICKER MODAL
+  window.openAddressPickerModal = function() {
+    const modal = document.getElementById('addresses-picker-modal');
+    if (modal) {
+      modal.style.cssText = '';
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+      }, 10);
+    }
+  };
+
+  window.closeAddressPickerModal = function() {
+    const modal = document.getElementById('addresses-picker-modal');
+    if (modal) {
+      modal.classList.remove('opacity-100', 'pointer-events-auto');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.style.cssText = 'display: none !important;';
+      }, 200);
+    }
+  };
+
+  window.selectBuyerAddress = function(tag, namePhone, details) {
+    window.sleecState.deliveryAddress = { tag, namePhone, details };
+    window.closeAddressPickerModal();
+    window.renderCheckoutStep();
+  };
+
+  window.saveAndApplyNewAddress = function() {
+    const name = document.getElementById('in-new-name').value.trim();
+    const phone = document.getElementById('in-new-phone').value.trim();
+    const street = document.getElementById('in-new-street').value.trim();
+    const city = document.getElementById('in-new-city').value.trim();
+    const state = document.getElementById('in-new-state').value.trim();
+
+    if (!street || !city) {
+      alert('Please fill out street and city fields.');
+      return;
+    }
+    const fullDetails = `${street}, ${city}${state ? ', ' + state : ''}`;
+    window.selectBuyerAddress('CUSTOM', `${name || 'Fuadino Adebayo'} • ${phone || '+234 812 345 6789'}`, fullDetails);
+    document.getElementById('add-new-address-inline-form').classList.add('hidden');
+  };
+
+  // 9. PAYMENT SIMULATION PROCESSOR
+  window.executePaymentSimulation = function() {
+    if (window.sleecState.isProcessingPayment) return;
+    window.sleecState.isProcessingPayment = true;
+
+    const btnNext = document.getElementById('btn-checkout-next');
+    if (btnNext) {
+      btnNext.disabled = true;
+      btnNext.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        Authorizing Payment...
+      `;
+    }
+
+    setTimeout(() => {
+      window.sleecState.isProcessingPayment = false;
+      window.sleecState.checkoutStep = 4;
+      window.renderCheckoutStep();
+    }, 1100);
+  };
+
+  // 10. RECEIPT MODAL
+  window.openReceiptModal = function() {
+    const modal = document.getElementById('receipt-modal');
+    const orderEl = document.getElementById('rcpt-order-id');
+    const payEl = document.getElementById('rcpt-payment-type');
+    const fulEl = document.getElementById('rcpt-fulfilment-type');
+    const totEl = document.getElementById('rcpt-total-paid');
+    const itemsEl = document.getElementById('receipt-items-breakdown');
+
+    const { total } = window.getCartTotals();
+    const isPickup = window.sleecState.fulfilment === 'pickup';
+
+    if (orderEl) orderEl.textContent = window.sleecState.orderId;
+    if (payEl) {
+      payEl.textContent = window.sleecState.paymentMethod === 'wallet' ? 'Sleec Pay Wallet' : (window.sleecState.paymentMethod === 'card' ? 'Debit Card' : 'Bank Transfer');
+    }
+    if (fulEl) {
+      fulEl.textContent = isPickup ? `Pickup: ${window.sleecState.pickupStore.name}` : `Delivery: ${window.sleecState.deliveryAddress.details}`;
+    }
+    if (totEl) totEl.textContent = '₦' + total.toLocaleString();
+
+    if (itemsEl) {
+      itemsEl.innerHTML = window.sleecState.cart.map(i => `
+        <div class="flex justify-between">
+          <span class="truncate max-w-[190px] text-slate-700">${i.name} (x${i.qty})</span>
+          <span class="font-bold text-slate-900">₦${(i.price * i.qty).toLocaleString()}</span>
+        </div>
+      `).join('');
+    }
+
+    if (modal) {
+      modal.style.cssText = '';
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+      }, 10);
+    }
+  };
+
+  window.closeReceiptModal = function() {
+    const modal = document.getElementById('receipt-modal');
+    if (modal) {
+      modal.classList.remove('opacity-100', 'pointer-events-auto');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.style.cssText = 'display: none !important;';
+      }, 200);
+    }
+  };
+
+  window.printReceipt = function() {
+    window.print ? window.print() : alert('Receipt printed successfully');
+  };
+
+  // 11. COMPLETE CHECKOUT AND RETURN TO CLEAN HOMEPAGE
+  window.finishAndContinueShopping = function() {
+    window.closeReceiptModal();
+    window.sleecState.cart = [];
+    window.sleecState.checkoutStep = 1;
+    window.closeSleecCheckout();
+    window.renderCartBagUI();
+  };
+
+  // Automated Hero Carousel background switching
+  let currentHeroSlide = 3;
+  setInterval(() => {
+    const slides = [0, 1, 2, 3];
+    currentHeroSlide = (currentHeroSlide + 1) % slides.length;
+    slides.forEach(idx => {
+      const slide = document.getElementById('hero-slide-' + idx);
+      const dot = document.querySelector(`.hero-dot[data-slide="${idx}"]`);
+      if (slide) {
+        if (idx === currentHeroSlide) {
+          slide.classList.remove('inactive');
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+          slide.classList.add('inactive');
+        }
+      }
+      if (dot) {
+        if (idx === currentHeroSlide) {
+          dot.className = 'hero-dot w-4 h-1.5 rounded-full bg-white transition-all duration-300';
+        } else {
+          dot.className = 'hero-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300';
+        }
+      }
+    });
+  }, 4500);
+
+  // Initial State Setup
+  window.renderCartBagUI();
+})();
+</script>
+</div>
+<!-- END: PhoneShellContainer -->
+
+
+<script>(function() { window.openBuyerDrawer = function() { const overlay = document.getElementById('buyer-drawer-overlay'); const content = document.getElementById('buyer-drawer-content'); if (overlay && content) { overlay.style.cssText = ''; overlay.classList.remove('hidden'); setTimeout(() => { overlay.classList.remove('opacity-0', 'pointer-events-none'); overlay.classList.add('opacity-100', 'pointer-events-auto'); content.classList.remove('-translate-x-full'); content.classList.add('translate-x-0'); }, 10); } }; window.closeBuyerDrawer = function() { const overlay = document.getElementById('buyer-drawer-overlay'); const content = document.getElementById('buyer-drawer-content'); if (overlay && content) { overlay.classList.remove('opacity-100', 'pointer-events-auto'); overlay.classList.add('opacity-0', 'pointer-events-none'); content.classList.remove('translate-x-0'); content.classList.add('-translate-x-full'); setTimeout(() => { overlay.classList.add('hidden'); overlay.style.cssText = 'display: none !important;'; }, 300); } }; const btnHam = document.getElementById('btn-hamburger-menu'); if (btnHam) btnHam.onclick = window.openBuyerDrawer; window.selectCategoryPill = function(btn) { const pills = document.querySelectorAll('.category-pill'); pills.forEach(p => { p.className = 'px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 transition-colors flex-shrink-0 category-pill'; }); btn.className = 'px-4 py-1.5 rounded-full bg-[#205739] text-white text-xs font-semibold shadow-sm flex-shrink-0 category-pill'; }; const tabAi = document.getElementById('tab-btn-ai'); if (tabAi) { tabAi.onclick = function() { window.openSleecBag(); }; } const tabSearch = document.getElementById('tab-btn-search'); if (tabSearch) { tabSearch.onclick = function() { window.location.hash = '#search'; const grid = document.querySelector('section[data-purpose="picked-for-you-section"]'); if (grid) grid.scrollIntoView({ behavior: 'smooth' }); }; } const tabCats = document.getElementById('tab-btn-categories'); if (tabCats) { tabCats.onclick = function() { const catRow = document.querySelector('section[data-purpose="picked-for-you-section"] .overflow-x-auto'); if (catRow) catRow.scrollIntoView({ behavior: 'smooth' }); }; } const tabSaved = document.getElementById('tab-btn-saved'); if (tabSaved) { tabSaved.onclick = function() { alert('Saved Items: 2 items saved to your Wishlist.'); }; } const tabHome = document.getElementById('tab-btn-home'); if (tabHome) { tabHome.onclick = function() { window.scrollTo({ top: 0, behavior: 'smooth' }); }; } const origAdd = window.addSampleItemToBag; window.addSampleItemToBag = function(type) { if (type === 'tote') { const ex = window.sleecState.cart.find(i => i.id === 'tote'); if (ex) { ex.qty += 1; } else { window.sleecState.cart.push({ id: 'tote', name: 'Sleec Canvas Tote & Essentials', variant: 'Size: One Size', store: 'Sage & Co.', price: 8500, qty: 1, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCfPVZLhvRNwK1ztp-tHtuf3W9A8sBIIOqeGcGGfPLE1IxO7z9k-0MS4WCNVk4oiXrUR9AuEUyKpHg8xe6JIelXZLh_aUPE_xYWUobZLGIZCKia43tM_HEbljdGnUHGao00O8YQiDUsB6C4o0ay9c7bKN7Hm3I9WdYL4ZNtxQtBoGcziruSe6ts-gtuF4PG6ycdfv6KYHkO905sKM5tWr-C9H9TH5bRpEhm9hwFB5EkWLXC3WneStxr6RDx6hkWPA-r' }); } window.renderCartBagUI(); window.openSleecBag(); } else if (type === 'perfume') { const ex = window.sleecState.cart.find(i => i.id === 'perfume'); if (ex) { ex.qty += 1; } else { window.sleecState.cart.push({ id: 'perfume', name: 'Amber Eau Maison Vert', variant: '50ml Eau de Parfum', store: 'Maison Vert', price: 24000, qty: 1, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCDjbwuGJe6YgOCFs1hr0ZKTYgBfB7fSXUurU0-TX8sKyNkhuatWDCkp4NrOgGm2lNs3XokY8SSWYtpwFbwC9FkrsuWPNai3oKU9fZMOtyp1j4UX0uNwGp9czf601rYo09O9IBI25rbk2w94GaEzH3U3FSxWxBkwTXKsIRC5wADoTK30JwyV44aCMeZ-U7WybZZhaQe81YfbWhpkdlL_KSpNudO80DaZDlESPIFgJ3Gu2aZcUkonwnVFA8KgRNWj3Ew' }); } window.renderCartBagUI(); window.openSleecBag(); } else if (origAdd) { origAdd(type); } }; })();</script></body></html>
